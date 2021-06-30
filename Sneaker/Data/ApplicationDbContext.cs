@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Sneaker.Models;
 
 namespace Sneaker.Data
 {
@@ -12,5 +10,9 @@ namespace Sneaker.Data
             : base(options)
         {
         }
+
+
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
     }
 }

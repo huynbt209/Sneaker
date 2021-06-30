@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sneaker.Data;
 using Sneaker.Data.DbInit;
+using Sneaker.Repository;
+using Sneaker.Repository.Interface;
+
 
 namespace Sneaker
 {
@@ -35,6 +38,8 @@ namespace Sneaker
 
             services.AddControllersWithViews();
             services.AddScoped<IDbInitializer, DbInitializer>();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
