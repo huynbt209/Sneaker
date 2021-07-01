@@ -40,6 +40,7 @@ namespace Sneaker
             services.AddScoped<IDbInitializer, DbInitializer>();
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAdminRepo, AdminRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

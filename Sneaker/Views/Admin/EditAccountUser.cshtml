@@ -1,0 +1,43 @@
+﻿@model Sneaker.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Admin Edit Account";
+    Layout = "_AdminLayout";
+}
+
+@Html.HiddenFor(u => u.Id)
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Dashboard</span>
+        <h3 class="page-title">Edit Account</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-12">
+        <div class="card shadow border-left-primary py-2">
+            <div class="card-body">
+                <form method="post" id="EditAccount">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="FullName" class="control-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <a type="submit" class="btn btn-success form-control" asp-action="Index">Back to List</a>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary form-control">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

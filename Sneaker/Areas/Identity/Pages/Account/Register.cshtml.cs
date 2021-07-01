@@ -107,6 +107,9 @@ namespace Sneaker.Areas.Identity.Pages.Account
                         case SystemRoles.Member when (User.IsInRole(SystemRoles.Administrator)):
                             await _userManager.AddToRoleAsync(user, SystemRoles.Member);
                             break;
+                        case SystemRoles.Member when (User == null):
+                            await _userManager.AddToRoleAsync(user, SystemRoles.Member);
+                            break;
                         default:
                             await _userManager.DeleteAsync(user);
                             break;

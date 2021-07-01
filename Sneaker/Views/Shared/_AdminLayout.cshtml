@@ -19,6 +19,8 @@
 
     <!-- Custom styles for this template-->
     <link href="~/bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css" />
+
 
 </head>
 
@@ -92,13 +94,6 @@
                 </div>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -111,8 +106,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
                         <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                        <a class="collapse-item" asp-area="Identity" asp-page="/Account/Register">Register New Users</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Index">Users</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
                         <a class="collapse-item" href="404.html">404 Page</a>
@@ -154,7 +149,7 @@
             <!-- Main Content -->
             <div id="content">
 
-               @RenderBody();
+                @RenderBody();
 
             </div>
             <!-- End of Main Content -->
@@ -214,6 +209,10 @@
     <!-- Page level custom scripts -->
     <script src="~/bootstrap/js/demo/chart-area-demo.js"></script>
     <script src="~/bootstrap/js/demo/chart-pie-demo.js"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 

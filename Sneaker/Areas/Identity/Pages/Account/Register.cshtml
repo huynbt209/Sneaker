@@ -84,10 +84,19 @@
                                             <option value="@SystemRoles.Manager">@SystemRoles.Manager</option>
                                             <option value="@SystemRoles.Member">@SystemRoles.Member</option>
                                         </select>
+                                    }                                   
+                                </div>
+                                <div class="form-group">
+                                    @if (User == null)
+                                    {
+                                        <select name="rdUserRole" id="inputRole" class="form-control-user" disabled>
+                                            <option selected>Role</option>
+                                            <option value="@SystemRoles.Member">@SystemRoles.Member</option>
+                                        </select>
                                     }
                                 </div>
                                 <div class="form-group row">
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">Register</button>
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">Register</button>
                                 </div>
                                 <hr>
                                 <a href="index.html" class="btn btn-google btn-user btn-block">
