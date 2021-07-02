@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Sneaker.Models.Trademark>
+@{
+    ViewBag.Title = "Trademark";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <h3 class="page-title"> Overview</h3>
+    </div>
+    <div class="col-12 mt-3">
+        <a asp-controller="Trademark" asp-action="CreateTrademark" class="btn btn-primary">
+            Create New Trademark
+        </a>
+    </div>
+</div>
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive-xl table mt-2">
+            <table class="table my-0 table-hover" id="trademarkTable">
+                <thead class="thead-light">
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div>
+    <partial name="_Remove" />
+</div>
+
+@section scripts {
+    <script>
+        var table = $(document).ready(function () {
+            $('#trademarkTable').DataTable({
+                info: false,
+                ajax: {
+                    url: '/Trademark/GetTrademarkInDb',
+                    dataSrc: ''
+                },
+                rowId: "id",
+                columns: [
+                    {
+                        data: 'trademarkName', title: 'Trademark Name', render: function (data, type, row) {
+                            return '<p id="TrademarkName' + row.id + '">' + data + '</p>';
+                        }
+                    },                    
+                    {
+                        data: 'description', title: 'Description'
+                    },
+                    {
+                        data: 'image', title: 'Image'
+                    },
+                    {
+                        data: 'createAt', title: "Create At"
+                    },
+                    {
+                        data: 'id', title: 'Action', render: function (data) {
+                            return '<a href="Trademark/EditTrademark/' + data + '"class="btn btn-success mr-1"> Edit </a> '
+                                + '<a id="DeleteHandleClick" class="btn btn-danger mr-1 text-white" data-toggle="modal" data-target="#delModal"> Remove </a>';
+                        }
+                    }
+                ],
+                order: [1, 'asc']
+            });
+            $('#trademarkTable tbody').on('click', 'tr', '#DeleteHandleClick', function () {
+                const trademarkId = $(this).closest('tr').attr('id');
+                document.getElementById('handleDeleteClick').setAttribute("href", "Trademark/RemoveTrademark/" + trademarkId);
+                document.getElementById('modalTitle').innerText = "Are You Sure You Want To Remove This Trademark?";
+                document.getElementById('modalWarning').innerText = "Warning! All Products of Trademark will be removed."
+                var title = $("#TrademarkName" + trademarkId).text();
+                document.getElementById('modalBody').innerHTML = "Trademark Name: " + title;
+            });
+        });
+    </script>
+}

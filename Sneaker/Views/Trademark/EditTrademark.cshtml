@@ -1,0 +1,52 @@
+﻿@model Trademark
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Dashboard</span>
+        <h3 class="page-title">Edit Trademark</h3>
+    </div>
+</div>
+<div class="card shadow col-xl-6">
+    <div class="card-body">
+        <form method="post">
+            <div class="backgroundWhite shadowNew">
+                <div class="form-group row">
+                    <div class="col-4 col-lg-2 col-md-2 col-sm-2 p-0">
+                        <label asp-for="TrademarkName"></label>
+                    </div>
+                    <div class="col-8 col-lg-10 col-md-10 col-sm-10 p-0">
+                        <input asp-for="TrademarkName" class="form-control" />
+                        <span asp-validation-for="TrademarkName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4 col-lg-2 col-md-2 col-sm-2 p-0">
+                        <label asp-for="Description"></label>
+                    </div>
+                    <div class="col-8 col-lg-10 col-md-10 col-sm-10 p-0">
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-xl-12">
+                        <partial name="_BacktoList" model="Model.Id" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

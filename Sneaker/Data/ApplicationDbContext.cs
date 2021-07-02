@@ -13,6 +13,8 @@ namespace Sneaker.Data
 
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Trademark> Trademarks { get; set; }
 
     }
 }
