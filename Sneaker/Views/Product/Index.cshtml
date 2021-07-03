@@ -1,0 +1,56 @@
+﻿@model List<Sneaker.Models.Product>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_AdminLayout";
+}
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Dashboard</span>
+        <h3 class="page-title">User Overview</h3>
+    </div>
+    <div class="col-12 mt-3">
+        <a asp-controller="Product" asp-action="ExportToExcel" class="btn btn-primary">
+            Export
+        </a>
+    </div>
+    <div class="col-12 mt-3">
+        <a asp-controller="Product" asp-action="ImportToExcel" class="btn btn-primary">
+            Improt
+        </a>
+    </div>
+</div>
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive-xl table mt-2">
+            <table class="table my-0 table-hover" id="ProductTable">
+                <thead class="thead-light">
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div>
+    <partial name="_Remove" />
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#productTable').DataTable({
+                info: false,
+                ajax: {
+                    url: '/Product/GetProductList',
+                    dataSrc: ''
+                },
+                rowId: "productName",
+                columns: [
+                    {
+                        data: "productName", title: "Product Name", render: function (data, type, row) {
+                            return '<p id="ProductName' + row.productName + '">' + data + '</p>';
+                        }
+                    },
+        });
+    </script>
+}
