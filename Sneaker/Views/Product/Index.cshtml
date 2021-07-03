@@ -15,8 +15,8 @@
         </a>
     </div>
     <div class="col-12 mt-3">
-        <a asp-controller="Product" asp-action="ImportToExcel" class="btn btn-primary">
-            Improt
+        <a asp-controller="Product" asp-action="ImportProduct" class="btn btn-primary">
+            Import
         </a>
     </div>
 </div>
@@ -31,26 +31,51 @@
     </div>
 </div>
 
-<div>
-    <partial name="_Remove" />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Title</td>
+                    <td>Title URL</td>
+                    <td>Product Name</td>
+                    <td>Image</td>
+                    <td>Image1</td>
+                    <td>Quantity</td>
+                    <td>Price</td>
+                    <td>Badge</td>
+                    <td>Category</td>
+                    <td>ProductCard</td>
+                    <td>Status</td>
+                    <td>StatusMessage</td>
+                    <td>ChangeStatusBy</td>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Product Iteam in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Id, new { @id = "Id", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Title, new { @id = "Title", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.TitleURL, new { @id = "TitleURL", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.ProductName, new { @id = "ProductName", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Image, new { @id = "Image", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Image1, new { @id = "Image1", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Quantity, new { @id = "Quantity", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Price, new { @id = "Price", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Badge, new { @id = "Badge", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Category, new { @id = "Category", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.ProductCard, new { @id = "ProductCard", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.Status, new { @id = "Status", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.StatusMessage, new { @id = "StatusMessage", @class = "form-control" })</td>
+                        <td>@Html.DisplayFor(modelItem => Iteam.ChangeStatusBy, new { @id = "ChangeStatusBy", @class = "form-control" })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#productTable').DataTable({
-                info: false,
-                ajax: {
-                    url: '/Product/GetProductList',
-                    dataSrc: ''
-                },
-                rowId: "productName",
-                columns: [
-                    {
-                        data: "productName", title: "Product Name", render: function (data, type, row) {
-                            return '<p id="ProductName' + row.productName + '">' + data + '</p>';
-                        }
-                    },
-        });
-    </script>
-}
+

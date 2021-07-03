@@ -7,15 +7,27 @@ using OfficeOpenXml;
 using System.Drawing;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using Sneaker.Repository.Interface;
+using Microsoft.Extensions.Logging;
+using Sneaker.ViewModel;
+using System.Threading.Tasks;
 
 namespace Sneaker.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly IProductRepo _productRepo;
+        private readonly ILogger<ProductController> _logger;
+        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger)
+        {
+            _productRepo = productRepo;
+            _logger = logger;
+        }
+
         public IActionResult Index()
         {
             var products = GetProductList();
-            return View();
+            return View(products);
         }
 
         public IActionResult ExportToExcel()
@@ -38,7 +50,7 @@ namespace Sneaker.Controllers
                 var row = startRow;
 
                 worksheet.Cells["A1"].Value = "Sample Product Export";
-                using(var r = worksheet.Cells["A1:N1"])
+                using (var r = worksheet.Cells["A1:N1"])
                 {
                     r.Merge = true;
                     r.Style.Font.Color.SetColor(Color.Green);
@@ -64,8 +76,8 @@ namespace Sneaker.Controllers
                 worksheet.Cells["A4:N4"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                 worksheet.Cells["A4:N4"].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
 
-                row =5;
-                foreach(var product in products)
+                row = 15;
+                foreach (var product in products)
                 {
                     worksheet.Cells[row, 1].Value = product.Id;
                     worksheet.Cells[row, 2].Value = product.Title;
@@ -98,17 +110,18 @@ namespace Sneaker.Controllers
         //
 
         [HttpGet]
-        public IActionResult ImportToExcel()
+        public IActionResult ImportProduct()
         {
-            return View();
+            var viewModel = _productRepo.ProductTrademarkViewModel();
+            return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ImportToExcel(IFormFile file)
+        public IActionResult ImportProduct(IFormFile file)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                if(file?.Length > 0)
+                if (file?.Length > 0)
                 {
                     // convert to a stream
                     var stream = file.OpenReadStream();
@@ -117,52 +130,51 @@ namespace Sneaker.Controllers
 
                     try
                     {
-                        using(var package = new ExcelPackage(stream))
+                        using (var package = new ExcelPackage(stream))
                         {
                             var worksheet = package.Workbook.Worksheets.First();
                             var rowCount = worksheet.Dimension.Rows;
 
-                            for(var row = 2; row <= rowCount; row++)
+                            for (var row = 2; row <= rowCount; row++)
                             {
                                 try
                                 {
-                                    var id = worksheet.Cells[row, 1].Value?.ToString();
-                                    var title = worksheet.Cells[row, 2].Value?.ToString();
-                                    var titleURL = worksheet.Cells[row, 3].Value?.ToString();
-                                    var productName = worksheet.Cells[row, 4].Value?.ToString();
-                                    var image = worksheet.Cells[row, 5].Value?.ToString();
-                                    var image1 = worksheet.Cells[row, 6].Value?.ToString();
-                                    var quantity = worksheet.Cells[row, 7].Value?.ToString();
-                                    var price = worksheet.Cells[row, 8].Value?.ToString();
-                                    var badge = worksheet.Cells[row, 9].Value?.ToString();
-                                    var category = worksheet.Cells[row, 10].Value?.ToString();
-                                    var productCard = worksheet.Cells[row, 11].Value?.ToString();
-                                    var status = worksheet.Cells[row, 12].Value?.ToString();
-                                    var statusMessage = worksheet.Cells[row, 13].Value?.ToString();
-                                    var changeStatusBy = worksheet.Cells[row, 14].Value?.ToString();
+                                    var id = int.Parse(worksheet.Cells[row, 1].Value?.ToString().Trim());
+                                    var title = worksheet.Cells[row, 2].Value?.ToString().Trim();
+                                    var titleURL = worksheet.Cells[row, 3].Value?.ToString().Trim();
+                                    var productName = worksheet.Cells[row, 4].Value?.ToString().Trim();
+                                    var image = worksheet.Cells[row, 5].Value?.ToString().Trim();
+                                    var image1 = worksheet.Cells[row, 6].Value?.ToString().Trim();
+                                    var quantity = int.Parse(worksheet.Cells[row, 7].Value?.ToString().Trim());
+                                    var price = int.Parse(worksheet.Cells[row, 8].Value?.ToString().Trim());
+                                    var badge = worksheet.Cells[row, 9].Value?.ToString().Trim();
+                                    var category = worksheet.Cells[row, 10].Value?.ToString().Trim();
+                                    var productCard = worksheet.Cells[row, 11].Value?.ToString().Trim();
+                                    var status = bool.Parse(worksheet.Cells[row, 12].Value?.ToString().Trim());
+                                    var statusMessage = worksheet.Cells[row, 13].Value?.ToString().Trim();
+                                    var changeStatusBy = worksheet.Cells[row, 14].Value?.ToString().Trim();
 
                                     var product = new Product()
                                     {
-                                        //Id = id,
+                                        Id = id,
                                         Title = title,
                                         TitleURL = titleURL,
                                         ProductName = productName,
                                         Image = image,
                                         Image1 = image1,
-                                        //Quantity = quantity,
-                                        //Price = price,
+                                        Quantity = quantity,
+                                        Price = price,
                                         Badge = badge,
                                         Category = category,
                                         ProductCard = productCard,
-                                        //Status = status,
+                                        Status = status,
                                         StatusMessage = statusMessage,
                                         ChangeStatusBy = changeStatusBy
-
                                     };
 
                                     products.Add(product);
                                 }
-                                catch(Exception ex)
+                                catch (Exception ex)
                                 {
                                     Console.WriteLine(ex.Message);
                                 }
@@ -171,34 +183,21 @@ namespace Sneaker.Controllers
 
                         return View("Index", products);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
                 }
             }
-
-            return View();
+            return View("Index");
         }
 
 
 
         private List<Product> GetProductList()
         {
-            var products = new List<Product>()
-            {
-                new Product {
-                ProductName = "Adidas01",
-                
-
-                },
-                new Product {
-                ProductName = "Nike02",
-
-                }
-            };
-            
-            return products;
+            var products = _productRepo.GetProducts();
+            return (List<Product>)products;
         }
     }
 }

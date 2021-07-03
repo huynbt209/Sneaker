@@ -42,6 +42,7 @@ namespace Sneaker
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAdminRepo, AdminRepo>();
             services.AddScoped<ITrademarkRepo, TrademarkRepo>();
+            services.AddScoped<IProductRepo, ProductRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
