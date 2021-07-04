@@ -30,19 +30,20 @@ namespace Sneaker.Repository
 
         public IEnumerable<Trademark> GetTrademarks()
         {
-            var trademarks = _dbContext.Trademarks.ToList();
-            return trademarks;
+            return _dbContext.Trademarks.ToList();
+            
         }
 
-        public ProductTrademarkViewModel ImportProduct(ProductTrademarkViewModel productTrademarkViewModel)
+        public ProductTrademarkViewModel CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
         {
-            var model = new ProductTrademarkViewModel
+            var newProduct = new ProductTrademarkViewModel
             {
-                Product = productTrademarkViewModel.Product,
+                Product = productTrademarkViewModel.Product,               
                 Trademarks = _dbContext.Trademarks.ToList(),
             };
+            _dbContext.Add(newProduct);
             _dbContext.SaveChanges();
-            return model;
+            return newProduct;
         }
 
         public IEnumerable<Product> GetProductInTrademarkId(int id)
@@ -60,6 +61,11 @@ namespace Sneaker.Repository
                 Trademarks = _dbContext.Trademarks.OrderBy(t => t.TrademarkName).Distinct().ToList(),
             };
             return productViewModel;
+        }
+
+        public ProductTrademarkViewModel ImportProduct(ProductTrademarkViewModel productTrademarkViewModel)
+        {
+            return null;
         }
     }
 }

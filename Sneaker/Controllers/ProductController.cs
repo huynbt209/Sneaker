@@ -26,8 +26,20 @@ namespace Sneaker.Controllers
 
         public IActionResult Index()
         {
-            var products = GetProductList();
-            return View(products);
+            return View(_productRepo.GetTrademarks());
+        }
+        
+        public IActionResult ListProducts (int id)
+        {
+            var listProducts = _productRepo.GetProductByTrademark(id);
+            _logger.LogInformation("Display list products!");
+            return View(listProducts);
+        }
+
+        public IActionResult GetListProducts(int id)
+        {
+            var listProducts = _productRepo.GetProductByTrademark(id);
+            return new JsonResult(listProducts);
         }
 
         public IActionResult ExportToExcel()
@@ -192,6 +204,24 @@ namespace Sneaker.Controllers
             return View("Index");
         }
 
+
+        [HttpGet]
+        public IActionResult CreateProduct()
+        {
+            var viewModel = _productRepo.ProductTrademarkViewModel();
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                _productRepo.ImportProduct(productTrademarkViewModel);
+            }
+            _logger.LogInformation("///");
+            return RedirectToAction("Index");
+        }
 
 
         private List<Product> GetProductList()

@@ -1,4 +1,4 @@
-﻿@model List<Sneaker.Models.Product>
+﻿@model List<Sneaker.Models.Trademark>
 
 @{
     ViewBag.Title = "title";
@@ -7,7 +7,7 @@
 <div class="page-header row no-gutters py-4">
     <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
         <span class="text-uppercase page-subtitle">Dashboard</span>
-        <h3 class="page-title">User Overview</h3>
+        <h3 class="page-title">Product Overview</h3>
     </div>
     <div class="col-12 mt-3">
         <a asp-controller="Product" asp-action="ExportToExcel" class="btn btn-primary">
@@ -20,18 +20,37 @@
         </a>
     </div>
 </div>
-<div class="card shadow">
-    <div class="card-body">
-        <div class="table-responsive-xl table mt-2">
-            <table class="table my-0 table-hover" id="ProductTable">
-                <thead class="thead-light">
-                </thead>
-            </table>
+
+<div class="row mt-2">
+    @foreach (var item in Model)
+    {
+        <div class="mr-1 ml-1 card" style="width: 18rem;">
+            <img @*src="/images/DefaultFaculty.jpg"*@ class="card-img-top" alt="@item.TrademarkName">
+            <div class="card-body">
+                <h5 class="card-title">@Html.DisplayFor(m => item.TrademarkName)</h5>
+                <p class="card-text">@Html.DisplayFor(m => item.Description)</p>
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-success text-white mr-1" asp-action="ListProducts" asp-route-id="@item.Id">View Product</a>
+                    </div>
+            </div>
         </div>
-    </div>
+    }
 </div>
 
-<div class="row">
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="row">
     <div class="col-md-12">
         <table class="table">
             <thead>
@@ -76,6 +95,6 @@
             </tbody>
         </table>
     </div>
-</div>
+</div>*@
 
 

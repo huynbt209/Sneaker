@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Routing
+@model IEnumerable<Sneaker.Models.Product>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_AdminLayout";
+}
+
+
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Dashboard</span>
+        <h3 class="page-title">Product Overview</h3>
+    </div>
+</div>
+<input id="trademarkId" type="hidden" value="@Context.GetRouteData().Values["id"]">
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive-xl table mt-2">
+            <table class="table my-0 table-hover" id="productTable">
+                <thead class="thead-light">
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const trademarkId = document.getElementById("trademarkId").value;
+            $('#productTable').DataTable({
+                "fixedHeader": true,
+                "processing": true,
+                "serverSide": true,
+
+                ajax: {
+                    url: '/Product/GetListProducts/' + trademarkId,
+                    dataSrc: ''
+                },
+                rowId: "id",
+                columns: [
+                    { data: "title", title: "Title" },
+                    { data: "productName", title: "Product Name" },
+                    {
+                        data: "createAt", title: "Create At",
+                    },
+                ],
+                order: [1, 'asc']
+            });
+
+            $('#productTable tbody').on( 'click', 'tr', function () {
+                const productId = $(this).closest('tr').attr('id');
+                window.location.href = '/Product/Details/' + productId;
+            } );
+        });
+    </script>
+}

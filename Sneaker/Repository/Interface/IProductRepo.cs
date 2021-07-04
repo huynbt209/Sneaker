@@ -15,5 +15,6 @@ namespace Sneaker.Repository.Interface
         ProductTrademarkViewModel ImportProduct(ProductTrademarkViewModel productTrademarkViewModel);
         ProductTrademarkViewModel ProductTrademarkViewModel();
         IEnumerable<Product> GetProductInTrademarkId(int id);
+        ProductTrademarkViewModel CreateProduct(ProductTrademarkViewModel productTrademarkViewModel);
     }
 }
