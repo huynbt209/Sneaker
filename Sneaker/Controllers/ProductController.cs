@@ -278,7 +278,7 @@ namespace Sneaker.Controllers
 
             //get extension
             string extension = Path.GetExtension(filename);
-            
+
 
             string conString = string.Empty;
 
@@ -333,6 +333,19 @@ namespace Sneaker.Controllers
                     // 
                     sqlBulkCopy.ColumnMappings.Add("Id", "Id");
                     sqlBulkCopy.ColumnMappings.Add("Title", "Title");
+                    sqlBulkCopy.ColumnMappings.Add("TitleURL", "TitleURL");
+                    sqlBulkCopy.ColumnMappings.Add("ProductName", "ProductName");
+                    sqlBulkCopy.ColumnMappings.Add("Image", "Image");
+                    sqlBulkCopy.ColumnMappings.Add("Image1", "Image1");
+                    sqlBulkCopy.ColumnMappings.Add("Quantity", "Quantity");
+                    sqlBulkCopy.ColumnMappings.Add("Price", "Price");
+                    sqlBulkCopy.ColumnMappings.Add("Badge", "Badge");
+                    sqlBulkCopy.ColumnMappings.Add("Category", "Category");
+                    sqlBulkCopy.ColumnMappings.Add("ProductCard", "ProductCard");
+                    sqlBulkCopy.ColumnMappings.Add("Status", "Status");
+                    sqlBulkCopy.ColumnMappings.Add("StatusMessage", "StatusMessage");
+                    sqlBulkCopy.ColumnMappings.Add("ChangeStatusBy", "ChangeStatusBy");
+                    sqlBulkCopy.ColumnMappings.Add("TrademarkId", "TrademarkId");
 
 
                     con.Open();
