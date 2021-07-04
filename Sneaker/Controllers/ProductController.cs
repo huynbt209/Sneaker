@@ -11,6 +11,14 @@ using Sneaker.Repository.Interface;
 using Microsoft.Extensions.Logging;
 using Sneaker.ViewModel;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Data.OleDb;
+using Microsoft.Data.SqlClient;
+using System.Text;
+using ExcelDataReader;
+using System.Net.Http.Headers;
 
 namespace Sneaker.Controllers
 {
@@ -18,18 +26,25 @@ namespace Sneaker.Controllers
     {
         private readonly IProductRepo _productRepo;
         private readonly ILogger<ProductController> _logger;
-        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger)
+        [Obsolete]
+        private IHostingEnvironment _environment;
+        private IConfiguration _configuration;
+
+        [Obsolete]
+        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger, IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
             _productRepo = productRepo;
             _logger = logger;
+            _configuration = configuration;
+            this._environment = hostingEnvironment;
         }
 
         public IActionResult Index()
         {
             return View(_productRepo.GetTrademarks());
         }
-        
-        public IActionResult ListProducts (int id)
+
+        public IActionResult ListProducts(int id)
         {
             var listProducts = _productRepo.GetProductByTrademark(id);
             _logger.LogInformation("Display list products!");
@@ -55,7 +70,7 @@ namespace Sneaker.Controllers
                 // Styling
                 var customStyle = xlPackage.Workbook.Styles.CreateNamedStyle("CustomStyle");
                 customStyle.Style.Font.UnderLine = true;
-                customStyle.Style.Font.Color.SetColor(Color.Red);
+                customStyle.Style.Font.Color.SetColor(new Color( /* Color [Red] */));
 
                 // First row
                 var startRow = 5;
@@ -165,6 +180,7 @@ namespace Sneaker.Controllers
                                     var status = bool.Parse(worksheet.Cells[row, 12].Value?.ToString().Trim());
                                     var statusMessage = worksheet.Cells[row, 13].Value?.ToString().Trim();
                                     var changeStatusBy = worksheet.Cells[row, 14].Value?.ToString().Trim();
+                                    var trademarkId = int.Parse(worksheet.Cells[row, 15].Value?.ToString().Trim());
 
                                     var product = new Product()
                                     {
@@ -181,7 +197,8 @@ namespace Sneaker.Controllers
                                         ProductCard = productCard,
                                         Status = status,
                                         StatusMessage = statusMessage,
-                                        ChangeStatusBy = changeStatusBy
+                                        ChangeStatusBy = changeStatusBy,
+                                        TrademarkId = trademarkId
                                     };
 
                                     products.Add(product);
@@ -193,7 +210,7 @@ namespace Sneaker.Controllers
                             }
                         }
 
-                        return View("Index", products);
+                        return View("ListProducts", products);
                     }
                     catch (Exception ex)
                     {
@@ -201,7 +218,7 @@ namespace Sneaker.Controllers
                     }
                 }
             }
-            return View("Index");
+            return View("ListProducts");
         }
 
 
@@ -215,9 +232,9 @@ namespace Sneaker.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _productRepo.ImportProduct(productTrademarkViewModel);
+                _productRepo.CreateProduct(productTrademarkViewModel);
             }
             _logger.LogInformation("///");
             return RedirectToAction("Index");
@@ -229,5 +246,105 @@ namespace Sneaker.Controllers
             var products = _productRepo.GetProducts();
             return (List<Product>)products;
         }
+
+        [HttpGet]
+        public IActionResult Uploads()
+        {
+            return View();
+        }
+        ///////////////////
+        [HttpPost]
+        [Obsolete]
+        public async Task<ActionResult> Uploads(IFormFile FormFile)
+        {
+            //get file name
+            var filename = ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition).FileName.Trim('"');
+
+            //get path
+            var MainPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files");
+
+            //create directory "Uploads" if it doesn't exists
+            if (!Directory.Exists(MainPath))
+            {
+                Directory.CreateDirectory(MainPath);
+            }
+
+            //get file path 
+            var filePath = Path.Combine(MainPath, FormFile.FileName);
+            using (System.IO.Stream stream = new FileStream(filePath, FileMode.Create))
+            {
+                await FormFile.CopyToAsync(stream);
+            }
+
+            //get extension
+            string extension = Path.GetExtension(filename);
+            
+
+            string conString = string.Empty;
+
+            switch (extension)
+            {
+                case ".xls": //Excel 97-03.
+                    conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                    break;
+                case ".xlsx": //Excel 07 and above.
+                    conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                    break;
+            }
+
+            DataTable dt = new DataTable();
+            conString = string.Format(conString, filePath);
+
+            using (OleDbConnection connExcel = new OleDbConnection(conString))
+            {
+                using (OleDbCommand cmdExcel = new OleDbCommand())
+                {
+                    using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                    {
+                        cmdExcel.Connection = connExcel;
+
+                        //Get the name of First Sheet.
+                        connExcel.Open();
+                        DataTable dtExcelSchema;
+                        dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                        string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                        connExcel.Close();
+
+                        //Read Data from First Sheet.
+                        connExcel.Open();
+                        cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                        odaExcel.SelectCommand = cmdExcel;
+                        odaExcel.Fill(dt);
+                        connExcel.Close();
+                    }
+                }
+            }
+            // database connection string
+            conString = "Server=(localdb)\\mssqllocaldb;Database=aspnet-Sneaker-22B6C20C-1D81-45E0-9D4E-4BBB13A5B01A;Trusted_Connection=True;";
+
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+                {
+                    //Set the database table name.
+                    sqlBulkCopy.DestinationTableName = "dbo.Products";
+
+                    // Map the Excel columns with that of the database table, this is optional but good if you do
+                    // 
+                    sqlBulkCopy.ColumnMappings.Add("Id", "Id");
+                    sqlBulkCopy.ColumnMappings.Add("Title", "Title");
+
+
+                    con.Open();
+                    sqlBulkCopy.WriteToServer(dt);
+                    con.Close();
+                }
+            }
+            //if the code reach here means everthing goes fine and excel data is imported into database
+            ViewBag.Message = "File Imported and excel data saved into database";
+
+            return View("Index");
+        }
+
     }
 }
