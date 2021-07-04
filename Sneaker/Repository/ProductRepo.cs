@@ -36,13 +36,24 @@ namespace Sneaker.Repository
 
         public ProductTrademarkViewModel CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
         {
+            var checkExists = _dbContext.Products.Include(p => p.Trademark).Where(p => p.ProductName == productTrademarkViewModel.Product.ProductName 
+            && p.Trademark.Id == productTrademarkViewModel.Product.TrademarkId);
+            if(checkExists.Any())
+            {
+                //
+            }
+            else
+            {
+                var productResult = _dbContext.Products.Add(productTrademarkViewModel.Product);
+                _dbContext.SaveChanges();
+                return null;
+            }
             var newProduct = new ProductTrademarkViewModel
             {
                 Product = productTrademarkViewModel.Product,               
                 Trademarks = _dbContext.Trademarks.ToList(),
+                StatusMessage = "Error: " + _dbContext.Trademarks.SingleOrDefault(t => t.Id == productTrademarkViewModel.Product.TrademarkId).TrademarkName.ToString()
             };
-            _dbContext.Add(newProduct);
-            _dbContext.SaveChanges();
             return newProduct;
         }
 
