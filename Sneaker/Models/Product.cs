@@ -20,7 +20,8 @@ namespace Sneaker.Models
         public string Image { get; set; }
         public string Image1 { get; set; }
         public int Quantity { get; set; }
-        public int Price { get; set; }
+        public string Price { get; set; }
+        public string PriceOld {get; set;}
         public string Badge { get; set; }
         public string Category { get; set; }
         [Display(Name = "Colors")]

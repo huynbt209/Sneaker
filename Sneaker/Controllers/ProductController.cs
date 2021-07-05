@@ -175,7 +175,7 @@ namespace Sneaker.Controllers
                                     var image = worksheet.Cells[row, 5].Value?.ToString().Trim();
                                     var image1 = worksheet.Cells[row, 6].Value?.ToString().Trim();
                                     var quantity = int.Parse(worksheet.Cells[row, 7].Value?.ToString().Trim());
-                                    var price = int.Parse(worksheet.Cells[row, 8].Value?.ToString().Trim());
+                                    var price = worksheet.Cells[row, 8].Value?.ToString().Trim();
                                     var badge = worksheet.Cells[row, 9].Value?.ToString().Trim();
                                     var category = worksheet.Cells[row, 10].Value?.ToString().Trim();
                                     var productCard = worksheet.Cells[row, 11].Value?.ToString().Trim();
