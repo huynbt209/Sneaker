@@ -76,8 +76,8 @@ namespace Sneaker.Controllers
                 var startRow = 5;
                 var row = startRow;
 
-                worksheet.Cells["A1"].Value = "Sample Product Export";
-                using (var r = worksheet.Cells["A1:N1"])
+                worksheet.Cells["A1"].Value = "Product Export";
+                using (var r = worksheet.Cells["A1:O1"])
                 {
                     r.Merge = true;
                     r.Style.Font.Color.SetColor(Color.Green);
@@ -85,41 +85,43 @@ namespace Sneaker.Controllers
                     r.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(23, 55, 93));
                 }
 
-                worksheet.Cells["A4"].Value = "Id";
-                worksheet.Cells["B4"].Value = "Title";
-                worksheet.Cells["C4"].Value = "TitleURL";
-                worksheet.Cells["D4"].Value = "ProductName";
-                worksheet.Cells["E4"].Value = "Image";
-                worksheet.Cells["F4"].Value = "Image1";
-                worksheet.Cells["G4"].Value = "Quantity";
-                worksheet.Cells["H4"].Value = "Price";
-                worksheet.Cells["I4"].Value = "Badge";
-                worksheet.Cells["J4"].Value = "Category";
-                worksheet.Cells["K4"].Value = "ProductCard";
-                worksheet.Cells["L4"].Value = "Status";
-                worksheet.Cells["M4"].Value = "StatusMessage";
-                worksheet.Cells["N4"].Value = "ChangeStatusBy";
+                worksheet.Cells["A2"].Value = "Id";
+                worksheet.Cells["B2"].Value = "Title";
+                worksheet.Cells["C2"].Value = "TitleURL";
+                worksheet.Cells["D2"].Value = "ProductName";
+                worksheet.Cells["E2"].Value = "Image";
+                worksheet.Cells["F2"].Value = "Image1";
+                worksheet.Cells["G2"].Value = "Quantity";
+                worksheet.Cells["H2"].Value = "Price";
+                worksheet.Cells["I2"].Value = "Badge";
+                worksheet.Cells["J2"].Value = "Category";
+                worksheet.Cells["K2"].Value = "ProductCard";
+                worksheet.Cells["L2"].Value = "Status";
+                worksheet.Cells["M2"].Value = "StatusMessage";
+                worksheet.Cells["N2"].Value = "ChangeStatusBy";
+                worksheet.Cells["O2"].Value = "TrademarkId";
                 //14
-                worksheet.Cells["A4:N4"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                worksheet.Cells["A4:N4"].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
+                worksheet.Cells["A2:O2"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                worksheet.Cells["A2:O2"].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
 
-                row = 15;
+                row = 3;
                 foreach (var product in products)
                 {
                     worksheet.Cells[row, 1].Value = product.Id;
                     worksheet.Cells[row, 2].Value = product.Title;
                     worksheet.Cells[row, 3].Value = product.Title;
-                    worksheet.Cells[row, 3].Value = product.ProductName;
-                    worksheet.Cells[row, 3].Value = product.Image;
-                    worksheet.Cells[row, 3].Value = product.Image1;
-                    worksheet.Cells[row, 3].Value = product.Quantity;
-                    worksheet.Cells[row, 3].Value = product.Price;
-                    worksheet.Cells[row, 3].Value = product.Badge;
-                    worksheet.Cells[row, 3].Value = product.Category;
-                    worksheet.Cells[row, 3].Value = product.ProductCard;
-                    worksheet.Cells[row, 3].Value = product.Status;
-                    worksheet.Cells[row, 3].Value = product.StatusMessage;
-                    worksheet.Cells[row, 3].Value = product.ChangeStatusBy;
+                    worksheet.Cells[row, 4].Value = product.ProductName;
+                    worksheet.Cells[row, 5].Value = product.Image;
+                    worksheet.Cells[row, 6].Value = product.Image1;
+                    worksheet.Cells[row, 7].Value = product.Quantity;
+                    worksheet.Cells[row, 8].Value = product.Price;
+                    worksheet.Cells[row, 9].Value = product.Badge;
+                    worksheet.Cells[row, 10].Value = product.Category;
+                    worksheet.Cells[row, 11].Value = product.ProductCard;
+                    worksheet.Cells[row, 12].Value = product.Status;
+                    worksheet.Cells[row, 13].Value = product.StatusMessage;
+                    worksheet.Cells[row, 14].Value = product.ChangeStatusBy;
+                    worksheet.Cells[row, 15].Value = product.TrademarkId;
 
                     row++; // row = row + 1;
                 }
