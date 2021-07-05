@@ -30,10 +30,7 @@
         $(document).ready(function () {
             const trademarkId = document.getElementById("trademarkId").value;
             $('#productTable').DataTable({
-                "fixedHeader": true,
                 "processing": true,
-                "serverSide": true,
-
                 ajax: {
                     url: '/Product/GetListProducts/' + trademarkId,
                     dataSrc: ''
@@ -41,18 +38,19 @@
                 rowId: "id",
                 columns: [
                     { data: "title", title: "Title" },
-                    { data: "productName", title: "Product Name" },
                     {
-                        data: "createAt", title: "Create At",
+                        data: "productName", title: "Product Name", render: function (data, type, row) {
+                            return '<p id="ProductName' + row.id + '">' + data + '</p>';
+                        }
                     },
                 ],
                 order: [1, 'asc']
             });
 
-            $('#productTable tbody').on( 'click', 'tr', function () {
+            $('#productTable tbody').on('click', 'tr', function () {
                 const productId = $(this).closest('tr').attr('id');
                 window.location.href = '/Product/Details/' + productId;
-            } );
+            });
         });
     </script>
 }
