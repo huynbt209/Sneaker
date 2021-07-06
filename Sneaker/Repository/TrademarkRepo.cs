@@ -1,6 +1,8 @@
-﻿using Sneaker.Data;
+﻿using Microsoft.AspNetCore.Hosting;
+using Sneaker.Data;
 using Sneaker.Models;
 using Sneaker.Repository.Interface;
+using Sneaker.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +13,11 @@ namespace Sneaker.Repository
     public class TrademarkRepo : ITrademarkRepo
     {
         private readonly ApplicationDbContext _dbContext;
-        public TrademarkRepo(ApplicationDbContext dbContext)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public TrademarkRepo(ApplicationDbContext dbContext, IWebHostEnvironment webHostEnvironment)
         {
             _dbContext = dbContext;
+            _webHostEnvironment = webHostEnvironment;
         }
 
     //
@@ -75,5 +79,6 @@ namespace Sneaker.Repository
             _dbContext.SaveChanges();
             return true;
         }
+    //
     }
 }

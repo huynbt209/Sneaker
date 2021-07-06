@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sneaker.Models;
 using Sneaker.Repository.Interface;
 using Sneaker.Utility;
+using System.IO;
 using System.Linq;
 
 namespace Sneaker.Controllers
@@ -13,11 +15,13 @@ namespace Sneaker.Controllers
     {
         private readonly ITrademarkRepo _trademarkRepo;
         private readonly ILogger<TrademarkController> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public TrademarkController(ITrademarkRepo trademarkRepo, ILogger<TrademarkController> logger)
+        public TrademarkController(ITrademarkRepo trademarkRepo, ILogger<TrademarkController> logger, IWebHostEnvironment webHostEnvironment)
         {
             _trademarkRepo = trademarkRepo;
             _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()

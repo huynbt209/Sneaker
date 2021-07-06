@@ -1,5 +1,4 @@
 ﻿@model Sneaker.Models.Trademark
-
 @{
     ViewBag.Title = "Create new Trademark";
     Layout = "_AdminLayout";
@@ -33,6 +32,20 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Image" class="control-label"></label>
+                            <div class="custom-file">
+                                <input asp-for="Image" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+
                 </form>
                 <div class="row">
                     <div class="col-md-9 col-lg-8"></div>
@@ -44,3 +57,14 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+} 
