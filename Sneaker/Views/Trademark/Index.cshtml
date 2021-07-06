@@ -41,7 +41,7 @@
                 rowId: "id",
                 columns: [
                     {
-                        data: 'trademarkName', title: 'Trademark Name', render: function (data, type, row) {
+                        data: 'trademarkName', title: 'Trademark Name', render: function (data, row) {
                             return '<p id="TrademarkName' + row.id + '">' + data + '</p>';
                         }
                     },                    
@@ -49,10 +49,16 @@
                         data: 'description', title: 'Description'
                     },
                     {
-                        data: 'image', title: 'Image'
+                        data: 'image', title: 'Image', render: function (data) {
+                            return '<img src=trademarks/' + data + ' class="avatar" width="100" height="100"/>';
+                        }
                     },
                     {
-                        data: 'createAt', title: "Create At"
+                        data: 'createAt', title: "Create At", render: function() {
+                            return new Date();
+                        },
+                        displayFormat: 'dddd D MMMM YYYY',
+                        wireFormat: 'YYYY-MM-DD',
                     },
                     {
                         data: 'id', title: 'Action', render: function (data) {
@@ -68,8 +74,8 @@
                 document.getElementById('handleDeleteClick').setAttribute("href", "Trademark/RemoveTrademark/" + trademarkId);
                 document.getElementById('modalTitle').innerText = "Are You Sure You Want To Remove This Trademark?";
                 document.getElementById('modalWarning').innerText = "Warning! All Products of Trademark will be removed."
-                var title = $("#TrademarkName" + trademarkId).text();
-                document.getElementById('modalBody').innerHTML = "Trademark Name: " + title;
+                var name = $("#TrademarkName" + trademarkId).text();
+                document.getElementById('modalBody').innerHTML = "Trademark Name: " + name;
             });
         });
     </script>

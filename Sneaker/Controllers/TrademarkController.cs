@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sneaker.Models;
@@ -42,7 +43,7 @@ namespace Sneaker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateTrademark(Trademark trademark)
+        public IActionResult CreateTrademark(Trademark trademark) 
         {
             if(ModelState.IsValid)
             {
