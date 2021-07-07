@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@using System.Security.Claims
+@using Sneaker.Utility
+
+<!DOCTYPE html>
 <html lang="zxx">
 <head>
     <!-- Meta Tag -->
@@ -66,8 +72,8 @@
                         <!-- Top Left -->
                         <div class="top-left">
                             <ul class="list-main">
-                                <li><i class="ti-headphone-alt"></i> +060 (800) 801-582</li>
-                                <li><i class="ti-email"></i> support@shophub.com</li>
+                                <li><i class="ti-headphone-alt"></i> +84 977966706</li>
+                                <li><i class="ti-email"></i> huynbtgcd17258@fpt.edu.vn</li>
                             </ul>
                         </div>
                         <!--/ End Top Left -->
@@ -78,8 +84,38 @@
                             <ul class="list-main">
                                 <li><i class="ti-location-pin"></i> Store location</li>
                                 <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
-                                <li><i class="ti-user"></i> <a href="~/Identity/Account/Manage">My account</a></li>
-                                <li><i class="ti-power-off"></i><a href="~/Identity/Account/Login">Login</a></li>
+
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    <li class="nav-item dropdown no-arrow">
+                                        <a class="nav-link dropdown-toggle text-nowrap px-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <img id="userAvatar" width="40" height="40" class="user-avatar rounded-circle mr-2" src="uploads/avatar.jpeg" alt="User Avatar">
+                                            <span class="d-none d-md-inline-block">@User.FindFirstValue(ClaimTypes.Name)</span>
+                                        </a>
+                                        <!-- Dropdown - User Information -->
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                Profile
+                                            </a>
+                                            @if (User.IsInRole(SystemRoles.Administrator))
+                                            {
+                                                <a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">
+                                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Dashboard
+                                                </a>
+                                            }
+
+                                            <form class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")">
+                                                <button class="dropdown-item text-danger" type="submit">Logout</button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li><i class="ti-power-off"></i><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+                                }
+
                             </ul>
                         </div>
                         <!-- End Top Right -->
@@ -1001,5 +1037,20 @@
     <script src="~/user/js/easing.js"></script>
     <!-- Active JS -->
     <script src="~/user/js/active.js"></script>
+
+
+    <script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Admin/Avatar/',
+            type: 'GET',
+            data: {userId: '@User.FindFirstValue(ClaimTypes.NameIdentifier)'},
+            success: function (data){
+                $('#userAvatar').attr('src', '/uploads/' + data.avatar);
+                $('#userAvatarComment').attr('src', '/uploads/' + data.avatar);
+            }
+        });
+    })
+    </script>
 </body>
 </html>

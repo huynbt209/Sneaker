@@ -43,6 +43,11 @@
                             return '<p id="ProductName' + row.id + '">' + data + '</p>';
                         }
                     },
+                    {
+                        data: 'image', title: 'Image', render: function (data) {
+                            return '<img src=' + data + ' class="avatar" width="100" height="100"/>';
+                        }
+                    }
                 ],
                 order: [1, 'asc']
             });

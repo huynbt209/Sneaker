@@ -30,7 +30,7 @@
     @foreach (var item in Model)
     {
         <div class="mr-1 ml-1 card" style="width: 18rem;">
-            <img src="/avatars/sneaker.jpg" class="card-img-top" alt="@item.TrademarkName">
+            <img src="~/trademarks/@item.Image"  class="avatar" width="100" height="100" alt="@item.TrademarkName">
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(m => item.TrademarkName)</h5>
                 <p class="card-text">@Html.DisplayFor(m => item.Description)</p>

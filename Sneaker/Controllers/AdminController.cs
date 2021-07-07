@@ -112,5 +112,12 @@ namespace Sneaker.Controllers
             var user = _adminRepo.GetUserById(userId);
             return Json(user.ImagePath == null ? new {profile = "avatar.jpeg"} : new {profile = user.ImagePath});
         }
+
+        [AllowAnonymous]
+        public IActionResult Avatar(string userId)
+        {
+            var users = _adminRepo.GetUserById(userId);
+            return Json(users.ImagePath == null? new {avatar = "avatar.jpeg"}:new {avatar = users.ImagePath});
+        }
     }
 }
