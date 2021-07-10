@@ -29,21 +29,23 @@ namespace Sneaker.Controllers
         [Obsolete]
         private IHostingEnvironment _environment;
         private IConfiguration _configuration;
+        private readonly ITrademarkRepo _trademarkRepo;
 
         [Obsolete]
-        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger, IHostingEnvironment hostingEnvironment, IConfiguration configuration)
+        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger, IHostingEnvironment hostingEnvironment, IConfiguration configuration, ITrademarkRepo trademarkRepo)
         {
             _productRepo = productRepo;
             _logger = logger;
             _configuration = configuration;
             this._environment = hostingEnvironment;
+            _trademarkRepo = trademarkRepo;
         }
 
         public IActionResult Index()
         {
             return View(_productRepo.GetTrademarks());
         }
-
+        //
         public IActionResult ListProducts(int id)
         {
             var listProducts = _productRepo.GetProductByTrademark(id);
@@ -54,9 +56,36 @@ namespace Sneaker.Controllers
         public IActionResult GetListProducts(int id)
         {
             var listProducts = _productRepo.GetProductByTrademark(id);
+            _logger.LogInformation("Display list products!");
             return new JsonResult(listProducts);
         }
-
+        //
+        public IActionResult GetProductSale(int id)
+        {
+            var listSale = _productRepo.GetProductsSale(id);
+            _logger.LogInformation("Display list products sale!");
+            return new JsonResult(listSale);
+        }
+        public IActionResult ListProductSale (int id)
+        {
+            var listSale = _productRepo.GetProductsSale(id);
+            _logger.LogInformation("Display list products sale!");
+            return View(listSale);
+        }
+        //
+        public IActionResult GetProductNew(int id)
+        {
+            var listNew = _productRepo.GetProductsNew(id);
+            _logger.LogInformation("Display list products new!");
+            return new JsonResult(listNew);
+        }
+        public IActionResult ListProductNew(int id)
+        {
+            var listNew = _productRepo.GetProductsNew(id);
+            _logger.LogInformation("Display list products new!");
+            return View(listNew);
+        }
+        //    
         public IActionResult ExportToExcel()
         {
             var products = GetProductList();
@@ -241,7 +270,33 @@ namespace Sneaker.Controllers
             _logger.LogInformation("///");
             return RedirectToAction("Index");
         }
-
+        //
+        [HttpGet]
+        public IActionResult EditProduct (int id)
+        {
+            var productInDb = _productRepo.GetProductById(id);
+            if (productInDb == null) 
+            return NotFound();
+            var productVM = new ProductTrademarkViewModel()
+            {
+                Product = productInDb,
+                Trademarks = _trademarkRepo.GetTrademarks()
+            };
+            return View(productVM);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProduct(ProductTrademarkViewModel productTrademarkViewModel)
+        {
+            var product = _productRepo.EditProduct(productTrademarkViewModel);
+            if (product == null)
+            {
+                _logger.LogInformation("Product has been update!");
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Message"] = product.StatusMessage;
+            return View(product);
+        }
 
         private List<Product> GetProductList()
         {
@@ -254,6 +309,14 @@ namespace Sneaker.Controllers
         {
             return View();
         }
+
+
+
+
+
+
+
+
         ///////////////////
         [HttpPost]
         [Obsolete]

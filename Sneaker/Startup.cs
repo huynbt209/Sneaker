@@ -9,7 +9,7 @@ using Sneaker.Data;
 using Sneaker.Data.DbInit;
 using Sneaker.Repository;
 using Sneaker.Repository.Interface;
-
+using System;
 
 namespace Sneaker
 {
@@ -43,6 +43,13 @@ namespace Sneaker
             services.AddScoped<IAdminRepo, AdminRepo>();
             services.AddScoped<ITrademarkRepo, TrademarkRepo>();
             services.AddScoped<IProductRepo, ProductRepo>();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(cfg =>
+            {
+                cfg.Cookie.Name = "Sneaker";
+                cfg.IdleTimeout = new TimeSpan(0, 30, 0);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +70,7 @@ namespace Sneaker
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

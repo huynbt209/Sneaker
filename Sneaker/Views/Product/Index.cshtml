@@ -34,9 +34,15 @@
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(m => item.TrademarkName)</h5>
                 <p class="card-text">@Html.DisplayFor(m => item.Description)</p>
-                    <div class="d-flex justify-content-center">
-                        <a class="btn btn-success text-white mr-1" asp-action="ListProducts" asp-route-id="@item.Id">View Product</a>
-                    </div>
+                <div class="d-flex justify-content-center">
+                    <a class="btn btn-success text-white mr-1" asp-action="ListProducts" asp-route-id="@item.Id">View Product</a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-info" asp-action="ListProductSale" asp-route-id="@item.Id">Product Sale</a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-info" asp-action="ListProductNew" asp-route-id="@item.Id">Product New</a>
+                </div>
             </div>
         </div>
     }
