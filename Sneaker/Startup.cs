@@ -43,6 +43,7 @@ namespace Sneaker
             services.AddScoped<IAdminRepo, AdminRepo>();
             services.AddScoped<ITrademarkRepo, TrademarkRepo>();
             services.AddScoped<IProductRepo, ProductRepo>();
+            services.AddScoped<IFeedbackProductRepo, FeedbackProductRepo>();
 
             services.AddDistributedMemoryCache();
             services.AddSession(cfg =>

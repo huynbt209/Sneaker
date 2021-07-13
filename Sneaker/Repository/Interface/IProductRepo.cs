@@ -20,5 +20,6 @@ namespace Sneaker.Repository.Interface
         IEnumerable<Product> GetProductsSale(int id);
         IEnumerable<Product> GetProductsNew(int id);
         Product GetProductById (int id);
+        FeedbackProductViewModel GetProductDetail (int id);
     }
 }

@@ -130,5 +130,17 @@ namespace Sneaker.Repository
         {
             return _dbContext.Products.Include(p => p.Trademark).Where(p => p.Badge != null && p.Trademark.Id == id).ToList();
         }
+
+        public FeedbackProductViewModel GetProductDetail(int id)
+        {
+            var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
+            var listFeedBack = _dbContext.FeedbackProducts.Include(f => f.ApplicationUser).Include(p => p.Product).Where(i => i.ProductId == id);
+            var model = new FeedbackProductViewModel
+            {
+                Product = product,
+                feedbackProducts = listFeedBack
+            };
+            return model;
+        }
     }
 }

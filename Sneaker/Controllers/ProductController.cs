@@ -40,7 +40,7 @@ namespace Sneaker.Controllers
             this._environment = hostingEnvironment;
             _trademarkRepo = trademarkRepo;
         }
-
+        //
         public IActionResult Index()
         {
             return View(_productRepo.GetTrademarks());
@@ -52,7 +52,6 @@ namespace Sneaker.Controllers
             _logger.LogInformation("Display list products!");
             return View(listProducts);
         }
-
         public IActionResult GetListProducts(int id)
         {
             var listProducts = _productRepo.GetProductByTrademark(id);
@@ -85,7 +84,69 @@ namespace Sneaker.Controllers
             _logger.LogInformation("Display list products new!");
             return View(listNew);
         }
-        //    
+        //
+        [HttpGet]
+        public IActionResult CreateProduct()
+        {
+            var viewModel = _productRepo.ProductTrademarkViewModel();
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _productRepo.CreateProduct(productTrademarkViewModel);
+            }
+            _logger.LogInformation("///");
+            return RedirectToAction("Index");
+        }
+        //
+        [HttpGet]
+        public IActionResult EditProduct (int id)
+        {
+            var productInDb = _productRepo.GetProductById(id);
+            if (productInDb == null) 
+            return NotFound();
+            var productVM = new ProductTrademarkViewModel()
+            {
+                Product = productInDb,
+                Trademarks = _trademarkRepo.GetTrademarks()
+            };
+            return View(productVM);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProduct(ProductTrademarkViewModel productTrademarkViewModel)
+        {
+            var product = _productRepo.EditProduct(productTrademarkViewModel);
+            if (product == null)
+            {
+                _logger.LogInformation("Product has been update!");
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Message"] = product.StatusMessage;
+            return View(product);
+        }
+        //
+        public IActionResult ProductDetails(int id)
+        {
+            var product = _productRepo.GetProductDetail(id);
+            if (product.Product != null)
+            _logger.LogInformation($"Product: {product.Product.ProductName}");
+            return View(product);
+        }
+        //
+
+
+
+
+
+
+
+
+                //    
         public IActionResult ExportToExcel()
         {
             var products = GetProductList();
@@ -252,51 +313,6 @@ namespace Sneaker.Controllers
             return View("ListProducts");
         }
 
-
-        [HttpGet]
-        public IActionResult CreateProduct()
-        {
-            var viewModel = _productRepo.ProductTrademarkViewModel();
-            return View(viewModel);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                _productRepo.CreateProduct(productTrademarkViewModel);
-            }
-            _logger.LogInformation("///");
-            return RedirectToAction("Index");
-        }
-        //
-        [HttpGet]
-        public IActionResult EditProduct (int id)
-        {
-            var productInDb = _productRepo.GetProductById(id);
-            if (productInDb == null) 
-            return NotFound();
-            var productVM = new ProductTrademarkViewModel()
-            {
-                Product = productInDb,
-                Trademarks = _trademarkRepo.GetTrademarks()
-            };
-            return View(productVM);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditProduct(ProductTrademarkViewModel productTrademarkViewModel)
-        {
-            var product = _productRepo.EditProduct(productTrademarkViewModel);
-            if (product == null)
-            {
-                _logger.LogInformation("Product has been update!");
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["Message"] = product.StatusMessage;
-            return View(product);
-        }
 
         private List<Product> GetProductList()
         {
