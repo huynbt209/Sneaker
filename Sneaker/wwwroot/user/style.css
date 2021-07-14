@@ -783,14 +783,25 @@ Version:1.0
 	background: #fff;
 	z-index: 1;
 	width: 100%;
+	-webkit-transition:all 0.4s ease;
+	-moz-transition:all 0.4s ease;
+	transition:all 0.4s ease;
 	-webkit-box-shadow: 0px 5px 15px #0000000a;
 	-moz-box-shadow: 0px 5px 15px #0000000a;
 	box-shadow: 0px 5px 15px #0000000a;
+	visibility: hidden;
+}
+.header.shop .all-category:hover .main-category{
+	visibility:visible;
+}
+.header.shop .all-category:hover .main-category li{
+	visibility:visible;
 }
 .header.shop .main-category li{
 	display:block;
 	border-bottom:1px solid #f6f6f6;
 	position:relative;
+	visibility:hidden;
 }
 .header.shop .main-category li:last-child{
 	border:none;
@@ -861,7 +872,7 @@ Version:1.0
 	visibility:visible;
 }
 .header.shop .main-category li .mega-menu .single-menu {
-	width: 33%;
+	width: 24%;
 	display: inline-block;
 	border: none;
 	padding: 0;
@@ -1214,7 +1225,7 @@ Version:1.0
 }
 .hero-slider .single-slider {
 	height: auto;
-	background-image: url('https://via.placeholder.com/1900x700');
+	background-image: url('https://images.footlocker.com/content/dam/final/footlocker/site/backpages/20201221-fl-nike-brand-page-asp.jpg');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -3592,7 +3603,7 @@ Version:1.0
 	font-size: 13px;
 	border-radius: 30px;
 	height: auto;
-	line-height: a;
+	line-height: 1px;
 	padding: 13px 32px;
 }
 .shop-list .list-content .btn:hover{
@@ -4761,7 +4772,7 @@ Version:1.0
 	font-size: 30px;
 }
 .mail-success .mail-inner p {
-	font-size: 14;
+	font-size: 14px;
 	color: #333;
 	margin-bottom: 30px;
 	line-height: 22px;
