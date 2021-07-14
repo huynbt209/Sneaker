@@ -8,6 +8,6 @@ namespace Sneaker.Repository.Interface
 {
     public interface IUserRepo
     {
-        IEnumerable<Product> GetProductsSaleUser();
+        IEnumerable<Product> GetProductsSaleUser(int id);
     }
 }

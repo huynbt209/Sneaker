@@ -1,15 +1,15 @@
-﻿@model System.Collections.Generic.IEnumerable<Sneaker.Models.Product>
+﻿@model IEnumerable<Sneaker.Models.Product>
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_UserLayout";
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
 <div class="container">
     <div class="row">
         <div class="col-12">
             <div class="section-title">
-                <h2>Nike On Sale</h2>
+                <h2>All Sneaker</h2>
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
                                                 </a>
                                                 <div class="button-head">
                                                     <div class="product-action">
-                                                        <a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="#">
+                                                        <a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="@product.TitleURL">
                                                             <i class=" ti-eye"></i><span>Quick Shop</span>
                                                         </a>
                                                         <a title="Wishlist" href="#">

@@ -16,9 +16,9 @@ namespace Sneaker.Repository
         {
             _dbContext = dbContext;
         }
-        public IEnumerable<Product> GetProductsSaleUser()
+        public IEnumerable<Product> GetProductsSaleUser(int id)
         {
-            return _dbContext.Products.Where(p => p.PriceOld != null).ToList();
+            return _dbContext.Products.Include(p => p.Trademark).Where(p => p.PriceOld != null && p.TrademarkId == id).ToList();
         }
     }
 }

@@ -13,26 +13,28 @@ namespace Sneaker.Controllers
         private readonly IUserRepo _userRepo;
         private readonly ILogger<UserController> _logger;
         private readonly ITrademarkRepo _trademarkRepo;
-        public UserController(IUserRepo userRepo, ILogger<UserController> logger, ITrademarkRepo trademarkRepo)
+        private readonly IProductRepo _productRepo;
+        public UserController(IUserRepo userRepo, ILogger<UserController> logger, ITrademarkRepo trademarkRepo, IProductRepo productRepo)
         {
             _userRepo = userRepo;
             _logger = logger;
             _trademarkRepo = trademarkRepo;
+            _productRepo = productRepo;
         }
         public IActionResult Index()
         {
-            return View();
+            return View(_productRepo.GetProducts());
         }
 
-        public IActionResult GetProductSaleUser()
+        public IActionResult GetProductSaleUser(int id)
         {
-            var listSale = _userRepo.GetProductsSaleUser();
+            var listSale = _userRepo.GetProductsSaleUser(id);
             _logger.LogInformation("Display list products sale!");
             return new JsonResult(listSale);
         }
-        public IActionResult ListSale()
+        public IActionResult ListSale(int id)
         {
-            var listSaleUser = _userRepo.GetProductsSaleUser();
+            var listSaleUser = _userRepo.GetProductsSaleUser(id);
             _logger.LogInformation("Display list products sale for user!");
             return View(listSaleUser);
         }
