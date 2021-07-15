@@ -25,6 +25,18 @@ namespace Sneaker.Controllers
         {
             return View(_productRepo.GetProducts());
         }
+        public IActionResult GetListProducts(int id)
+        {
+            var listProducts = _productRepo.GetProductByTrademark(id);
+            _logger.LogInformation("Display list products!");
+            return new JsonResult(listProducts);
+        }
+        public IActionResult ListProducts(int id)
+        {
+            var listProducts = _productRepo.GetProductByTrademark(id);
+            _logger.LogInformation("Display list products!");
+            return View(listProducts);
+        }       
 
         public IActionResult GetProductSaleUser(int id)
         {
@@ -37,6 +49,19 @@ namespace Sneaker.Controllers
             var listSaleUser = _userRepo.GetProductsSaleUser(id);
             _logger.LogInformation("Display list products sale for user!");
             return View(listSaleUser);
+        }
+
+        public IActionResult GetProductNewUser(int id)
+        {
+            var listNew = _productRepo.GetProductsNew(id);
+            _logger.LogInformation("Display list products new!");
+            return new JsonResult(listNew);
+        }
+        public IActionResult ListNew(int id)
+        {
+            var listNew = _productRepo.GetProductsNew(id);
+            _logger.LogInformation("Display list products new!");
+            return View(listNew);
         }
     }
 }
