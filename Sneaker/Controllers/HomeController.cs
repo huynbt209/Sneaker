@@ -26,7 +26,7 @@ namespace Sneaker.Controllers
 
         public IActionResult Index()
         {
-            return View(_productRepo.GetTrademarks());
+            return View(_productRepo.getTrendingHotSaleProducts());
         }
 
         public IActionResult Privacy()

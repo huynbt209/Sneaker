@@ -46,7 +46,8 @@
     <link rel="stylesheet" href="~/user/css/reset.css">
     <link rel="stylesheet" href="~/user/style.css">
     <link rel="stylesheet" href="~/user/css/responsive.css">
-
+    <link type="text/css" href="~/user/css/details.css" rel="stylesheet" />
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 <body class="js">
@@ -245,7 +246,7 @@
             </div>
         </div>
     </header>
-   
+
     <!-- Start Product Area -->
     <div class="product-area section">
         @RenderBody()
@@ -406,9 +407,12 @@
     <script src="~/user/js/easing.js"></script>
     <!-- Active JS -->
     <script src="~/user/js/active.js"></script>
+    <script type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 
-    <script>
+<script>
     $(document).ready(function () {
         $.ajax({
             url: '/Admin/Avatar/',
@@ -421,5 +425,6 @@
         });
     })
     </script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

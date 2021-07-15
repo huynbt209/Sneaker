@@ -25,7 +25,7 @@ namespace Sneaker.Repository
 
         public IEnumerable<Product> GetProducts()
         {
-            return _dbContext.Products.ToList();
+            return _dbContext.Products.Include(p => p.Trademark).ToList();
         }
 
         public IEnumerable<Trademark> GetTrademarks()
@@ -124,6 +124,21 @@ namespace Sneaker.Repository
         public IEnumerable<Product> GetProductsSale(int id)
         {
             return _dbContext.Products.Include(p => p.Trademark).Where(p => p.PriceOld != null && p.Trademark.Id == id).ToList();
+        }
+
+        public TrendingHotSaleViewModel getTrendingHotSaleProducts()
+        {
+            //category
+            IEnumerable<Product> _trendingProducts = _dbContext.Products.Include(p => p.Trademark).Where(p => p.ChangeStatusBy != null).ToList();
+            // list invoices ->> count each product(count not duplicate name) in invoices -> list product have productId + product sales(count each product in invoices) + list information bt productId List
+            IEnumerable<Product> _hotProducts = _dbContext.Products.Include(p => p.Trademark).Where(p => p.StatusMessage != null).ToList();
+
+            var newTrendingHotSaleViewModel = new TrendingHotSaleViewModel()
+            {
+                trendingProducts = _trendingProducts,
+                hotProducts = _hotProducts
+            };
+            return newTrendingHotSaleViewModel;
         }
 
         public IEnumerable<Product> GetProductsNew(int id)

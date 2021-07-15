@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Sneaker.Models.Product>
+﻿@model System.Collections.Generic.IEnumerable<Sneaker.Models.Product>
 
 @{
     ViewData["Title"] = "Index";
@@ -27,12 +27,17 @@
                                 {
                                     <div class="col-xl-3 col-lg-4 col-md-4 col-12">
                                         <div class="single-product">
+                                            <div class="name">
+                                                <span>@product.Trademark.TrademarkName</span>
+                                            </div>
                                             <div class="product-img">
                                                 <a href="product-details.html">
                                                     <img class="default-img" src="@product.Image" alt="#">
                                                     <img class="hover-img" src="@product.Image" alt="#">
                                                     @if (product.Badge != null)
-                                                    {<span class="new">@product.Badge</span>}
+                                                    {
+                                                        <span class="new">@product.Badge</span>
+                                                    }
                                                 </a>
                                                 <div class="button-head">
                                                     <div class="product-action">

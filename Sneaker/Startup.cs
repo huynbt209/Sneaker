@@ -27,7 +27,7 @@ namespace Sneaker
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("SqlServerDocker")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

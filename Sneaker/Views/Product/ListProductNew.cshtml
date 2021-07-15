@@ -56,10 +56,10 @@
                 order: [1, 'asc']
             });
 
-            //$('#productTable tbody').on('click', 'tr', function () {
-            //    const productId = $(this).closest('tr').attr('id');
-            //    window.location.href = '/Product/Details/' + productId;
-            //});
+            $('#productTable tbody').on('click', 'tr', function () {
+               const productId = $(this).closest('tr').attr('id');
+               window.location.href = '/Product/ProductDetails/' + productId;
+            });
         });
     </script>
 }

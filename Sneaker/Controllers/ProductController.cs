@@ -19,6 +19,8 @@ using Microsoft.Data.SqlClient;
 using System.Text;
 using ExcelDataReader;
 using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Threading.Tasks.Dataflow;
 
 namespace Sneaker.Controllers
 {
@@ -30,15 +32,20 @@ namespace Sneaker.Controllers
         private IHostingEnvironment _environment;
         private IConfiguration _configuration;
         private readonly ITrademarkRepo _trademarkRepo;
+        private readonly IAdminRepo _adminRepo;
+        private readonly IFeedbackProductRepo _feedbackProductRepo;
 
         [Obsolete]
-        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger, IHostingEnvironment hostingEnvironment, IConfiguration configuration, ITrademarkRepo trademarkRepo)
+        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger, IHostingEnvironment hostingEnvironment, IConfiguration configuration, 
+            ITrademarkRepo trademarkRepo, IAdminRepo adminRepo, IFeedbackProductRepo feedbackProductRepo)
         {
             _productRepo = productRepo;
             _logger = logger;
             _configuration = configuration;
             this._environment = hostingEnvironment;
             _trademarkRepo = trademarkRepo;
+            _adminRepo = adminRepo;
+            _feedbackProductRepo = feedbackProductRepo;
         }
         //
         public IActionResult Index()
@@ -138,6 +145,17 @@ namespace Sneaker.Controllers
             return View(product);
         }
         //
+        [HttpPost]
+        public async Task<IActionResult> SendFeedback(int productId, string message)
+        {
+            if (message == null) return Json(new {success = false, message = "Please write your feedback again!"});
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userFullName = await _adminRepo.GetUserName(currentUser);
+            var sendMessage = await _feedbackProductRepo.SaveComment(productId, currentUser, message);
+            if (!sendMessage) return RedirectToAction();
+            _logger.LogInformation($"{userFullName} has been sent a feedback: {message}!");
+            return Json(new {success = true, userInput = userFullName, messageInput = message});
+        }
 
 
 
