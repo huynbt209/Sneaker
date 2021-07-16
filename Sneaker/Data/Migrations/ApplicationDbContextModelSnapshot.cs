@@ -221,6 +221,26 @@ namespace Sneaker.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Sneaker.Models.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("Carts");
+                });
+
             modelBuilder.Entity("Sneaker.Models.FeedbackProduct", b =>
                 {
                     b.Property<int>("Id")
@@ -416,6 +436,15 @@ namespace Sneaker.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Sneaker.Models.Cart", b =>
+                {
+                    b.HasOne("Sneaker.Models.Product", "Products")
+                        .WithMany()
+                        .HasForeignKey("ProductsId");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Sneaker.Models.FeedbackProduct", b =>
