@@ -65,20 +65,20 @@ namespace Sneaker.Controllers
             _logger.LogInformation("Display list products!");
             return new JsonResult(listProducts);
         }
-        //
+
         public IActionResult GetProductSale(int id)
         {
             var listSale = _productRepo.GetProductsSale(id);
             _logger.LogInformation("Display list products sale!");
             return new JsonResult(listSale);
         }
-        public IActionResult ListProductSale (int id)
+        public IActionResult ListProductSale(int id)
         {
             var listSale = _productRepo.GetProductsSale(id);
             _logger.LogInformation("Display list products sale!");
             return View(listSale);
         }
-        //
+
         public IActionResult GetProductNew(int id)
         {
             var listNew = _productRepo.GetProductsNew(id);
@@ -283,7 +283,7 @@ namespace Sneaker.Controllers
                                     var image = worksheet.Cells[row, 5].Value?.ToString().Trim();
                                     var image1 = worksheet.Cells[row, 6].Value?.ToString().Trim();
                                     var quantity = int.Parse(worksheet.Cells[row, 7].Value?.ToString().Trim());
-                                    var price = worksheet.Cells[row, 8].Value?.ToString().Trim();
+                                    var price = decimal.Parse(worksheet.Cells[row, 8].Value?.ToString().Trim());
                                     var badge = worksheet.Cells[row, 9].Value?.ToString().Trim();
                                     var category = worksheet.Cells[row, 10].Value?.ToString().Trim();
                                     var productCard = worksheet.Cells[row, 11].Value?.ToString().Trim();

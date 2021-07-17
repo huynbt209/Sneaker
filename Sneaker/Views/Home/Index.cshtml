@@ -115,7 +115,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="product-action-2">
-                                                    <a title="Add to cart" href="#">Add to cart</a>
+                                                    <a title="Add to cart" asp-action="AddCart" asp-controller="Cart" asp-route-id="@item.Id">Add to cart</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -178,7 +178,7 @@
                                         </a>
                                     </div>
                                     <div class="product-action-2">
-                                        <a title="Add to cart" href="#">Add to cart</a>
+                                        <a title="Add to cart" asp-action="AddCart" asp-controller="Cart" asp-route-id="@item.Id">Add to cart</a>
                                     </div>
                                 </div>
                             </div>
@@ -190,7 +190,7 @@
                                     <a href="/Product/ProductDetails/@item.Id">@item.ProductName</a>
                                 </h3>
                                 <div class="product-price">
-                                    <span class="old">@item.PriceOld</span>
+                                    <span class="old">10</span>
                                     <span>@item.Price</span>
                                 </div>
                             </div>
