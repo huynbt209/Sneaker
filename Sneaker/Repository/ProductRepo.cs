@@ -81,7 +81,6 @@ namespace Sneaker.Repository
                 productInDb.Quantity = productTrademarkViewModel.Product.Quantity;
                 productInDb.Badge = productTrademarkViewModel.Product.Badge;
                 productInDb.Price = productTrademarkViewModel.Product.Price;
-                productInDb.PriceOld = productTrademarkViewModel.Product.PriceOld;
                 productInDb.Status = productTrademarkViewModel.Product.Status;
                 productInDb.StatusMessage = productTrademarkViewModel.Product.StatusMessage;
                 _dbContext.SaveChanges();
@@ -123,7 +122,7 @@ namespace Sneaker.Repository
 
         public IEnumerable<Product> GetProductsSale(int id)
         {
-            return _dbContext.Products.Include(p => p.Trademark).Where(p => p.PriceOld != null && p.Trademark.Id == id).ToList();
+            return _dbContext.Products.Include(p => p.Trademark).Where(p => p.Status == true && p.Trademark.Id == id).ToList();
         }
 
         public TrendingHotSaleViewModel getTrendingHotSaleProducts()

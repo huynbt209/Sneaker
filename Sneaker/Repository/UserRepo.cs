@@ -30,7 +30,7 @@ namespace Sneaker.Repository
 
         public IEnumerable<Product> GetProductsSaleUser(int id)
         {
-            return _dbContext.Products.Include(p => p.Trademark).Where(p => p.PriceOld != null && p.TrademarkId == id).ToList();
+            return _dbContext.Products.Include(p => p.Trademark).Where(p => p.Status == true && p.TrademarkId == id).ToList();
         }
         public IEnumerable<Product> GetProductByTrademark(int trademarkId)
         {

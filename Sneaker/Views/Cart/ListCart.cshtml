@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "_UserLayout";
+}
+
+<div class="shopping-cart section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Shopping Summery -->
+                <table class="table shopping-summery">
+                    <thead>
+                        <tr class="main-hading">
+                            <th>PRODUCT</th>
+                            <th>NAME</th>
+                            <th class="text-center">UNIT PRICE</th>
+                            <th class="text-center">QUANTITY</th>
+                            @*<th class="text-center">TOTAL</th>*@
+                            <th class="text-center">
+                                <i class="ti-trash remove-icon"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in ViewBag.carts)
+                            {
+                                <tr>
+                                    <td class="image" data-title="No">
+                                        <img src="@item.Products.Image" alt="#">
+                                    </td>
+                                    <td class="product-des" data-title="Description">
+                                        <p class="product-name">
+                                            <a href="#">@item.Products.ProductName</a>
+                                        </p>
+                                        <p class="product-des">@item.Products.Category</p>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <span>@item.Products.Price </span>
+                                    </td>
+                                    <td class="qty" data-title="Qty">
+                                        <!-- Input Order -->
+                                        <div class="input-group">
+                                            <div class="button minus">
+                                                <button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">
+                                                    <i class="ti-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" name="quant[1]" class="input-number" data-min="1" data-max="100" value="1">
+                                            <div class="button plus">
+                                                <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
+                                                    <i class="ti-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!--/ End Input Order -->
+                                    </td>
+                                    @*<td class="total-amount" data-title="Total">
+                                        <span>                 </span>
+                                    </td>*@
+                                    <td class="action" data-title="Remove">
+                                        <a asp-controller="Cart" asp-action="DeleteCart" asp-route-id="@item.Products.Id">
+                                            <i class="ti-trash remove-icon"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <!--/ End Shopping Summery -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <!-- Total Amount -->
+                @{
+                    foreach (var item in ViewBag.carts)
+                    {
+                        <div class="total-amount">
+                            <div class="row">
+                                <div class="col-lg-8 col-md-5 col-12">
+                                    <div class="left">
+                                        <div class="coupon">
+                                            <form action="#" target="_blank">
+                                                <input name="Coupon" placeholder="Enter Your Coupon">
+                                                <button class="btn">Apply</button>
+                                            </form>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox"> Shipping (+10$)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-7 col-12">
+                                    <div class="right">
+                                        <ul>
+                                            <li>Cart Subtotal<span>$@ViewBag.TotalProduct</span></li>
+                                            <li>Shipping<span>Free</span></li>
+                                            <li>You Save<span>$20.00</span></li>
+                                            <li class="last">You Pay<span>$@ViewBag.TotalProduct</span></li>
+                                        </ul>
+                                        <div class="button5">
+                                            <a href="#" class="btn">Checkout</a>
+                                            <a href="#" class="btn">Continue shopping</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <!--/ End Total Amount -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+          $(document).ready(function () {
+              $(".updateCartItem").click(function (event) {
+                  event.preventDefault();
+                  var productId = $(this).attr("data-productId");
+                  var quantity = $("#quantity-" + productId).val();
+                  $.ajax({
+                      type: "POST",
+                      url:"@Url.RouteUrl("updateCart")",
+                      data: {
+                          productId: productId,
+                          quantity:quantity
+                      },
+                      success: function (result) {
+                          window.location.href = "@Url.RouteUrl("cart")";
+                      }
+                  });
+              });
+          });
+    </script>
+}

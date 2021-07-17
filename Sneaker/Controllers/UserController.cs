@@ -36,7 +36,7 @@ namespace Sneaker.Controllers
             var listProducts = _productRepo.GetProductByTrademark(id);
             _logger.LogInformation("Display list products!");
             return View(listProducts);
-        }       
+        }
 
         public IActionResult GetProductSaleUser(int id)
         {
