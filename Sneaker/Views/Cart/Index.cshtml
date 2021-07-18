@@ -23,49 +23,48 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{
-                            foreach (var item in ViewBag.carts)
-                            {
-                                <tr>
-                                    <td class="image" data-title="No">
-                                        <img src="@item.Products.Image" alt="#">
-                                    </td>
-                                    <td class="product-des" data-title="Description">
-                                        <p class="product-name">
-                                            <a href="#">@item.Products.ProductName</a>
-                                        </p>
-                                        <p class="product-des">@item.Products.Category</p>
-                                    </td>
-                                    <td class="price" data-title="Price">
-                                        <span>@item.Products.Price </span>
-                                    </td>
-                                    <td class="qty" data-title="Qty">
-                                        <!-- Input Order -->
-                                        <div class="input-group">
-                                            <div class="button minus">
-                                                <button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">
-                                                    <i class="ti-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" name="quant[1]" class="input-number" data-min="1" data-max="100" value="1">
-                                            <div class="button plus">
-                                                <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
+                        @foreach (var item in ViewBag.cart)
+                        {
+                            Product product = (Product)item.Products;
+                            <tr>
+                                <td class="image" data-title="No">
+                                    <img src="@item.Products.Image" alt="#">
+                                </td>
+                                <td class="product-des" data-title="Description">
+                                    <p class="product-name">
+                                        <a href="#">@item.Products.ProductName</a>
+                                    </p>
+                                    <p class="product-des">@item.Products.Category</p>
+                                </td>
+                                <td class="price" data-title="Price">
+                                    <span>$@item.Products.Price </span>
+                                </td>
+                                <td class="qty" data-title="Qty">
+                                    <!-- Input Order -->
+                                    <div class="input-group">
+                                        <div class="button minus">
+                                            <button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">
+                                                <i class="ti-minus"></i>
+                                            </button>
                                         </div>
-                                        <!--/ End Input Order -->
-                                    </td>
-                                    @*<td class="total-amount" data-title="Total">
-                                        <span>                 </span>
-                                    </td>*@
-                                    <td class="action" data-title="Remove">
-                                        <a asp-controller="Cart" asp-action="DeleteCart" asp-route-id="@item.Products.Id">
-                                            <i class="ti-trash remove-icon"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
+                                        <input type="text" name="quant[1]" class="input-number" data-min="1" data-max="100" value="@item.Quantity">
+                                        <div class="button plus">
+                                            <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
+                                                <i class="ti-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!--/ End Input Order -->
+                                </td>
+                                <td class="total-amount" data-title="Total">
+                                    <span>$@(item.Products.Price * item.Quantity)</span>
+                                </td>
+                                <td class="action" data-title="Remove">
+                                    <a asp-controller="Cart" asp-action="DeleteCart" asp-route-id="@item.Products.Id">
+                                        <i class="ti-trash remove-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -76,7 +75,7 @@
             <div class="col-12">
                 <!-- Total Amount -->
                 @{
-                    foreach (var item in ViewBag.carts)
+                    foreach (var item in ViewBag.cart)
                     {
                         <div class="total-amount">
                             <div class="row">
@@ -96,10 +95,10 @@
                                 <div class="col-lg-4 col-md-7 col-12">
                                     <div class="right">
                                         <ul>
-                                            <li>Cart Subtotal<span>$@ViewBag.TotalProduct</span></li>
+                                            <li>Cart Subtotal<span>$@ViewBag.Total</span></li>
                                             <li>Shipping<span>Free</span></li>
                                             <li>You Save<span>$20.00</span></li>
-                                            <li class="last">You Pay<span>$@ViewBag.TotalProduct</span></li>
+                                            <li class="last">You Pay<span>$@ViewBag.Total</span></li>
                                         </ul>
                                         <div class="button5">
                                             <a href="#" class="btn">Checkout</a>

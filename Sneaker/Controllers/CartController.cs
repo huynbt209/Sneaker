@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MySqlX.XDevAPI;
 using Newtonsoft.Json;
+using Sneaker.Helpers;
 using Sneaker.Models;
 using Sneaker.Repository.Interface;
 using System;
@@ -22,45 +24,60 @@ namespace Sneaker.Controllers
             _productRepo = productRepo;
         }
 
+        public IActionResult Index()
+        {
+            List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
+            ViewBag.cart= carts;
+            ViewBag.countCart = carts.Count;
+            ViewBag.Total = carts.Sum(c => c.Products.Price * c.Quantity);
+            return View();
+        }
+
         public IActionResult AddCart(int id)
         {
-            var cart = HttpContext.Session.GetString("cart");
-            if (cart == null)
+            var product = _productRepo.GetProductById(id);
+            if (SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart") == null)
             {
-                var product = _productRepo.GetProductById(id);
-                List<Cart> listCart = new List<Cart>()
-               {
-                   new Cart
-                   {
-                       Products = product,
-                       Quantity = 1
-                   }
-               };
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(listCart));
+                List<Cart> carts = new List<Cart>();
+                carts.Add(new Cart
+                {
+                    Products = product,
+                    Quantity = 1
+                });
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", carts);
             }
             else
             {
-                List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-                bool check = true;
-                for (int i = 0; i < dataCart.Count; i++)
+                List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
+                int index = exists(id, carts);
+                if (index == -1)
                 {
-                    if (dataCart[i].Products.Id == id)
+                    carts.Add(new Cart
                     {
-                        dataCart[i].Quantity++;
-                        check = false;
-                    }
-                }
-                if (check)
-                {
-                    dataCart.Add(new Cart
-                    {
-                        Products = _productRepo.GetProductById(id),
+                        Products = product,
                         Quantity = 1
                     });
                 }
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
+                else
+                {
+                    int newQuantity = carts[index].Quantity++;
+                    carts[index].Quantity = newQuantity;
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", carts);
             }
-            return RedirectToAction(nameof(ListCart));
+            return RedirectToAction("Index", "Cart");
+        }
+
+        private int exists(int id, List<Cart> carts)
+        {
+            for (var i = 0; i < carts.Count; i++)
+            {
+                if (carts[i].Products.Id == id)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public IActionResult ListCart()
@@ -73,7 +90,7 @@ namespace Sneaker.Controllers
                 {
                     ViewBag.carts = dataCart;
                     ViewBag.TotalProduct = dataCart.Sum(c => c.Products.Price * c.Quantity);
-                    ViewBag.Total = dataCart.Sum(p => p.Products.Price );
+                    ViewBag.Total = dataCart.Sum(p => p.Products.Price);
                     return View();
                 }
             }

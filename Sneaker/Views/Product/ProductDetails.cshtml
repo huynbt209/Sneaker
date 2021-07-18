@@ -47,7 +47,7 @@
         <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
             <h2 class="name">
                 @Html.DisplayFor(p => p.Product.ProductName)
-                <small>Product by <a href="javascript:void(0);">@Html.DisplayFor(p => p.Product.Trademark)</a></small>
+                <small>Product by <a href="javascript:void(0);">@Html.DisplayFor(p => p.Product.Trademark.TrademarkName)</a></small>
                 <i class="fa fa-star fa-2x text-primary"></i>
                 <i class="fa fa-star fa-2x text-primary"></i>
                 <i class="fa fa-star fa-2x text-primary"></i>
@@ -62,16 +62,6 @@
             <h3 class="price-container">
                 @Html.DisplayFor(p => p.Product.Price)
             </h3>
-            @* <div class="certified"> *@
-            @*     <ul> *@
-            @*         <li> *@
-            @*             <a href="javascript:void(0);">Delivery time<span>7 Working Days</span></a> *@
-            @*         </li> *@
-            @*         <li> *@
-            @*             <a href="javascript:void(0);">Certified<span>Quality Assured</span></a> *@
-            @*         </li> *@
-            @*     </ul> *@
-            @* </div> *@
             <hr/>
             <div class="description description-tabs">
                 <ul id="myTab" class="nav nav-pills">
@@ -157,7 +147,7 @@
             <hr/>
             <div class="row">
                 <div class="col-sm-12 col-md-6 col-lg-6">
-                    <a href="javascript:void(0);" class="btn btn-success btn-lg">Add to cart (@Html.DisplayFor(p => p.Product.Price))</a>
+                    <a title="Add to cart" asp-action="AddCart" asp-controller="Cart" value="@Model.Product.Id" class="btn btn-success btn-lg">Add to cart</a>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-6">
                     <div class="btn-group pull-right">
