@@ -10,6 +10,7 @@ using Sneaker.Data.DbInit;
 using Sneaker.Repository;
 using Sneaker.Repository.Interface;
 using System;
+using System.Collections.Immutable;
 
 namespace Sneaker
 {
@@ -88,6 +89,8 @@ namespace Sneaker
             });
 
             dbInitializer.Initializer();
+            
+            
         }
     }
 }

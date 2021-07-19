@@ -80,22 +80,22 @@ namespace Sneaker.Controllers
             return -1;
         }
 
-        public IActionResult ListCart()
-        {
-            var cart = HttpContext.Session.GetString("cart");
-            if (cart != null)
-            {
-                List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-                if (dataCart.Count > 0)
-                {
-                    ViewBag.carts = dataCart;
-                    ViewBag.TotalProduct = dataCart.Sum(c => c.Products.Price * c.Quantity);
-                    ViewBag.Total = dataCart.Sum(p => p.Products.Price);
-                    return View();
-                }
-            }
-            return RedirectToAction(nameof(ListCart));
-        }
+        // public IActionResult ListCart()
+        // {
+        //     var cart = HttpContext.Session.GetString("cart");
+        //     if (cart != null)
+        //     {
+        //         List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
+        //         if (dataCart.Count > 0)
+        //         {
+        //             ViewBag.carts = dataCart;
+        //             ViewBag.TotalProduct = dataCart.Sum(c => c.Products.Price * c.Quantity);
+        //             ViewBag.Total = dataCart.Sum(p => p.Products.Price);
+        //             return View();
+        //         }
+        //     }
+        //     return RedirectToAction(nameof(ListCart));
+        // }
 
         [HttpPost]
         public IActionResult UpdateCart(int id, int quantity)
@@ -136,9 +136,9 @@ namespace Sneaker.Controllers
                     }
                 }
                 HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
-                return RedirectToAction(nameof(ListCart));
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(ListCart));
+            return RedirectToAction(nameof(Index));
         }
     }
 }

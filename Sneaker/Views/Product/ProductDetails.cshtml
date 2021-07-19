@@ -60,7 +60,7 @@
             </h2>
             <hr/>
             <h3 class="price-container">
-                @Html.DisplayFor(p => p.Product.Price)
+                $@Html.DisplayFor(p => p.Product.Price)
             </h3>
             <hr/>
             <div class="description description-tabs">
@@ -147,7 +147,7 @@
             <hr/>
             <div class="row">
                 <div class="col-sm-12 col-md-6 col-lg-6">
-                    <a title="Add to cart" asp-action="AddCart" asp-controller="Cart" value="@Model.Product.Id" class="btn btn-success btn-lg">Add to cart</a>
+                    <a title="Add to cart" asp-action="AddCart" asp-controller="Cart" asp-route-id="@Model.Product.Id" class="btn btn-success btn-lg">Add to cart</a>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-6">
                     <div class="btn-group pull-right">
