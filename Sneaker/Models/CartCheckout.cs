@@ -2,36 +2,33 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sneaker.Models
 {
-    public class FeedbackProduct
+    public class Checkout
     {
         [Key]
         public int Id { get; set; }
-        public string Message { get; set; }
         
-        [Required]
-        [Display(Name = "Product")]
-        public int ProductId { get; set; }
-        [ForeignKey("ProductId")]
-        public virtual Product Product { get; set; }
+        public string Name { get; set; }
+        
+        public bool Status { get; set; }
+        public DateTime CreateAt { get; set; }
         
         [Required]
         [Display(Name = "User")]
         public string UserId { get; set; }
-
+        
         [ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }
-        public DateTime CreateAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        
+        public virtual ICollection<CheckoutDetails> CheckoutDetailses { get; set; }
 
-        public FeedbackProduct()
+        
+        public Checkout()
         {
             CreateAt = DateTime.Now;
-            UpdateAt = DateTime.Now;
+            CheckoutDetailses = new HashSet<CheckoutDetails>();
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Sneaker.Models
         public string Image { get; set; }
         public string Image1 { get; set; }
         public int Quantity { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public Decimal Price { get; set; }
         public string Badge { get; set; }
         public string Category { get; set; }
@@ -36,10 +37,13 @@ namespace Sneaker.Models
         public int TrademarkId { get; set; }
         [ForeignKey("TrademarkId")]
         public virtual Trademark Trademark { get; set; }
+        
+        public virtual ICollection<CheckoutDetails> CheckoutDetailses { get; set; }
         public Product()
         {
             CreateAt = DateTime.Now;
             UpdateAt = DateTime.Now;
+            CheckoutDetailses = new HashSet<CheckoutDetails>();
         }
     }
 }

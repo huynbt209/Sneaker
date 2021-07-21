@@ -9,6 +9,7 @@ using Sneaker.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Sneaker.Controllers
@@ -16,12 +17,14 @@ namespace Sneaker.Controllers
     public class CartController : Controller
     {
         private readonly IProductRepo _productRepo;
+        private readonly IAdminRepo _adminRepo;
         private readonly ILogger<UserController> _logger;
 
-        public CartController(ILogger<UserController> logger, IProductRepo productRepo)
+        public CartController(ILogger<UserController> logger, IProductRepo productRepo, IAdminRepo adminRepo) 
         {
             _logger = logger;
             _productRepo = productRepo;
+            _adminRepo = adminRepo;
         }
 
         public IActionResult Index()
@@ -145,5 +148,25 @@ namespace Sneaker.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Checkout(string UserName)
+        {
+            var user = User.FindFirst(ClaimTypes.Name);
+            if (user == null)
+            {
+                return RedirectToAction("Finish", "Cart");
+            }
+            else
+            {
+                var customer = _adminRepo.GetUserName(UserName);
+                return RedirectToAction("Index", "Cart");
+            }
+        }
+        public IActionResult Finish()
+        {
+            
+            return View("ThankYou");
+        }
+        
     }
 }

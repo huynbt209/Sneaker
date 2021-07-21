@@ -241,6 +241,64 @@ namespace Sneaker.Data.Migrations
                     b.ToTable("Carts");
                 });
 
+            modelBuilder.Entity("Sneaker.Models.Checkout", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Checkouts");
+                });
+
+            modelBuilder.Entity("Sneaker.Models.CheckoutDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CheckoutId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CheckoutId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CheckoutDetails");
+                });
+
             modelBuilder.Entity("Sneaker.Models.FeedbackProduct", b =>
                 {
                     b.Property<int>("Id")
@@ -444,6 +502,36 @@ namespace Sneaker.Data.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("Sneaker.Models.Checkout", b =>
+                {
+                    b.HasOne("Sneaker.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("Sneaker.Models.CheckoutDetails", b =>
+                {
+                    b.HasOne("Sneaker.Models.Checkout", "Checkout")
+                        .WithMany("CheckoutDetailses")
+                        .HasForeignKey("CheckoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Sneaker.Models.Product", "Product")
+                        .WithMany("CheckoutDetailses")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Checkout");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Sneaker.Models.FeedbackProduct", b =>
                 {
                     b.HasOne("Sneaker.Models.Product", "Product")
@@ -472,6 +560,16 @@ namespace Sneaker.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Trademark");
+                });
+
+            modelBuilder.Entity("Sneaker.Models.Checkout", b =>
+                {
+                    b.Navigation("CheckoutDetailses");
+                });
+
+            modelBuilder.Entity("Sneaker.Models.Product", b =>
+                {
+                    b.Navigation("CheckoutDetailses");
                 });
 #pragma warning restore 612, 618
         }
