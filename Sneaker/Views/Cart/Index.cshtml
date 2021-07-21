@@ -94,7 +94,7 @@
                                             <li class="last">You Pay<span>$@ViewBag.Total</span></li>
                                         </ul>
                                         <div class="button5">
-                                            <a href="#" class="btn">Checkout</a>
+                                            <a asp-action="Checkout" asp-controller="Cart" class="btn">Checkout</a>
                                             <a href="#" class="btn">Continue shopping</a>
                                         </div>
                                     </div>
@@ -109,27 +109,3 @@
         </div>
     </div>
 </div>
-
-
-@section Scripts {
-    <script>
-          $(document).ready(function () {
-              $(".updateCartItem").click(function (event) {
-                  event.preventDefault();
-                  var productId = $(this).attr("data-productId");
-                  var quantity = $("#quantity-" + productId).val();
-                  $.ajax({
-                      type: "POST",
-                      url:"@Url.RouteUrl("updateCart")",
-                      data: {
-                          productId: productId,
-                          quantity:quantity
-                      },
-                      success: function (result) {
-                          window.location.href = "@Url.RouteUrl("cart")";
-                      }
-                  });
-              });
-          });
-    </script>
-}

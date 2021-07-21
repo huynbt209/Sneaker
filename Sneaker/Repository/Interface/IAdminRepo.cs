@@ -16,5 +16,6 @@ namespace Sneaker.Repository.Interface
         bool EditAccountUser(ApplicationUser applicationUser);
         bool LockAccountUser(string Id);
         bool UnlockAccountUser(string Id);
+        
     }
 }

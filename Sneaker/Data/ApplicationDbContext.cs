@@ -16,6 +16,11 @@ namespace Sneaker.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Trademark> Trademarks { get; set; }
         public DbSet<FeedbackProduct> FeedbackProducts { get; set; }
+        
         public DbSet<Cart> Carts { get; set; }
+        
+        public DbSet<Checkout> Checkouts { get; set; }
+        
+        public DbSet<CheckoutDetails> CheckoutDetails { get; set; }
     }
 }
