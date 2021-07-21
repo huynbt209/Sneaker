@@ -59,10 +59,31 @@
                 <a href="javascript:void(0);">109 customer reviews</a>
             </h2>
             <hr/>
-            <h3 class="price-container">
-                $@Html.DisplayFor(p => p.Product.Price)
-            </h3>
+            <form class="form-horizontal qtyFrm" asp-action="AddCart" asp-controller="Cart" asp-route-id="@Model.Product.Id" method="post">
+                <div class="control-group">
+                    <h3 class="price-container">
+                        $@Html.DisplayFor(p => p.Product.Price)
+                    </h3>
+                    <div class="controls">
+                        <input type="number" min="1" name="quantity" value="1" class="span1" placeholder="Qty."/>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <button type="submit" class="btn btn-success btn-lg">Add to cart</button>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="btn-group pull-right">
+                            <button class="btn btn-white btn-default"><i class="fa fa-star"></i> Add to wishlist</button>
+                            <button class="btn btn-white btn-default"><i class="fa fa-envelope"></i> Contact Seller</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
             <hr/>
+
             <div class="description description-tabs">
                 <ul id="myTab" class="nav nav-pills">
                     <li class="active">
@@ -145,21 +166,11 @@
                 </div>
             </div>
             <hr/>
-            <div class="row">
-                <div class="col-sm-12 col-md-6 col-lg-6">
-                    <a title="Add to cart" asp-action="AddCart" asp-controller="Cart" asp-route-id="@Model.Product.Id" class="btn btn-success btn-lg">Add to cart</a>
-                </div>
-                <div class="col-sm-12 col-md-6 col-lg-6">
-                    <div class="btn-group pull-right">
-                        <button class="btn btn-white btn-default"><i class="fa fa-star"></i> Add to wishlist</button>
-                        <button class="btn btn-white btn-default"><i class="fa fa-envelope"></i> Contact Seller</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 <!-- end product -->
+
 @section Scripts{
     <script>
         $("#sendButton").click(function () {

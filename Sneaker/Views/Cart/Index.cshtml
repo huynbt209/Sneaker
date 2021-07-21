@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "_UserLayout";
 }
@@ -9,23 +8,24 @@
         <div class="row">
             <div class="col-12">
                 <!-- Shopping Summery -->
-                <table class="table shopping-summery">
-                    <thead>
+                <form method="post" asp-controller="Cart" asp-action="UpdateCart">
+                    <table class="table shopping-summery">
+                        <thead>
                         <tr class="main-hading">
                             <th>PRODUCT</th>
                             <th>NAME</th>
                             <th class="text-center">UNIT PRICE</th>
                             <th class="text-center">QUANTITY</th>
-                            @*<th class="text-center">TOTAL</th>*@
+                            <th class="text-center">TOTAL</th>
                             <th class="text-center">
                                 <i class="ti-trash remove-icon"></i>
                             </th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach (var item in ViewBag.cart)
                         {
-                            Product product = (Product)item.Products;
+                            Product product = (Product) item.Products;
                             <tr>
                                 <td class="image" data-title="No">
                                     <img src="@item.Products.Image" alt="#">
@@ -39,22 +39,14 @@
                                 <td class="price" data-title="Price">
                                     <span>$@item.Products.Price </span>
                                 </td>
-                                <td class="qty" data-title="Qty">
-                                    <!-- Input Order -->
-                                    <div class="input-group">
-                                        <div class="button minus">
-                                            <button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">
-                                                <i class="ti-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" name="quant[1]" class="input-number" data-min="1" data-max="100" value="@item.Quantity">
-                                        <div class="button plus">
-                                            <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-                                                <i class="ti-plus"></i>
-                                            </button>
-                                        </div>
+                                <td>
+                                    <div class="input-append">
+                                        <input class="span1" style="max-width: 60px" placeholder="1" id="appendedInputButtons" size="20"
+                                               type="number" min="1" value="@item.Quantity" name="quantity"/>
+                                        <button class="btn" type="submit">
+                                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                                        </button>
                                     </div>
-                                    <!--/ End Input Order -->
                                 </td>
                                 <td class="total-amount" data-title="Total">
                                     <span>$@(item.Products.Price * item.Quantity)</span>
@@ -66,8 +58,9 @@
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </form>
                 <!--/ End Shopping Summery -->
             </div>
         </div>
