@@ -160,6 +160,26 @@ namespace Sneaker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Order(Order order)
+        {
+            List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
+            ViewBag.cart = carts;
+            ViewBag.Total = carts.Sum(c => c.Products.Price * c.Quantity);
+            foreach (var item in carts)
+            {
+                if (item == null)
+                {
+                    ModelState.AddModelError("", "Your card is empty, add some products first!");
+                }
+                if(ModelState.IsValid)
+                {
+                    _cartRepo.CreateOrder(order);
+                    return RedirectToAction("Success");
+                }
+            }
+            return View(order);
+        }
+
         [HttpPost]
         [Route("checkout")]
         public async Task<IActionResult> Checkout(double total)

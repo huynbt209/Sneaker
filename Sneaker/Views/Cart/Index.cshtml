@@ -95,10 +95,9 @@
                                         </ul>
                                         <div class="button5" methods="post">
                                             <input type="hidden" name="total" value="@ViewBag.Total" />
-                                            <form method="post" asp-controller="cart" asp-action="checkout">
+                                            <form method="post" asp-controller="Cart" asp-action="Order">
                                                 <button type="submit" value="Checkout" class="btn">Checkout</button>
                                                 <input type="hidden" name="total" value="@ViewBag.Total" />
-                                                @*<input asp-for="Checkout.UserId" hidden readonly value="@Model.UserId" />*@
                                             </form>
                                             <a href="#" class="btn">Continue shopping</a>
                                         </div>

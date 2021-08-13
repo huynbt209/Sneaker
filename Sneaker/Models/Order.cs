@@ -10,15 +10,45 @@ namespace Sneaker.Models
     {
         [Key]
         public int Id { get; set; }
-        
+
+        [Display(Name ="First Name")]
+        [StringLength(50)]
+        [Required(ErrorMessage ="Please enter your First Name")]
         public string FirstName { get; set; }
+
+        [Display(Name ="Last Name")]
+        [StringLength(50)]
+        [Required(ErrorMessage ="Please enter your Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name ="Email Address")]
+        [StringLength(100)]
+        [DataType(DataType.EmailAddress)]
+        [RegularExpression(@"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|""(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*"")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])",
+            ErrorMessage = "The email address is not entered in a correct format")]
         public string Email { get; set; }
+
+        [Display(Name ="Phone Number")]
+        [Required(ErrorMessage ="Please enter your Phone Number")]
         public int PhoneNumber { get; set; }
+
+        [Display(Name ="Country")]
+        [StringLength(50)]
+        [Required(ErrorMessage ="Please enter your Country")]
         public string Country { get; set; }
+
+        [StringLength(50)]
+        [Required(ErrorMessage ="Please enter your State / City")]
         public string State { get; set; }
+
+        [StringLength(50)]
+        [Required(ErrorMessage ="Please enter your Address")]
         public string Address { get; set; }
+
+        [Display(Name ="Postal Code")]
+        [Required(ErrorMessage ="Please enter your Postal Code")]
         public int PostalCode { get; set; }
+
         public decimal OrderTotal {get; set;}
         
         public bool Status { get; set; }
