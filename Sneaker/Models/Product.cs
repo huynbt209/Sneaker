@@ -38,12 +38,12 @@ namespace Sneaker.Models
         [ForeignKey("TrademarkId")]
         public virtual Trademark Trademark { get; set; }
         
-        public virtual ICollection<CheckoutDetails> CheckoutDetailses { get; set; }
+        public virtual ICollection<OrderDetails> OrderDetails { get; set; }
         public Product()
         {
             CreateAt = DateTime.Now;
             UpdateAt = DateTime.Now;
-            CheckoutDetailses = new HashSet<CheckoutDetails>();
+            OrderDetails = new HashSet<OrderDetails>();
         }
     }
 }

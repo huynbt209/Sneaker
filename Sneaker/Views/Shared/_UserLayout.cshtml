@@ -21,7 +21,6 @@
         {
             coutCart += item.Quantity;
         }
-
     }
 
 }
@@ -596,6 +595,25 @@
             }
         });
     })
+
+        $('addCartProduct').on('click', function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            $.ajax({
+                type: "POST",
+                url: '/Cart/AddCart',
+                data: {
+                    id : id
+                },
+                success: function (res){
+                    console.log(res)
+                },
+                error: function (data) {
+                    alert(data);
+                }
+            });
+        })
+
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

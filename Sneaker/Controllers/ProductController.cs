@@ -28,15 +28,15 @@ namespace Sneaker.Controllers
     {
         private readonly IProductRepo _productRepo;
         private readonly ILogger<ProductController> _logger;
-        [Obsolete]
-        private IHostingEnvironment _environment;
+        [Obsolete] private IHostingEnvironment _environment;
         private IConfiguration _configuration;
         private readonly ITrademarkRepo _trademarkRepo;
         private readonly IAdminRepo _adminRepo;
         private readonly IFeedbackProductRepo _feedbackProductRepo;
 
         [Obsolete]
-        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger, IHostingEnvironment hostingEnvironment, IConfiguration configuration, 
+        public ProductController(IProductRepo productRepo, ILogger<ProductController> logger,
+            IHostingEnvironment hostingEnvironment, IConfiguration configuration,
             ITrademarkRepo trademarkRepo, IAdminRepo adminRepo, IFeedbackProductRepo feedbackProductRepo)
         {
             _productRepo = productRepo;
@@ -47,11 +47,13 @@ namespace Sneaker.Controllers
             _adminRepo = adminRepo;
             _feedbackProductRepo = feedbackProductRepo;
         }
+
         //
         public IActionResult Index()
         {
             return View(_productRepo.GetTrademarks());
         }
+
         //
         public IActionResult ListProducts(int id)
         {
@@ -59,6 +61,7 @@ namespace Sneaker.Controllers
             _logger.LogInformation("Display list products!");
             return View(listProducts);
         }
+
         public IActionResult GetListProducts(int id)
         {
             var listProducts = _productRepo.GetProductByTrademark(id);
@@ -72,6 +75,7 @@ namespace Sneaker.Controllers
             _logger.LogInformation("Display list products sale!");
             return new JsonResult(listSale);
         }
+
         public IActionResult ListProductSale(int id)
         {
             var listSale = _productRepo.GetProductsSale(id);
@@ -85,12 +89,14 @@ namespace Sneaker.Controllers
             _logger.LogInformation("Display list products new!");
             return new JsonResult(listNew);
         }
+
         public IActionResult ListProductNew(int id)
         {
             var listNew = _productRepo.GetProductsNew(id);
             _logger.LogInformation("Display list products new!");
             return View(listNew);
         }
+
         //
         [HttpGet]
         public IActionResult CreateProduct()
@@ -98,6 +104,7 @@ namespace Sneaker.Controllers
             var viewModel = _productRepo.ProductTrademarkViewModel();
             return View(viewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
@@ -106,16 +113,18 @@ namespace Sneaker.Controllers
             {
                 _productRepo.CreateProduct(productTrademarkViewModel);
             }
+
             _logger.LogInformation("///");
             return RedirectToAction("Index");
         }
+
         //
         [HttpGet]
-        public IActionResult EditProduct (int id)
+        public IActionResult EditProduct(int id)
         {
             var productInDb = _productRepo.GetProductById(id);
-            if (productInDb == null) 
-            return NotFound();
+            if (productInDb == null)
+                return NotFound();
             var productVM = new ProductTrademarkViewModel()
             {
                 Product = productInDb,
@@ -123,6 +132,7 @@ namespace Sneaker.Controllers
             };
             return View(productVM);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditProduct(ProductTrademarkViewModel productTrademarkViewModel)
@@ -133,17 +143,20 @@ namespace Sneaker.Controllers
                 _logger.LogInformation("Product has been update!");
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["Message"] = product.StatusMessage;
             return View(product);
         }
+
         //
         public IActionResult ProductDetails(int id)
         {
             var product = _productRepo.GetProductDetail(id);
             if (product.Product != null)
-            _logger.LogInformation($"Product: {product.Product.ProductName}");
+                _logger.LogInformation($"Product: {product.Product.ProductName}");
             return View(product);
         }
+
         //
         [HttpPost]
         public async Task<IActionResult> SendFeedback(int productId, string message)
@@ -157,14 +170,7 @@ namespace Sneaker.Controllers
             return Json(new {success = true, userInput = userFullName, messageInput = message});
         }
 
-
-
-
-
-
-
-
-                //    
+        //    
         public IActionResult ExportToExcel()
         {
             var products = GetProductList();
@@ -252,6 +258,7 @@ namespace Sneaker.Controllers
             var viewModel = _productRepo.ProductTrademarkViewModel();
             return View(viewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ImportProduct(IFormFile file)
@@ -328,6 +335,7 @@ namespace Sneaker.Controllers
                     }
                 }
             }
+
             return View("ListProducts");
         }
 
@@ -335,7 +343,7 @@ namespace Sneaker.Controllers
         private List<Product> GetProductList()
         {
             var products = _productRepo.GetProducts();
-            return (List<Product>)products;
+            return (List<Product>) products;
         }
 
         [HttpGet]
@@ -343,12 +351,6 @@ namespace Sneaker.Controllers
         {
             return View();
         }
-
-
-
-
-
-
 
 
         ///////////////////
@@ -384,10 +386,12 @@ namespace Sneaker.Controllers
             switch (extension)
             {
                 case ".xls": //Excel 97-03.
-                    conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                    conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath +
+                                ";Extended Properties='Excel 8.0;HDR=YES'";
                     break;
                 case ".xlsx": //Excel 07 and above.
-                    conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                    conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath +
+                                ";Extended Properties='Excel 8.0;HDR=YES'";
                     break;
             }
 
@@ -418,8 +422,10 @@ namespace Sneaker.Controllers
                     }
                 }
             }
+
             // database connection string
-            conString = "Server=(localdb)\\mssqllocaldb;Database=aspnet-Sneaker-22B6C20C-1D81-45E0-9D4E-4BBB13A5B01A;Trusted_Connection=True;";
+            conString =
+                "Server=(localdb)\\mssqllocaldb;Database=aspnet-Sneaker-22B6C20C-1D81-45E0-9D4E-4BBB13A5B01A;Trusted_Connection=True;";
 
             using (SqlConnection con = new SqlConnection(conString))
             {
@@ -452,11 +458,11 @@ namespace Sneaker.Controllers
                     con.Close();
                 }
             }
+
             //if the code reach here means everthing goes fine and excel data is imported into database
             ViewBag.Message = "File Imported and excel data saved into database";
 
             return View("Index");
         }
-
     }
 }

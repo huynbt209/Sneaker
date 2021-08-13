@@ -19,8 +19,8 @@ namespace Sneaker.Data
         
         public DbSet<Cart> Carts { get; set; }
         
-        public DbSet<Checkout> Checkouts { get; set; }
+        public DbSet<Order> Orders { get; set; }
         
-        public DbSet<CheckoutDetails> CheckoutDetails { get; set; }
+        public DbSet<OrderDetails> OrderDetails { get; set; }
     }
 }

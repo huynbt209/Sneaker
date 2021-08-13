@@ -11,53 +11,53 @@
                 <form method="post" asp-controller="Cart" asp-action="UpdateCart">
                     <table class="table shopping-summery">
                         <thead>
-                        <tr class="main-hading">
-                            <th>PRODUCT</th>
-                            <th>NAME</th>
-                            <th class="text-center">UNIT PRICE</th>
-                            <th class="text-center">QUANTITY</th>
-                            <th class="text-center">TOTAL</th>
-                            <th class="text-center">
-                                <i class="ti-trash remove-icon"></i>
-                            </th>
-                        </tr>
+                            <tr class="main-hading">
+                                <th>PRODUCT</th>
+                                <th>NAME</th>
+                                <th class="text-center">UNIT PRICE</th>
+                                <th class="text-center">QUANTITY</th>
+                                <th class="text-center">TOTAL</th>
+                                <th class="text-center">
+                                    <i class="ti-trash remove-icon"></i>
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var item in ViewBag.cart)
-                        {
-                            Product product = (Product) item.Products;
-                            <tr>
-                                <td class="image" data-title="No">
-                                    <img src="@item.Products.Image" alt="#">
-                                </td>
-                                <td class="product-des" data-title="Description">
-                                    <p class="product-name">
-                                        <a href="#">@item.Products.ProductName</a>
-                                    </p>
-                                    <p class="product-des">@item.Products.Category</p>
-                                </td>
-                                <td class="price" data-title="Price">
-                                    <span>$@item.Products.Price </span>
-                                </td>
-                                <td>
-                                    <div class="input-append">
-                                        <input class="span1" style="max-width: 60px" placeholder="1" id="appendedInputButtons" size="20"
-                                               type="number" min="1" value="@item.Quantity" name="quantity"/>
-                                        <button class="btn" type="submit">
-                                            <i class="fa fa-refresh" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                                <td class="total-amount" data-title="Total">
-                                    <span>$@(item.Products.Price * item.Quantity)</span>
-                                </td>
-                                <td class="action" data-title="Remove">
-                                    <a asp-controller="Cart" asp-action="DeleteCart" asp-route-id="@item.Products.Id">
-                                        <i class="ti-trash remove-icon"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
+                            @foreach (var item in ViewBag.cart)
+                            {
+                                Product product = (Product)item.Products;
+                                <tr>
+                                    <td class="image" data-title="No">
+                                        <img src="@item.Products.Image" alt="#">
+                                    </td>
+                                    <td class="product-des" data-title="Description">
+                                        <p class="product-name">
+                                            <a href="#">@item.Products.ProductName</a>
+                                        </p>
+                                        <p class="product-des">@item.Products.Category</p>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <span>$@item.Products.Price </span>
+                                    </td>
+                                    <td>
+                                        <div class="input-append">
+                                            <input class="span1" style="max-width: 60px" placeholder="1" id="appendedInputButtons" size="20"
+                                                   type="number" min="1" value="@item.Quantity" name="quantity" />
+                                            <button class="btn" type="submit">
+                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="total-amount" data-title="Total">
+                                        <span>$@(item.Products.Price * item.Quantity)</span>
+                                    </td>
+                                    <td class="action" data-title="Remove">
+                                        <a asp-controller="Cart" asp-action="DeleteCart" asp-route-id="@item.Products.Id">
+                                            <i class="ti-trash remove-icon"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </form>
@@ -93,8 +93,13 @@
                                             <li>You Save<span>$20.00</span></li>
                                             <li class="last">You Pay<span>$@ViewBag.Total</span></li>
                                         </ul>
-                                        <div class="button5">
-                                            <a asp-action="Checkout" asp-controller="Cart" class="btn">Checkout</a>
+                                        <div class="button5" methods="post">
+                                            <input type="hidden" name="total" value="@ViewBag.Total" />
+                                            <form method="post" asp-controller="cart" asp-action="checkout">
+                                                <button type="submit" value="Checkout" class="btn">Checkout</button>
+                                                <input type="hidden" name="total" value="@ViewBag.Total" />
+                                                @*<input asp-for="Checkout.UserId" hidden readonly value="@Model.UserId" />*@
+                                            </form>
                                             <a href="#" class="btn">Continue shopping</a>
                                         </div>
                                     </div>
