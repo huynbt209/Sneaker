@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sneaker.Data;
 
 namespace Sneaker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210813064001_AddTableCart")]
+    partial class AddTableCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,7 +231,7 @@ namespace Sneaker.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CartItemId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("ProductsId")
                         .HasColumnType("int");
@@ -237,14 +239,23 @@ namespace Sneaker.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CartItemId");
 
                     b.HasIndex("ProductsId");
 
                     b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("Sneaker.Models.CartItem", b =>
+                {
+                    b.Property<string>("CartItemId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CartItemId");
+
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Sneaker.Models.FeedbackProduct", b =>
@@ -530,6 +541,10 @@ namespace Sneaker.Data.Migrations
 
             modelBuilder.Entity("Sneaker.Models.Cart", b =>
                 {
+                    b.HasOne("Sneaker.Models.CartItem", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("CartItemId");
+
                     b.HasOne("Sneaker.Models.Product", "Products")
                         .WithMany()
                         .HasForeignKey("ProductsId");
@@ -584,6 +599,11 @@ namespace Sneaker.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Trademark");
+                });
+
+            modelBuilder.Entity("Sneaker.Models.CartItem", b =>
+                {
+                    b.Navigation("Carts");
                 });
 
             modelBuilder.Entity("Sneaker.Models.Order", b =>

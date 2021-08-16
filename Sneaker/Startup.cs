@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sneaker.Data;
 using Sneaker.Data.DbInit;
+using Sneaker.Models;
 using Sneaker.Repository;
 using Sneaker.Repository.Interface;
 using System;
@@ -47,6 +48,7 @@ namespace Sneaker
             services.AddScoped<IFeedbackProductRepo, FeedbackProductRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ICartRepo, CartRepo>();
+            services.AddScoped(c => CartItem.GetCart(c));
 
             services.AddMvc().AddSessionStateTempDataProvider();
             services.AddDistributedMemoryCache();

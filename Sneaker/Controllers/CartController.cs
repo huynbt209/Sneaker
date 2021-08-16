@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Sneaker.ViewModel;
 
 namespace Sneaker.Controllers
 {
@@ -21,145 +22,55 @@ namespace Sneaker.Controllers
         private readonly ICartRepo _cartRepo;
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
-
+        private readonly CartItem _cartItem;
 
         public CartController(ILogger<UserController> logger, IProductRepo productRepo, IAdminRepo adminRepo,
-            ICartRepo cartRepo, IConfiguration configuration)
+            ICartRepo cartRepo, IConfiguration configuration, CartItem cartItem)
         {
             _logger = logger;
             _productRepo = productRepo;
             _adminRepo = adminRepo;
             _cartRepo = cartRepo;
             _configuration = configuration;
+            _cartItem = cartItem;
+        }
+        public ViewResult Index()
+        {
+            var items = _cartItem.GetCartItems();
+            _cartItem.Carts = items;
+            var cartViewModel = new CartViewModel
+            {
+                CartItem = _cartItem,
+                CartTotal = _cartItem.GetCartTotal()
+            };
+
+            return View(cartViewModel);
         }
 
-        public IActionResult Index()
+        public RedirectToActionResult AddCart(int id)
         {
-            List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
-            ViewBag.cart = carts;
-            ViewBag.Total = carts.Sum(c => c.Products.Price * c.Quantity);
+            var product = _productRepo.GetProductById(id);
+            if (product != null)
+            {
+                _cartItem.AddToCart(product, 1);
+            }
+            return RedirectToAction("Index");
+        }
+
+        public RedirectToActionResult RemoveCart(int id)
+        {
+            var product = _productRepo.GetProductById(id);
+            if (product != null)
+            {
+                _cartItem.RemoveCart(product);
+            }
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Order()
+        {
             return View();
         }
-
-        [HttpGet]
-        public IActionResult AddCart(int id)
-        {
-            var product = _productRepo.GetProductById(id);
-            if (SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart") == null)
-            {
-                List<Cart> carts = new List<Cart>();
-                carts.Add(new Cart
-                {
-                    Products = product,
-                    Quantity = 1
-                });
-                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", carts);
-            }
-            else
-            {
-                List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
-                int index = exists(id, carts);
-                if (index == -1)
-                {
-                    carts.Add(new Cart
-                    {
-                        Products = product,
-                        Quantity = 1
-                    });
-                }
-                else
-                {
-                    carts[index].Quantity++;
-                }
-                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", carts);
-            }
-            return RedirectToAction("Index", "Cart");
-        }
-
-        [HttpPost]
-        public IActionResult AddCart(int id, int quantity)
-        {
-            var product = _productRepo.GetProductById(id);
-            if (SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart") == null)
-            {
-                List<Cart> carts = new List<Cart>();
-                carts.Add(new Cart
-                {
-                    Products = product,
-                    Quantity = quantity
-                });
-                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", carts);
-            }
-            else
-            {
-                List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
-                int index = exists(id, carts);
-                if (index == -1)
-                {
-                    carts.Add(new Cart
-                    {
-                        Products = product,
-                        Quantity = quantity
-                    });
-                }
-                else
-                {
-                    carts[index].Quantity += quantity;
-                }
-
-                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", carts);
-            }
-
-            return RedirectToAction("Index", "Cart");
-        }
-
-        private int exists(int id, List<Cart> carts)
-        {
-            for (var i = 0; i < carts.Count; i++)
-            {
-                if (carts[i].Products.Id == id)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        [HttpPost]
-        public IActionResult UpdateCart(int[] quantity)
-        {
-            List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
-            for (var i = 0; i < carts.Count; i++)
-            {
-                carts[i].Quantity = quantity[i];
-            }
-
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", carts);
-            return RedirectToAction("Index", "Cart");
-        }
-
-        public IActionResult DeleteCart(int id)
-        {
-            var cart = HttpContext.Session.GetString("cart");
-            if (cart != null)
-            {
-                List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-
-                for (int i = 0; i < dataCart.Count; i++)
-                {
-                    if (dataCart[i].Products.Id == id)
-                    {
-                        dataCart.RemoveAt(i);
-                    }
-                }
-
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
-                return RedirectToAction(nameof(Index));
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
         public IActionResult Order(Order order)
         {
             List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
@@ -171,7 +82,7 @@ namespace Sneaker.Controllers
                 {
                     ModelState.AddModelError("", "Your card is empty, add some products first!");
                 }
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     _cartRepo.CreateOrder(order);
                     return RedirectToAction("Success");

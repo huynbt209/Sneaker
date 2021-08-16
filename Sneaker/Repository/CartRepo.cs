@@ -48,31 +48,7 @@ namespace Sneaker.Repository
             return user == null ? "Unknown" : user.Id;
         }
 
-        //public bool SaveCheckout(string userId)
-        //{
-        //    var customer = GetUserId(userId);
-        //    var newCheckout = new Order
-        //    {
-        //        Name = "Checkout",
-        //        CreateAt = DateTime.Now,
-        //        Status = true,
-        //    };
-        //    _dbContext.Orders.Add(newCheckout);
-        //    List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(_httpContextAccessor.HttpContext.Session, "cart");
-        //    foreach (var item in carts)
-        //    {
-        //        var checkoutDetails = new CheckoutDetails
-        //        {
-        //            CheckoutId = newCheckout.Id,
-        //            ProductId = item.Id,
-        //            Price = carts.Sum(c => c.Products.Price * c.Quantity),
-        //            Quantity = item.Quantity
-        //        };
-        //        _dbContext.CheckoutDetails.Add(checkoutDetails);
-        //    }
-        //    _dbContext.SaveChanges();
-        //    return true;
-        //}
+        public IEnumerable<Product> Products => _dbContext.Products.Include(c => c.Trademark);
 
         //public UserCheckoutViewModel UserCheckoutViewModel(string userId)
         //{

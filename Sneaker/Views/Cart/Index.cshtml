@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Sneaker.ViewModel.CartViewModel
+
+@{
     ViewBag.Title = "Index";
     Layout = "_UserLayout";
 }
@@ -7,8 +9,8 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <!-- Shopping Summery -->
-                <form method="post" asp-controller="Cart" asp-action="UpdateCart">
+                Shopping Summery
+                <form method="post" asp-controller="Cart" asp-action="">
                     <table class="table shopping-summery">
                         <thead>
                             <tr class="main-hading">
@@ -23,9 +25,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in ViewBag.cart)
+                            @foreach (var item in Model.CartItem.Carts)
                             {
-                                Product product = (Product)item.Products;
                                 <tr>
                                     <td class="image" data-title="No">
                                         <img src="@item.Products.Image" alt="#">
@@ -52,7 +53,7 @@
                                         <span>$@(item.Products.Price * item.Quantity)</span>
                                     </td>
                                     <td class="action" data-title="Remove">
-                                        <a asp-controller="Cart" asp-action="DeleteCart" asp-route-id="@item.Products.Id">
+                                        <a asp-controller="Cart" asp-action="RemoveCart" asp-route-id="@item.Products.Id">
                                             <i class="ti-trash remove-icon"></i>
                                         </a>
                                     </td>
@@ -61,14 +62,14 @@
                         </tbody>
                     </table>
                 </form>
-                <!--/ End Shopping Summery -->
+                / End Shopping Summery
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <!-- Total Amount -->
+                Total Amount
                 @{
-                    foreach (var item in ViewBag.cart)
+                    foreach (var item in Model.CartItem.Carts)
                     {
                         <div class="total-amount">
                             <div class="row">
@@ -88,16 +89,16 @@
                                 <div class="col-lg-4 col-md-7 col-12">
                                     <div class="right">
                                         <ul>
-                                            <li>Cart Subtotal<span>$@ViewBag.Total</span></li>
+                                            <li>Cart Subtotal<span>$@Model.CartTotal</span></li>
                                             <li>Shipping<span>Free</span></li>
                                             <li>You Save<span>$20.00</span></li>
-                                            <li class="last">You Pay<span>$@ViewBag.Total</span></li>
+                                            <li class="last">You Pay<span>$@Model.CartTotal</span></li>
                                         </ul>
                                         <div class="button5" methods="post">
-                                            <input type="hidden" name="total" value="@ViewBag.Total" />
+                                            <input type="hidden" name="total" value="@Model.CartTotal" />
                                             <form method="post" asp-controller="Cart" asp-action="Order">
                                                 <button type="submit" value="Checkout" class="btn">Checkout</button>
-                                                <input type="hidden" name="total" value="@ViewBag.Total" />
+                                                <input type="hidden" name="total" value="@Model.CartTotal" />
                                             </form>
                                             <a href="#" class="btn">Continue shopping</a>
                                         </div>
@@ -108,7 +109,7 @@
                     }
                 }
 
-                <!--/ End Total Amount -->
+                / End Total Amount
             </div>
         </div>
     </div>

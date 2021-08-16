@@ -4,14 +4,13 @@
 @using System.Security.Claims
 @using Sneaker.Utility
 
-
 @{
     var data = Context.Session.GetString("cart");
 
-    int coutCart = 0;
+    int countCart = 0;
     if (data == null)
     {
-        coutCart = 0;
+        countCart = 0;
     }
     else
     {
@@ -19,11 +18,12 @@
         List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(data2);
         foreach (var item in dataCart)
         {
-            coutCart += item.Quantity;
+            countCart += item.Quantity;
         }
     }
-
 }
+
+
 
 <!DOCTYPE html>
 <html lang="zxx">
@@ -260,7 +260,7 @@
                             <!-- Search Form -->
                             <div class="sinlge-bar shopping">
                                 <a asp-controller="Cart" asp-action="Index" class="single-icon">
-                                    <i class="ti-bag"></i> <span class="total-count">@coutCart</span>
+                                    <i class="ti-bag"></i> <span class="total-count">@countCart</span>
                                 </a>
                                 <!-- Shopping Item -->
                                 <div class="shopping-item">
@@ -270,7 +270,7 @@
                                     </div>
                                     <ul class="shopping-list">
                                         <li>
-                                            <a asp-controller="Cart" asp-action="DeleteCart" class="remove" title="Remove this item">
+                                            <a asp-controller="" asp-action="" class="remove" title="Remove this item">
                                                 <i class="fa fa-remove"></i>
                                             </a>
                                             <a class="cart-img" href="#">
