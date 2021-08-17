@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Sneaker.ViewModel
 {
-    public class CartViewModel
+    public class CartProductViewModel
     {
         public decimal CartTotal { get; set; }
-        public IEnumerable<Cart> Carts {get ; set;}
+        public IEnumerable<Product> trendingProducts { get; set; }
+        
+        public IEnumerable<Product> hotProducts { get; set; }
     }
 }

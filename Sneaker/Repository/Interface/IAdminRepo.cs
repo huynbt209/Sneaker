@@ -9,6 +9,7 @@ namespace Sneaker.Repository.Interface
 {
     public interface IAdminRepo
     {
+        public Task<string> GetUserId(string userId);
         public Task<string> GetUserName(string userId);
         public IEnumerable<UserRoleViewModel> GetAllUserInDb();
         bool RemoveAccountUser(string Id);
@@ -16,6 +17,6 @@ namespace Sneaker.Repository.Interface
         bool EditAccountUser(ApplicationUser applicationUser);
         bool LockAccountUser(string Id);
         bool UnlockAccountUser(string Id);
-        
+
     }
 }

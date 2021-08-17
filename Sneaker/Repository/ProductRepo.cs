@@ -125,14 +125,14 @@ namespace Sneaker.Repository
             return _dbContext.Products.Include(p => p.Trademark).Where(p => p.Status == true && p.Trademark.Id == id).ToList();
         }
 
-        public TrendingHotSaleViewModel getTrendingHotSaleProducts()
+        public CartProductViewModel getTrendingHotSaleProducts()
         {
             //category
             IEnumerable<Product> _trendingProducts = _dbContext.Products.Include(p => p.Trademark).Where(p => p.ChangeStatusBy != null).ToList();
             // list invoices ->> count each product(count not duplicate name) in invoices -> list product have productId + product sales(count each product in invoices) + list information bt productId List
             IEnumerable<Product> _hotProducts = _dbContext.Products.Include(p => p.Trademark).Where(p => p.StatusMessage != null).ToList();
 
-            var newTrendingHotSaleViewModel = new TrendingHotSaleViewModel()
+            var newTrendingHotSaleViewModel = new CartProductViewModel()
             {
                 trendingProducts = _trendingProducts,
                 hotProducts = _hotProducts

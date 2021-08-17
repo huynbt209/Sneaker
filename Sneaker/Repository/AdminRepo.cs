@@ -1,4 +1,5 @@
-﻿using Sneaker.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Sneaker.Data;
 using Sneaker.Models;
 using Sneaker.Repository.Interface;
 using Sneaker.ViewModel;
@@ -16,7 +17,11 @@ namespace Sneaker.Repository
         {
             _dbContext = dbContext;
         }
-
+        public async Task<string> GetUserId(string userId)
+        {
+            var user = await _dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == userId);
+            return user == null ? "Unknown" : user.Id;
+        }
         public async Task<string> GetUserName(string userId)
         {
             var user = _dbContext.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
@@ -26,13 +31,17 @@ namespace Sneaker.Repository
         public IEnumerable<UserRoleViewModel> GetAllUserInDb()
         {
             var listUsers = (from user in _dbContext.ApplicationUsers
-                    join userRoles in _dbContext.UserRoles on user.Id equals userRoles.UserId
-                    join role in _dbContext.Roles on userRoles.RoleId equals role.Id
-                    select new
-                    {
-                        UserId = user.Id, FullName = user.FullName, Email = user.Email, RoleName = role.Name,
-                        DateCreate = user.CreateAt, LockUser = user.LockoutEnd
-                    })
+                             join userRoles in _dbContext.UserRoles on user.Id equals userRoles.UserId
+                             join role in _dbContext.Roles on userRoles.RoleId equals role.Id
+                             select new
+                             {
+                                 UserId = user.Id,
+                                 FullName = user.FullName,
+                                 Email = user.Email,
+                                 RoleName = role.Name,
+                                 DateCreate = user.CreateAt,
+                                 LockUser = user.LockoutEnd
+                             })
                 .ToList().Select(u => new UserRoleViewModel
                 {
                     UserId = u.UserId,

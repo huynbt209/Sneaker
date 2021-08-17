@@ -22,47 +22,51 @@ namespace Sneaker.Controllers
         private readonly ICartRepo _cartRepo;
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly CartItem _cartItem;
 
         public CartController(ILogger<UserController> logger, IProductRepo productRepo, IAdminRepo adminRepo,
-            ICartRepo cartRepo, IConfiguration configuration, CartItem cartItem)
+            ICartRepo cartRepo, IConfiguration configuration)
         {
             _logger = logger;
             _productRepo = productRepo;
             _adminRepo = adminRepo;
             _cartRepo = cartRepo;
             _configuration = configuration;
-            _cartItem = cartItem;
         }
-        public ViewResult Index()
+        public IActionResult Index()
         {
-            var items = _cartItem.GetCartItems();
-            _cartItem.Carts = items;
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+            var items = _cartRepo.GetCartItem(user);
             var cartViewModel = new CartViewModel
             {
-                CartItem = _cartItem,
-                CartTotal = _cartItem.GetCartTotal()
+                Carts = items,
+                CartTotal = _cartRepo.GetCartTotal(user)
             };
-
+            int count = _cartRepo.GetCount(user);
+            ViewBag.cartCount = count;
             return View(cartViewModel);
         }
 
-        public RedirectToActionResult AddCart(int id)
+        public IActionResult AddCart(int id)
         {
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+            var cart = _cartRepo.cart(user);
             var product = _productRepo.GetProductById(id);
             if (product != null)
             {
-                _cartItem.AddToCart(product, 1);
+                _cartRepo.AddtoCart(product, 1, user);
+                return Json(nameof(Index));
             }
-            return RedirectToAction("Index");
+            return View(cart);
         }
 
-        public RedirectToActionResult RemoveCart(int id)
+        public IActionResult RemoveCart(int id)
         {
             var product = _productRepo.GetProductById(id);
             if (product != null)
             {
-                _cartItem.RemoveCart(product);
+                _cartRepo.RemoveCart(id);
             }
             return RedirectToAction("Index");
         }
@@ -71,25 +75,24 @@ namespace Sneaker.Controllers
         {
             return View();
         }
-        public IActionResult Order(Order order)
-        {
-            List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(HttpContext.Session, "cart");
-            ViewBag.cart = carts;
-            ViewBag.Total = carts.Sum(c => c.Products.Price * c.Quantity);
-            foreach (var item in carts)
-            {
-                if (item == null)
-                {
-                    ModelState.AddModelError("", "Your card is empty, add some products first!");
-                }
-                if (ModelState.IsValid)
-                {
-                    _cartRepo.CreateOrder(order);
-                    return RedirectToAction("Success");
-                }
-            }
-            return View(order);
-        }
+        //public IActionResult Order(Order order)
+        //{
+        //   var items = _cartItem.GetCartItems();
+        //    _cartItem.Carts = items;           
+        //    foreach (var item in items)
+        //    {
+        //        if (item == null)
+        //        {
+        //            ModelState.AddModelError("", "Your card is empty, add some products first!");
+        //        }
+        //        if (ModelState.IsValid)
+        //        {
+        //            _cartRepo.CreateOrder(order);
+        //            return RedirectToAction("Success");
+        //        }
+        //    }
+        //    return View(order);
+        //}
 
         [HttpPost]
         [Route("checkout")]

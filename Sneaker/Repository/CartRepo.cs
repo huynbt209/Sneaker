@@ -23,29 +23,77 @@ namespace Sneaker.Repository
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public void CreateOrder(Order order)
+        public Cart cart(string userId)
         {
-            order.CreateAt = DateTime.Now;
-            _dbContext.Orders.Add(order);
-            List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(_httpContextAccessor.HttpContext.Session, "cart");
-            foreach (var item in carts)
+            var cart = new Cart
             {
-                var checkoutDetails = new OrderDetails
+                UserId = userId
+            };
+            return cart;
+        }
+        public bool AddtoCart(Product product, int quantity, string userId)
+        {
+            var cart = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == product.Id && c.UserId == userId);
+            if (cart == null)
+            {
+                cart = new Cart
                 {
-                    OrderId = order.Id,
-                    ProductId = item.Id,
-                    Price = carts.Sum(c => c.Products.Price * c.Quantity),
-                    Quantity = item.Quantity
+                    Products = product,
+                    Quantity = quantity,
+                    UserId = userId
                 };
-                _dbContext.OrderDetails.Add(checkoutDetails);
+                _dbContext.Carts.Add(cart);
+            }
+            else
+            {
+                cart.Quantity++;
             }
             _dbContext.SaveChanges();
+            return true;
         }
 
-        public async Task<string> GetUserId(string userId)
+
+        public IEnumerable<Cart> GetCartItem(string userId)
         {
-            var user = await _dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == userId);
-            return user == null ? "Unknown" : user.Id;
+            return _dbContext.Carts.Where(c => c.UserId == userId).Include(p => p.Products).ToList();
+        }
+
+        public decimal GetCartTotal(string userId)
+        {
+            var total = _dbContext.Carts.Where(c => c.UserId == userId).Select(c => c.Products.Price * c.Quantity).Sum();
+            return total;
+        }
+        public int GetCount(string userId)
+        {
+            return _dbContext.Carts.Where(c => c.UserId == userId).Count();
+        }
+
+        public bool RemoveCart(int id)
+        {
+            var CartItem = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == id);
+            var localAmount = 0;
+            if (CartItem != null)
+            {
+                if (CartItem.Quantity > 1)
+                {
+                    CartItem.Quantity--;
+                    localAmount = CartItem.Quantity;
+                }
+                else
+                {
+                    _dbContext.Carts.Remove(CartItem);
+                }
+            }
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool ClearCart(int id)
+        {
+            var cartItems = _dbContext.Carts.Where(c => c.Id == id);
+            _dbContext.Carts.RemoveRange(cartItems);
+            _dbContext.SaveChanges();
+            return true;
         }
 
         public IEnumerable<Product> Products => _dbContext.Products.Include(c => c.Trademark);
@@ -59,5 +107,26 @@ namespace Sneaker.Repository
         //    };
         //    return userCheckoutViewModel;
         //}
+
+
+                //public void CreateOrder(Order order)
+        //{
+        //    order.CreateAt = DateTime.Now;
+        //    _dbContext.Orders.Add(order);
+        //    List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(_httpContextAccessor.HttpContext.Session, "cart");
+        //    foreach (var item in carts)
+        //    {
+        //        var checkoutDetails = new OrderDetails
+        //        {
+        //            OrderId = order.Id,
+        //            ProductId = item.Id,
+        //            Price = carts.Sum(c => c.Products.Price * c.Quantity),
+        //            Quantity = item.Quantity
+        //        };
+        //        _dbContext.OrderDetails.Add(checkoutDetails);
+        //    }
+        //    _dbContext.SaveChanges();
+        //}
+
     }
 }

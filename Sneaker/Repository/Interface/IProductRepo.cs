@@ -18,7 +18,7 @@ namespace Sneaker.Repository.Interface
         ProductTrademarkViewModel CreateProduct(ProductTrademarkViewModel productTrademarkViewModel);
         ProductTrademarkViewModel EditProduct(ProductTrademarkViewModel productTrademarkViewModel);
         IEnumerable<Product> GetProductsSale(int id);
-        TrendingHotSaleViewModel getTrendingHotSaleProducts();
+        CartProductViewModel getTrendingHotSaleProducts();
         IEnumerable<Product> GetProductsNew(int id);
         Product GetProductById (int id);
         FeedbackProductViewModel GetProductDetail (int id);
