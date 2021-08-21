@@ -49,6 +49,7 @@ namespace Sneaker
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ICartRepo, CartRepo>();
 
+
             services.AddMvc().AddSessionStateTempDataProvider();
             services.AddDistributedMemoryCache();
             services.AddSession(cfg =>

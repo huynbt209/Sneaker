@@ -10,8 +10,8 @@ using Sneaker.Data;
 namespace Sneaker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210812081523_AddOrder")]
-    partial class AddOrder
+    [Migration("20210821145703_AddTableInvoiceAndDetails")]
+    partial class AddTableInvoiceAndDetails
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -236,6 +236,9 @@ namespace Sneaker.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductsId");
@@ -275,7 +278,7 @@ namespace Sneaker.Data.Migrations
                     b.ToTable("FeedbackProducts");
                 });
 
-            modelBuilder.Entity("Sneaker.Models.Order", b =>
+            modelBuilder.Entity("Sneaker.Models.Invoice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,25 +286,43 @@ namespace Sneaker.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("DeliveryFee")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsTeamOrder")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("OrderTotal")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
@@ -310,17 +331,19 @@ namespace Sneaker.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Invoice");
                 });
 
-            modelBuilder.Entity("Sneaker.Models.OrderDetails", b =>
+            modelBuilder.Entity("Sneaker.Models.InvoiceDetails", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -329,6 +352,9 @@ namespace Sneaker.Data.Migrations
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("InvoiceId")
+                        .HasColumnType("int");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -342,13 +368,17 @@ namespace Sneaker.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("InvoiceDetails");
                 });
 
             modelBuilder.Entity("Sneaker.Models.Product", b =>
@@ -541,21 +571,19 @@ namespace Sneaker.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Sneaker.Models.OrderDetails", b =>
+            modelBuilder.Entity("Sneaker.Models.InvoiceDetails", b =>
                 {
-                    b.HasOne("Sneaker.Models.Order", "Order")
-                        .WithMany("CheckoutDetailses")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Sneaker.Models.Invoice", "Invoice")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("InvoiceId");
 
                     b.HasOne("Sneaker.Models.Product", "Product")
-                        .WithMany("OrderDetails")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
+                    b.Navigation("Invoice");
 
                     b.Navigation("Product");
                 });
@@ -571,12 +599,7 @@ namespace Sneaker.Data.Migrations
                     b.Navigation("Trademark");
                 });
 
-            modelBuilder.Entity("Sneaker.Models.Order", b =>
-                {
-                    b.Navigation("CheckoutDetailses");
-                });
-
-            modelBuilder.Entity("Sneaker.Models.Product", b =>
+            modelBuilder.Entity("Sneaker.Models.Invoice", b =>
                 {
                     b.Navigation("OrderDetails");
                 });

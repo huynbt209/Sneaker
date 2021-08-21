@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sneaker.Data;
 
 namespace Sneaker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210821160736_RemoveInvoiceDetail")]
+    partial class RemoveInvoiceDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -341,42 +343,6 @@ namespace Sneaker.Data.Migrations
                     b.ToTable("Invoice");
                 });
 
-            modelBuilder.Entity("Sneaker.Models.InvoiceDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId")
-                        .IsUnique();
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("InvoiceDetails");
-                });
-
             modelBuilder.Entity("Sneaker.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -567,25 +533,6 @@ namespace Sneaker.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Sneaker.Models.InvoiceDetails", b =>
-                {
-                    b.HasOne("Sneaker.Models.Invoice", "Invoice")
-                        .WithOne("OrderDetails")
-                        .HasForeignKey("Sneaker.Models.InvoiceDetails", "InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Sneaker.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invoice");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("Sneaker.Models.Product", b =>
                 {
                     b.HasOne("Sneaker.Models.Trademark", "Trademark")
@@ -595,11 +542,6 @@ namespace Sneaker.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Trademark");
-                });
-
-            modelBuilder.Entity("Sneaker.Models.Invoice", b =>
-                {
-                    b.Navigation("OrderDetails");
                 });
 #pragma warning restore 612, 618
         }

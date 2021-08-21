@@ -71,28 +71,26 @@ namespace Sneaker.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Order()
+        public IActionResult CreateOrder()
         {
             return View();
         }
-        //public IActionResult Order(Order order)
-        //{
-        //   var items = _cartItem.GetCartItems();
-        //    _cartItem.Carts = items;           
-        //    foreach (var item in items)
-        //    {
-        //        if (item == null)
-        //        {
-        //            ModelState.AddModelError("", "Your card is empty, add some products first!");
-        //        }
-        //        if (ModelState.IsValid)
-        //        {
-        //            _cartRepo.CreateOrder(order);
-        //            return RedirectToAction("Success");
-        //        }
-        //    }
-        //    return View(order);
-        //}
+        [HttpPost]
+        public IActionResult CreateOrder(Invoice invoice)
+        {
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+            var items = _cartRepo.GetCartItem(user);
+            if (items == null)
+            {
+                ModelState.AddModelError("", "Add Product First");
+            }
+            else
+            {
+                _cartRepo.CreateOrder(invoice, user);
+            }
+            return View();
+        }
 
         [HttpPost]
         [Route("checkout")]

@@ -50,6 +50,22 @@
     <link type="text/css" href="~/user/css/details.css" rel="stylesheet" />
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
+    <title>My Cart</title>
+    <link rel="stylesheet" href="~/cart/css/bootstrap.min.css">
+    <style>
+        .badge-notify {
+            background: red;
+            position: relative;
+            top: -20px;
+            right: 10px;
+        }
+
+        .my-cart-icon-affix {
+            position: fixed;
+            z-index: 999;
+        }
+    </style>
+
 </head>
 <body class="js">
 
@@ -175,7 +191,6 @@
                                     </li>
                                     <li class="slicknav_collapsed slicknav_parent">
                                         <a href="#" role="menuitem" aria-haspopup="true" tabindex="-1" class="slicknav_item slicknav_row" style="">
-                                            <a href="#" tabindex="-1">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
                                             <span class="slicknav_arrow">►</span>
                                         </a>
                                         <ul class="dropdown slicknav_hidden" role="menu" aria-hidden="true" style="display: none;">
@@ -192,7 +207,6 @@
                                     </li>
                                     <li class="slicknav_collapsed slicknav_parent">
                                         <a href="#" role="menuitem" aria-haspopup="true" tabindex="-1" class="slicknav_item slicknav_row" style="">
-                                            <a href="#" tabindex="-1">Blog<i class="ti-angle-down"></i></a>
                                             <span class="slicknav_arrow">►</span>
                                         </a>
                                         <ul class="dropdown slicknav_hidden" role="menu" aria-hidden="true" style="display: none;">
@@ -235,14 +249,18 @@
                             </div>
                         </div>
                     </div>
+                    @*<div class="page-header">
+                            <div style="float: right; cursor: pointer;">
+                                <span class="glyphicon glyphicon-shopping-cart my-cart-icon"><span class="badge badge-notify my-cart-badge"></span></span>
+                            </div>
+                        </div>*@
+
                     <div class="col-lg-2 col-md-3 col-12">
                         <div class="right-bar">
-                            <!-- Search Form -->
                             <div class="sinlge-bar shopping">
                                 <a asp-controller="Cart" asp-action="Index" class="single-icon">
                                     <i class="ti-bag"></i> <span id="spnCart" class="total-count">@ViewBag.cartCount</span>
                                 </a>
-                                <!-- Shopping Item -->
                                 <div class="shopping-item">
                                     <div class="dropdown-cart-header">
                                         <span></span>
@@ -272,7 +290,6 @@
                                         <a href="checkout.html" class="btn animate">Checkout</a>
                                     </div>
                                 </div>
-                                <!--/ End Shopping Item -->
                             </div>
                         </div>
                     </div>
@@ -561,7 +578,64 @@
     <script type="text/javascript"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="~/cart/js/jquery-2.2.3.min.js"></script>
+    <script type='text/javascript' src="~/cart/js/bootstrap.min.js"></script>
+    <script type='text/javascript' src="~/cart/js/jquery.mycart.js"></script>
 
+
+    @*<script type="text/javascript">
+            $(function () {
+
+                var goToCartIcon = function ($addTocartBtn) {
+                    var $cartIcon = $(".my-cart-icon");
+                    var $image = $('<img width="30px" height="30px" src="' + $addTocartBtn.data("image") + '"/>').css({ "position": "fixed", "z-index": "999" });
+                    $addTocartBtn.prepend($image);
+                    var position = $cartIcon.position();
+                    $image.animate({
+                        top: position.top,
+                        left: position.left
+                    }, 500, "linear", function () {
+                        $image.remove();
+                    });
+                }
+
+                $('.my-cart-btn').myCart({
+                    currencySymbol: '$',
+                    classCartIcon: 'my-cart-icon',
+                    classCartBadge: 'my-cart-badge',
+                    classProductQuantity: 'my-product-quantity',
+                    classProductRemove: 'my-product-remove',
+                    classCheckoutCart: 'my-cart-checkout',
+                    affixCartIcon: true,
+                    showCheckoutModal: true,
+                    numberOfDecimals: 2,
+                    cartItems: [
+                    ],
+                    clickOnAddToCart: function ($addTocart) {
+                        goToCartIcon($addTocart);
+                    },
+                    afterAddOnCart: function (products, totalPrice, totalQuantity) {
+                        console.log("afterAddOnCart", products, totalPrice, totalQuantity);
+                    },
+                    clickOnCartIcon: function ($cartIcon, products, totalPrice, totalQuantity) {
+                        console.log("cart icon clicked", $cartIcon, products, totalPrice, totalQuantity);
+                    },
+                    checkoutCart: function (products, totalPrice, totalQuantity) {
+                        var checkoutString = "Total Price: " + totalPrice + "\nTotal Quantity: " + totalQuantity;
+                        checkoutString += "\n\n id \t name \t summary \t price \t quantity \t image path";
+                        $.each(products, function () {
+                            checkoutString += ("\n " + this.id + " \t " + this.name + " \t " + this.summary + " \t " + this.price + " \t " + this.quantity + " \t " + this.image);
+                        });
+                        alert(checkoutString)
+                        console.log("checking out", products, totalPrice, totalQuantity);
+                    },
+                    getDiscountPrice: function (products, totalPrice, totalQuantity) {
+                        console.log("calculating discount", products, totalPrice, totalQuantity);
+                        return totalPrice * 0.5;
+                    }
+                });
+            });
+        </script>*@
 
     @section Scripts{
         <script>
@@ -579,8 +653,8 @@
 
         $(document).ready(function () {
 
-            $('#divAddCart').on('click', 'td', function () {
-                const getProductId = parseInt($(this).closest('td').attr('id'));
+            $('#divAddCart').on('click', 'tr', function () {
+                const getProductId = parseInt($(this).closest('tr').attr('id'));
                 $.ajax({
                     type: 'POST',
                     url: 'Cart/AddCart',

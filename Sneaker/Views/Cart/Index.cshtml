@@ -91,14 +91,19 @@
                                             <li>You Save<span>$20.00</span></li>
                                             <li class="last">You Pay<span>$@Model.CartTotal</span></li>
                                         </ul>
-                                        <div class="button5" methods="post">
-                                            <input type="hidden" name="total" value="@Model.CartTotal" />
-                                            <form method="post" asp-controller="Cart" asp-action="Order">
-                                                <button type="submit" value="Checkout" class="btn">Checkout</button>
-                                                <input type="hidden" name="total" value="@Model.CartTotal" />
-                                            </form>
+                                        <div class="button5">
+                                            <a asp-controller="Cart" asp-action="CreateOrder" class="btn">Checkout</a>
                                             <a href="#" class="btn">Continue shopping</a>
                                         </div>
+                                        @*<div class="button5">
+                                                <input type="hidden" name="total" value="@Model.CartTotal" />
+                                                <form method="post" asp-controller="Cart" asp-action="CreateOrder">
+                                                    <button value="Checkout" class="btn">Checkout</button>
+                                                    <input type="hidden" name="total" value="@Model.CartTotal" />
+                                                </form>
+
+                                                <a href="#" class="btn">Continue shopping</a>
+                                            </div>*@
                                     </div>
                                 </div>
                             </div>

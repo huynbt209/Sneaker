@@ -114,7 +114,7 @@ namespace Sneaker.Controllers
                 _productRepo.CreateProduct(productTrademarkViewModel);
             }
 
-            _logger.LogInformation("///");
+            _logger.LogInformation("Created New Products");
             return RedirectToAction("Index");
         }
 

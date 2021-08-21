@@ -52,7 +52,6 @@ namespace Sneaker.Repository
             return true;
         }
 
-
         public IEnumerable<Cart> GetCartItem(string userId)
         {
             return _dbContext.Carts.Where(c => c.UserId == userId).Include(p => p.Products).ToList();
@@ -96,37 +95,63 @@ namespace Sneaker.Repository
             return true;
         }
 
-        public IEnumerable<Product> Products => _dbContext.Products.Include(c => c.Trademark);
-
-        //public UserCheckoutViewModel UserCheckoutViewModel(string userId)
+        //public bool CreateOrder(Invoice invoice, string userId)
         //{
-        //    var userCheckoutViewModel = new UserCheckoutViewModel
+        //    invoice.CreateAt = DateTime.Now;
+        //    _dbContext.Invoice.Add(invoice);
+        //    decimal orderTotal = 0;
+        //    var cartItems = GetCartItem(userId);
+        //    foreach (var item in cartItems)
         //    {
-        //        Checkout = new Checkout(),
-        //        UserId = userId
-        //    };
-        //    return userCheckoutViewModel;
-        //}
-
-
-                //public void CreateOrder(Order order)
-        //{
-        //    order.CreateAt = DateTime.Now;
-        //    _dbContext.Orders.Add(order);
-        //    List<Cart> carts = SessionHelper.GetObjectFromJson<List<Cart>>(_httpContextAccessor.HttpContext.Session, "cart");
-        //    foreach (var item in carts)
-        //    {
-        //        var checkoutDetails = new OrderDetails
+        //        var orderDetail = new InvoiceDetails
         //        {
-        //            OrderId = order.Id,
-        //            ProductId = item.Id,
-        //            Price = carts.Sum(c => c.Products.Price * c.Quantity),
-        //            Quantity = item.Quantity
+        //            ProductId = item.Products.Id,
+        //            InvoiceId = invoice.Id,
+        //            Price = item.Products.Price,
+        //            Quantity = item.Quantity,
+        //            UserId = item.UserId,
+        //            CreateAt = DateTime.Now
         //        };
-        //        _dbContext.OrderDetails.Add(checkoutDetails);
+        //        orderTotal += (item.Quantity * item.Products.Price);
+        //        _dbContext.InvoiceDetails.Add(orderDetail);
         //    }
+        //    invoice.OrderTotal = orderTotal;
         //    _dbContext.SaveChanges();
+        //    return true;
         //}
 
+        public bool CreateOrder(Invoice invoice, string userId)
+        {
+            var cartItems = GetCartItem(userId);
+            foreach (var item in cartItems)
+            {
+                var newOrder = new Invoice
+                {
+                    Id = invoice.Id,
+                    FirstName = invoice.FirstName,
+                    LastName = invoice.LastName,
+                    Email = invoice.Email,
+                    PhoneNumber = invoice.PhoneNumber,
+                    Address = invoice.Address,
+                    State = invoice.State,
+                    Country = invoice.Country,
+                    PostalCode = invoice.PostalCode,
+                    OrderTotal = (item.Quantity * item.Products.Price),
+                    OwnerId = userId
+                };
+                _dbContext.Invoice.Add(newOrder);
+                var newDetails = new InvoiceDetails
+                {
+                    ProductId = item.Products.Id,
+                    InvoiceId = invoice.Id,
+                    Price = item.Products.Price,
+                    Quantity = item.Quantity,
+                    UserId = item.UserId,
+                };
+                _dbContext.InvoiceDetails.Add(newDetails);
+            }
+            _dbContext.SaveChanges();
+            return true;
+        }
     }
 }

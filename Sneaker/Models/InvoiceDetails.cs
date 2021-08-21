@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace Sneaker.Models
 {
-    public class OrderDetails
-    {
+    public class InvoiceDetails
+    {      
         public int Id { get; set; }
+        [Required]
+        public string UserId {get; set;}
         
         [Required]
         [Display(Name = "Invoice")]
-        public int OrderId { get; set; }
+        public int InvoiceId { get; set; }
 
-        public virtual Order Order { get; set; }
+        public virtual Invoice Invoice { get; set; }
 
         [Required]
         [Display(Name = "Product")]
@@ -29,7 +31,7 @@ namespace Sneaker.Models
         public int Quantity { get; set; }
         public DateTime CreateAt { get; set; }
 
-        public OrderDetails()
+        public InvoiceDetails()
         {
             CreateAt = DateTime.Now;
         }

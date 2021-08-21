@@ -8,7 +8,6 @@ namespace Sneaker.Repository.Interface
 {
     public interface ICartRepo
     {
-        //void CreateOrder(Order checkout);
         bool AddtoCart(Product product, int quantity, string userId);
         Cart cart(string userId);
         IEnumerable<Cart> GetCartItem(string userId);
@@ -16,5 +15,6 @@ namespace Sneaker.Repository.Interface
         int GetCount(string userId);
         bool RemoveCart(int id);
         bool ClearCart(int id);
+        bool CreateOrder(Invoice invoice, string userId);
     }
 }

@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sneaker.Models
 {
-    public class Order
+    public partial class Invoice
     {
         [Key]
         public int Id { get; set; }
+
+        public string OwnerId {get; set;}
+
+        public bool IsTeamOrder {get; set;}
 
         [Display(Name ="First Name")]
         [StringLength(50)]
@@ -48,15 +53,17 @@ namespace Sneaker.Models
         [Display(Name ="Postal Code")]
         [Required(ErrorMessage ="Please enter your Postal Code")]
         public int PostalCode { get; set; }
-
+        [Column(TypeName = "decimal(18,2)")]
         public decimal OrderTotal {get; set;}
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DeliveryFee {get; set;}
         
         public bool Status { get; set; }
-        public DateTime CreateAt { get; set; }        
-        
-        public List<OrderDetails> CheckoutDetailses { get; set; }
-        
-        public Order()
+        public DateTime CreateAt { get; set; }
+
+        public virtual InvoiceDetails OrderDetails { get; set; }
+
+        public Invoice()
         {
             CreateAt = DateTime.Now;
         }

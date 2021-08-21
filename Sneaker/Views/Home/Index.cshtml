@@ -115,8 +115,9 @@
                                                         <i class="ti-bar-chart-alt"></i><span>Add to Compare</span>
                                                     </a>
                                                 </div>
-                                                <div class="product-action-2" id="divAddCart">
-                                                    <a title="Add to cart" @*asp-action="AddCart" asp-controller="Cart"*@ asp-route-id=@item.Id>Add to cart</a>
+                                                <div class="product-action-2 divAddCart">
+                                                    <button class="btn btn-outline-success my-cart-btn" data-name="@item.ProductName" data-id="@item.Id" data-price="@item.Price"
+                                                    data-quantity="1" data-image="@item.Image" asp-action="AddCart" asp-controller="Cart" asp-route-id=@item.Id>Add to cart</button>
                                                 </div>
                                             </div>
                                         </div>
