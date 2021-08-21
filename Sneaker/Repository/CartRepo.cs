@@ -95,63 +95,61 @@ namespace Sneaker.Repository
             return true;
         }
 
-        //public bool CreateOrder(Invoice invoice, string userId)
-        //{
-        //    invoice.CreateAt = DateTime.Now;
-        //    _dbContext.Invoice.Add(invoice);
-        //    decimal orderTotal = 0;
-        //    var cartItems = GetCartItem(userId);
-        //    foreach (var item in cartItems)
-        //    {
-        //        var orderDetail = new InvoiceDetails
-        //        {
-        //            ProductId = item.Products.Id,
-        //            InvoiceId = invoice.Id,
-        //            Price = item.Products.Price,
-        //            Quantity = item.Quantity,
-        //            UserId = item.UserId,
-        //            CreateAt = DateTime.Now
-        //        };
-        //        orderTotal += (item.Quantity * item.Products.Price);
-        //        _dbContext.InvoiceDetails.Add(orderDetail);
-        //    }
-        //    invoice.OrderTotal = orderTotal;
-        //    _dbContext.SaveChanges();
-        //    return true;
-        //}
-
         public bool CreateOrder(Invoice invoice, string userId)
         {
+            invoice.CreateAt = DateTime.Now;
+            _dbContext.Invoice.Add(invoice);
+            decimal orderTotal = 0;
             var cartItems = GetCartItem(userId);
             foreach (var item in cartItems)
             {
-                var newOrder = new Invoice
-                {
-                    Id = invoice.Id,
-                    FirstName = invoice.FirstName,
-                    LastName = invoice.LastName,
-                    Email = invoice.Email,
-                    PhoneNumber = invoice.PhoneNumber,
-                    Address = invoice.Address,
-                    State = invoice.State,
-                    Country = invoice.Country,
-                    PostalCode = invoice.PostalCode,
-                    OrderTotal = (item.Quantity * item.Products.Price),
-                    OwnerId = userId
-                };
-                _dbContext.Invoice.Add(newOrder);
-                var newDetails = new InvoiceDetails
+                var orderDetail = new InvoiceDetails
                 {
                     ProductId = item.Products.Id,
                     InvoiceId = invoice.Id,
                     Price = item.Products.Price,
                     Quantity = item.Quantity,
                     UserId = item.UserId,
+                    CreateAt = DateTime.Now
                 };
-                _dbContext.InvoiceDetails.Add(newDetails);
+                orderTotal += (item.Quantity * item.Products.Price);
+                _dbContext.InvoiceDetails.Add(orderDetail);
             }
+            invoice.OrderTotal = orderTotal;
             _dbContext.SaveChanges();
             return true;
         }
+        //public bool CreateOrder(Invoice invoice, string userId)
+        //{
+        //    var cartItems = GetCartItem(userId);
+        //    foreach (var item in cartItems)
+        //    {
+        //        var newOrder = new Invoice
+        //        {
+        //            FirstName = invoice.FirstName,
+        //            LastName = invoice.LastName,
+        //            Email = invoice.Email,
+        //            PhoneNumber = invoice.PhoneNumber,
+        //            Address = invoice.Address,
+        //            State = invoice.State,
+        //            Country = invoice.Country,
+        //            PostalCode = invoice.PostalCode,
+        //            OrderTotal = (item.Quantity * item.Products.Price),
+        //            OwnerId = userId
+        //        };
+        //        _dbContext.Invoice.Add(newOrder);
+        //        var newDetails = new InvoiceDetails
+        //        {
+        //            ProductId = item.Products.Id,
+        //            InvoiceId = invoice.Id,
+        //            Price = item.Products.Price,
+        //            Quantity = item.Quantity,
+        //            UserId = item.UserId,
+        //        };
+        //        _dbContext.InvoiceDetails.Add(newDetails);
+        //    }
+        //    _dbContext.SaveChanges();
+        //    return true;
+        //}
     }
 }
