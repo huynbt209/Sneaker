@@ -98,6 +98,7 @@ namespace Sneaker.Repository
         public bool CreateOrder(Invoice invoice, string userId)
         {
             invoice.CreateAt = DateTime.Now;
+            invoice.OwnerId = userId;
             _dbContext.Invoice.Add(invoice);
             decimal orderTotal = 0;
             var cartItems = GetCartItem(userId);
@@ -110,7 +111,6 @@ namespace Sneaker.Repository
                     Price = item.Products.Price,
                     Quantity = item.Quantity,
                     UserId = item.UserId,
-                    CreateAt = DateTime.Now
                 };
                 orderTotal += (item.Quantity * item.Products.Price);
                 _dbContext.InvoiceDetails.Add(orderDetail);
