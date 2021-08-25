@@ -36,14 +36,16 @@ namespace Sneaker.Controllers
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
+            int count = _cartRepo.GetCount(user);
+            ViewBag.cartCount = count;
             var items = _cartRepo.GetCartItem(user);
+
             var cartViewModel = new CartViewModel
             {
                 Carts = items,
                 CartTotal = _cartRepo.GetCartTotal(user)
             };
-            int count = _cartRepo.GetCount(user);
-            ViewBag.cartCount = count;
+
             return View(cartViewModel);
         }
 
@@ -73,10 +75,20 @@ namespace Sneaker.Controllers
 
         public IActionResult CreateOrder()
         {
-            return View();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+            var items = _cartRepo.GetCartItem(user);
+            var cartViewModel = new CartViewModel
+            {
+                Carts = items,
+                CartTotal = _cartRepo.GetCartTotal(user)
+            };
+            int count = _cartRepo.GetCount(user);
+            ViewBag.cartCount = count;
+            return View(cartViewModel);
         }
         [HttpPost]
-        public IActionResult CreateOrder(Invoice invoice)
+        public IActionResult CreateOrder(CartViewModel invoiceVM)
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
@@ -87,7 +99,13 @@ namespace Sneaker.Controllers
             }
             else
             {
-                _cartRepo.CreateOrder(invoice, user);
+                var cartViewModel = new CartViewModel
+                {
+                    Carts = items,
+                    CartTotal = _cartRepo.GetCartTotal(user)
+                };
+                _cartRepo.CreateOrder(invoiceVM, user);
+                return View(cartViewModel);
             }
             return View();
         }

@@ -1,4 +1,5 @@
 ﻿using Sneaker.Models;
+using Sneaker.ViewModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,6 @@ namespace Sneaker.Repository.Interface
         int GetCount(string userId);
         bool RemoveCart(int id);
         bool ClearCart(int id);
-        bool CreateOrder(Invoice invoice, string userId);
+        bool CreateOrder(CartViewModel invoiceVM, string userId);
     }
 }
