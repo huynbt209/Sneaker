@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Sneaker.Data;
 using Sneaker.Helpers;
 using Sneaker.Models;
@@ -8,7 +9,6 @@ using Sneaker.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Sneaker.Repository
@@ -17,10 +17,12 @@ namespace Sneaker.Repository
     {
         private readonly ApplicationDbContext _dbContext;
         private IHttpContextAccessor _httpContextAccessor;
-        public CartRepo(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        private readonly IConfiguration _configuration;
+        public CartRepo(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
         }
 
         public Cart cart(string userId)
@@ -64,24 +66,15 @@ namespace Sneaker.Repository
         }
         public int GetCount(string userId)
         {
-            return _dbContext.Carts.Where(c => c.UserId == userId).Count();
+            return _dbContext.Carts.Where(c => c.UserId == userId).Sum(c => c.Quantity);
         }
 
         public bool RemoveCart(int id)
         {
             var CartItem = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == id);
-            var localAmount = 0;
             if (CartItem != null)
             {
-                if (CartItem.Quantity > 1)
-                {
-                    CartItem.Quantity--;
-                    localAmount = CartItem.Quantity;
-                }
-                else
-                {
-                    _dbContext.Carts.Remove(CartItem);
-                }
+                _dbContext.Carts.Remove(CartItem);
             }
             _dbContext.SaveChanges();
             return true;
@@ -89,67 +82,43 @@ namespace Sneaker.Repository
 
         public bool ClearCart(int id)
         {
-            var cartItems = _dbContext.Carts.Where(c => c.Id == id);
+            var cartItems = _dbContext.Carts.Find(id);
             _dbContext.Carts.RemoveRange(cartItems);
             _dbContext.SaveChanges();
             return true;
         }
 
-        public bool CreateOrder(Invoice invoice, string userId)
+        public bool CreateOrder(CartViewModel invoiceVM, string userId)
         {
-            invoice.CreateAt = DateTime.Now;
-            invoice.OwnerId = userId;
-            _dbContext.Invoice.Add(invoice);
+            invoiceVM.Invoices.CreateAt = DateTime.Now;
+            invoiceVM.Invoices.OwnerId = userId;
+            _dbContext.Invoice.Add(invoiceVM.Invoices);
+            _dbContext.SaveChanges();
             decimal orderTotal = 0;
             var cartItems = GetCartItem(userId);
             foreach (var item in cartItems)
             {
-                var orderDetail = new InvoiceDetails
+                var invoiceDetail = new InvoiceDetails
                 {
                     ProductId = item.Products.Id,
-                    InvoiceId = invoice.Id,
-                    Price = item.Products.Price,
+                    InvoiceId = invoiceVM.Invoices.Id,
+                    Price = item.Products.Price * item.Quantity,
                     Quantity = item.Quantity,
                     UserId = item.UserId,
                 };
                 orderTotal += (item.Quantity * item.Products.Price);
-                _dbContext.InvoiceDetails.Add(orderDetail);
+                _dbContext.InvoiceDetails.Add(invoiceDetail);
             }
-            invoice.OrderTotal = orderTotal;
+            invoiceVM.Invoices.OrderTotal = orderTotal;
             _dbContext.SaveChanges();
             return true;
         }
-        //public bool CreateOrder(Invoice invoice, string userId)
-        //{
-        //    var cartItems = GetCartItem(userId);
-        //    foreach (var item in cartItems)
-        //    {
-        //        var newOrder = new Invoice
-        //        {
-        //            FirstName = invoice.FirstName,
-        //            LastName = invoice.LastName,
-        //            Email = invoice.Email,
-        //            PhoneNumber = invoice.PhoneNumber,
-        //            Address = invoice.Address,
-        //            State = invoice.State,
-        //            Country = invoice.Country,
-        //            PostalCode = invoice.PostalCode,
-        //            OrderTotal = (item.Quantity * item.Products.Price),
-        //            OwnerId = userId
-        //        };
-        //        _dbContext.Invoice.Add(newOrder);
-        //        var newDetails = new InvoiceDetails
-        //        {
-        //            ProductId = item.Products.Id,
-        //            InvoiceId = invoice.Id,
-        //            Price = item.Products.Price,
-        //            Quantity = item.Quantity,
-        //            UserId = item.UserId,
-        //        };
-        //        _dbContext.InvoiceDetails.Add(newDetails);
-        //    }
-        //    _dbContext.SaveChanges();
-        //    return true;
-        //}
+
+        public async Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel invoiceVM)
+        {
+            var paypalAPI = new PayPalAPI(_configuration);
+            await paypalAPI.ExecutedPayment(paymentId, payerId); 
+            return true;
+        }
     }
 }

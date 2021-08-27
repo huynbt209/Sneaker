@@ -35,7 +35,9 @@
                                                     <img class="default-img" src="@product.Image" alt="#">
                                                     <img class="hover-img" src="@product.Image" alt="#">
                                                     @if (product.Badge != null)
-                                                    {<span class="new">@product.Badge</span>}
+                                                    {
+                                                        <span class="new">@product.Badge</span>
+                                                    }
                                                 </a>
                                                 <div class="button-head">
                                                     <div class="product-action">
@@ -50,7 +52,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="product-action-2">
-                                                        <a title="Add to cart" asp-action="AddCart" asp-controller="Cart" asp-route-id="@product.Id">Add to cart</a>
+                                                        <a type="button" class="add-to-cart" data-id="@product.Id">Add to cart</a>
                                                     </div>
                                                 </div>
                                             </div>
