@@ -10,8 +10,6 @@ namespace Sneaker.ViewModel
     {
         public decimal CartTotal { get; set; }
         public IEnumerable<Cart> Carts {get ; set;}
-        public Invoice Invoices {get; set;}
-        public string PaymentId {get ;set;}
-        public string PaymentMethod {get ;set;}
+        public IEnumerable<Invoice> Invoices {get; set;}
     }
 }
