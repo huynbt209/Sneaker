@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -36,14 +36,16 @@ namespace Sneaker.Controllers
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
+            int count = _cartRepo.GetCount(user);
+            ViewBag.cartCount = count;
             var items = _cartRepo.GetCartItem(user);
+
             var cartViewModel = new CartViewModel
             {
                 Carts = items,
                 CartTotal = _cartRepo.GetCartTotal(user)
             };
-            int count = _cartRepo.GetCount(user);
-            ViewBag.cartCount = count;
+
             return View(cartViewModel);
         }
 
@@ -71,25 +73,19 @@ namespace Sneaker.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult CreateOrder()
-        {
-            return View();
-        }
         [HttpPost]
-        public IActionResult CreateOrder(Invoice invoice)
+        public IActionResult SubmitOrder(CartViewModel invoiceVM)
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
             var items = _cartRepo.GetCartItem(user);
-            if (items == null)
+            var cartViewModel = new CartViewModel
             {
-                ModelState.AddModelError("", "Add Product First");
-            }
-            else
-            {
-                _cartRepo.CreateOrder(invoice, user);
-            }
-            return View();
+                Carts = items,
+                CartTotal = _cartRepo.GetCartTotal(user)
+            };
+            _cartRepo.CreateOrder(invoiceVM, user);
+            return View(cartViewModel);
         }
 
         [HttpPost]
@@ -101,28 +97,21 @@ namespace Sneaker.Controllers
             return Redirect(url);
         }
 
-        public async Task<IActionResult> Success([FromQuery(Name = "paymentId")] string paymentId, [FromQuery(Name = "PayerId")] string payerId)
+        public async Task<IActionResult> SubmitOrder([FromQuery(Name = "paymentId")] string paymentId, [FromQuery(Name = "PayerId")] string payerId, CartViewModel invoiceVM)
         {
-            var paypalAPI = new PayPalAPI(_configuration);
-            PayPalPaymentExecutedResponse result = await paypalAPI.ExecutedPayment(paymentId, payerId);
-            Debug.WriteLine("Transaction Details");
-            Debug.WriteLine("cart: " + result.cart);
-            Debug.WriteLine("CreateAt: " + result.create_time.ToLongDateString());
-            Debug.WriteLine("id: " + result.id);
-            Debug.WriteLine("intent: " + result.intent);
-            Debug.WriteLine("links 0 - href: " + result.links[0].href);
-            Debug.WriteLine("links 0 - method: " + result.links[0].method);
-            Debug.WriteLine("links 0 - rel: " + result.links[0].rel);
-            Debug.WriteLine("payer_info - first_name: " + result.payer.payer_info.first_name);
-            Debug.WriteLine("payer_info - last_name: " + result.payer.payer_info.last_name);
-            Debug.WriteLine("payer_info - email: " + result.payer.payer_info.email);
-            Debug.WriteLine("payer_info - billing_address: " + result.payer.payer_info.billing_address);
-            Debug.WriteLine("payer_info - country_code: " + result.payer.payer_info.country_code);
-            Debug.WriteLine("payer_info - shipping_address: " + result.payer.payer_info.shipping_address);
-            Debug.WriteLine("payer_info - payer_id: " + result.payer.payer_info.payer_id);
-            Debug.WriteLine("state: " + result.state);
-            ViewBag.result = result;
-            return View("Success");
+            await _cartRepo.SubmitOrder(paymentId, payerId, invoiceVM);
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+            var items = _cartRepo.GetCartItem(user);
+            var cartViewModel = new CartViewModel
+            {
+                Carts = items,
+                CartTotal = _cartRepo.GetCartTotal(user),
+                PaymentId = paymentId
+            };
+            int count = _cartRepo.GetCount(user);
+            ViewBag.cartCount = count;
+            return View(cartViewModel);
         }
     }
 }

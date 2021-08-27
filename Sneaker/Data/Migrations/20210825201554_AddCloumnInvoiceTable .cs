@@ -2,13 +2,19 @@
 
 namespace Sneaker.Data.Migrations
 {
-    public partial class AddCloumnCart : Migration
+    public partial class AddColoumnInvoiceTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "CartItemId",
-                table: "Carts",
+                name: "PaymentId",
+                table: "Invoice",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "PaymentMethod",
+                table: "Invoice",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -16,8 +22,12 @@ namespace Sneaker.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CartItemId",
-                table: "Carts");
+                name: "PaymentId",
+                table: "Invoice");
+
+            migrationBuilder.DropColumn(
+                name: "PaymentMethod",
+                table: "Invoice");
         }
     }
 }

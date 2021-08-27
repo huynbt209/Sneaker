@@ -12,6 +12,11 @@ namespace Sneaker.Models
         [Key]
         public int Id { get; set; }
 
+        public string PaymentId {get; set;}
+
+        [Display(Name ="Payment Method")]
+        public string PaymentMethod{get; set;}
+
         public string OwnerId {get; set;}
 
         public bool IsTeamOrder {get; set;}
