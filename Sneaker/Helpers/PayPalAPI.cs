@@ -17,6 +17,7 @@ namespace Sneaker.Helpers
     public class PayPalAPI
     {
         private readonly IConfiguration _configuration;
+
         public PayPalAPI(IConfiguration configuration)
         {
             _configuration = configuration;

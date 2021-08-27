@@ -1,6 +1,6 @@
-﻿@model Sneaker.ViewModel.CartViewModel
+﻿@model Sneaker.Models.Invoice
 @{
-    ViewBag.Title = "Submit Order";
+    ViewBag.Title = "Order";
     Layout = "_UserLayout";
 }
 
@@ -18,86 +18,71 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-12">
-        <div class="section-title">
-            <h2>Complete Your Order Information Here</h2>
-        </div>
-    </div>
-</div>
 
-@if (@Model.PaymentId != null)
-{
-<div class="row">
-    <div class="col-8">
-        <div class="section-title">
-            <h3>You have completed the payment for the order @Model.PaymentId</h3>
-        </div>
-    </div>
-</div>
-}
 <section class="shop checkout section">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-12">
                 <div class="checkout-form">
+                    <h2>Complete Your Payment Information Here</h2>
                     <!-- Form -->
-                    <form class="form" method="post" asp-action="SubmitOrder" id="SubmitForm">
-                        <input hidden asp-for="Invoices.Id" />
-                        <input asp-for="Invoices.PaymentId" hidden class="form-control" readonly value="@Model.PaymentId" />
-                        @if (@Model.PaymentId != null)
-                        {
-                            <input asp-for="Invoices.PaymentMethod" hidden class="form-control" readonly value="PayPal" />
-                        }
+                    <form class="form" method="post" asp-action="CreateOrder" id="SubmitForm">
+                        <input hidden asp-for="Id" />
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.FirstName">First Name<span asp-validation-for="Invoices.FirstName">*</span></label>
-                                <input asp-for="Invoices.FirstName" required="required">
+                                <label asp-for="FirstName">First Name<span asp-validation-for="FirstName">*</span></label>
+                                <input asp-for="FirstName" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.LastName">Last Name<span asp-validation-for="Invoices.LastName">*</span></label>
-                                <input asp-for="Invoices.LastName" required="required">
+                                <label asp-for="LastName">Last Name<span asp-validation-for="LastName">*</span></label>
+                                <input asp-for="LastName" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.Email">Email Address<span asp-validation-for="Invoices.Email">*</span></label>
-                                <input asp-for="Invoices.Email" required="required">
+                                <label asp-for="Email">Email Address<span asp-validation-for="Email">*</span></label>
+                                <input asp-for="Email" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.PhoneNumber">Phone Number<span asp-validation-for="Invoices.PhoneNumber">*</span></label>
-                                <input asp-for="Invoices.PhoneNumber" required="required">
+                                <label asp-for="PhoneNumber">Phone Number<span asp-validation-for="PhoneNumber">*</span></label>
+                                <input asp-for="PhoneNumber" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.Country">Country<span asp-validation-for="Invoices.Country">*</span></label>
-                                <input asp-for="Invoices.Country" required="required">
+                                <label asp-for="Country">Country<span asp-validation-for="Country">*</span></label>
+                                <input asp-for="Country" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.State">State / City<span asp-validation-for="Invoices.State">*</span></label>
-                                <input asp-for="Invoices.State" required="required">
+                                <label asp-for="State">State / City<span asp-validation-for="State">*</span></label>
+                                <input asp-for="State" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.Address">Address Line<span asp-validation-for="Invoices.Address">*</span></label>
-                                <input asp-for="Invoices.Address" required="required">
+                                <label asp-for="Address">Address Line<span asp-validation-for="Address">*</span></label>
+                                <input asp-for="Address" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group row">
-                                <label asp-for="Invoices.PostalCode">Postal Code<span asp-validation-for="Invoices.PostalCode">*</span></label>
-                                <input asp-for="Invoices.PostalCode" required="required">
+                                <label asp-for="PostalCode">Postal Code<span asp-validation-for="PostalCode">*</span></label>
+                                <input asp-for="PostalCode" required="required">
                             </div>
                         </div>
                     </form>
+                    <div class="row">
+                        <div class="col-md-9 col-lg-8"></div>
+                        <div class="col-md-3 col-lg-4">
+                            <input type="submit" form="SubmitForm" class="btn w-100 btn-accent" value="Create" />
+                        </div>
+                    </div>
                     <!--/ End Form -->
                 </div>
             </div>
@@ -105,12 +90,12 @@
                 <div class="order-details">
                     <!-- Order Widget -->
                     <div class="single-widget">
-                        <h2>CART TOTALS</h2>
+                        <h2>CART  TOTALS</h2>
                         <div class="content">
                             <ul>
-                                <li>Sub Total<span>$@Model.CartTotal</span></li>
+                                <li>Sub Total<span></span></li>
                                 <li>(+) Shipping<span>$10.00</span></li>
-                                <li class="last">Total<span>$@Model.CartTotal</span></li>
+                                <li class="last">Total<span>$</span></li>
                             </ul>
                         </div>
                     </div>
@@ -123,7 +108,10 @@
                     <!-- Button Widget -->
                     <div class="single-widget get-button">
                         <div class="content">
-                            <input type="submit" form="SubmitForm" value="Create" />
+                            <form method="post" asp-controller="cart" asp-action="checkout">
+                                <button type="submit" value="Checkout" class="btn">Checkout With PayPal</button>
+                                <input type="hidden" name="total" value="" />
+                            </form>
                         </div>
                     </div>
                     <!--/ End Button Widget -->
