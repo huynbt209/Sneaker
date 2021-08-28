@@ -49,6 +49,7 @@
     <link rel="stylesheet" href="~/user/css/responsive.css">
     <link type="text/css" href="~/user/css/details.css" rel="stylesheet" />
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css" />
 
     <title>My Cart</title>
     <link rel="stylesheet" href="~/cart/css/bootstrap.min.css">
@@ -250,7 +251,7 @@
                         </div>
                     </div>
 
-                    @*<div class="col-lg-2 col-md-3 col-12">
+                    <div class="col-lg-2 col-md-3 col-12">
                         <div class="right-bar">
                             <div class="sinlge-bar shopping">
                                 <a asp-controller="Cart" asp-action="Index" class="single-icon">
@@ -258,8 +259,8 @@
                                 </a>
                             </div>
                         </div>
-                    </div>*@
-                    @await Html.PartialAsync("_CartView")
+                    </div>
+                    @*@await Html.PartialAsync("_CartView")*@
                 </div>
             </div>
         </div>
@@ -548,6 +549,8 @@
     <script src="~/cart/js/jquery-2.2.3.min.js"></script>
     <script type='text/javascript' src="~/cart/js/bootstrap.min.js"></script>
     <script type='text/javascript' src="~/cart/js/jquery.mycart.js"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
 
 
     @section Scripts{

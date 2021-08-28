@@ -14,7 +14,7 @@ namespace Sneaker.Repository.Interface
         IEnumerable<Cart> GetCartItem(string userId);
         decimal GetCartTotal(string userId);
         int GetCount(string userId);
-        bool RemoveCart(int id);
+        bool RemoveCart(int id, string userId);
         bool ClearCart(int id);
         bool CreateOrder(CartViewModel invoiceVM, string userId);
         Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel invoiceVM);

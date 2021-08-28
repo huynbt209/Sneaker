@@ -69,9 +69,9 @@ namespace Sneaker.Repository
             return _dbContext.Carts.Where(c => c.UserId == userId).Sum(c => c.Quantity);
         }
 
-        public bool RemoveCart(int id)
+        public bool RemoveCart(int id, string userId)
         {
-            var CartItem = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == id);
+            var CartItem = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == id && c.UserId == userId);
             if (CartItem != null)
             {
                 _dbContext.Carts.Remove(CartItem);

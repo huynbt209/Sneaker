@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Sneaker.Models.Invoice>
+
+@{
+    ViewBag.Title = "index";
+    Layout = "_UserLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="section-title">
+            <h2>Invoice Overview</h2>
+        </div>
+    </div>
+</div>
+<div class="shopping-cart section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form method="post" asp-controller="Cart" asp-action="">
+                    <table class="table shopping-summery">
+                        <thead>
+                            <tr class="main-hading">
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th class="text-center">Total Price</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Order Date</th>
+                                <th class="text-center">Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ti-email" data-title="Email">
+                                        <span>@item.Email </span>
+                                    </td>
+                                    <td class="address" data-title="Address">
+                                        <p class="address">
+                                            @item.Address
+                                        </p>
+                                        <p class="ui-state-hover">@item.State</p>
+                                        <p class="country">@item.Country</p>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <span>$@item.OrderTotal </span>
+                                    </td>
+                                    <td class="status-indicator" data-title="Status">
+                                        <span>@item.Status </span>
+                                    </td>
+                                    <td class="date" data-title="Date">
+                                        <span>@item.CreateAt </span>
+                                    </td>
+                                    <td class="payement" data-title="Payment">
+                                        <p class="payement">
+                                            @item.PaymentMethod
+                                        </p>
+                                        <p class="payement">@item.PaymentId</p>
+                                    </td>
+                                    
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,6 +12,7 @@ using Sneaker.Repository;
 using Sneaker.Repository.Interface;
 using System;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace Sneaker
 {
@@ -48,6 +49,7 @@ namespace Sneaker
             services.AddScoped<IFeedbackProductRepo, FeedbackProductRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ICartRepo, CartRepo>();
+            services.AddScoped<IInvoiceRepo, InvoiceRepo>();
 
 
             services.AddMvc().AddSessionStateTempDataProvider();
@@ -92,8 +94,8 @@ namespace Sneaker
             });
 
             dbInitializer.Initializer();
-            
-            
+
+
         }
     }
 }

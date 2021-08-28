@@ -15,12 +15,14 @@ namespace Sneaker.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminRepo _adminRepo;
+        private readonly IInvoiceRepo _invoiceRepo;
         private readonly ILogger<AdminController> _logger;
 
-        public AdminController(IAdminRepo adminRepo, ILogger<AdminController> logger)
+        public AdminController(IAdminRepo adminRepo, ILogger<AdminController> logger, IInvoiceRepo invoiceRepo)
         {
             _adminRepo = adminRepo;
             _logger = logger;
+            _invoiceRepo = invoiceRepo;
         }
         public IActionResult Dashboard()
         {
@@ -119,5 +121,16 @@ namespace Sneaker.Controllers
             var users = _adminRepo.GetUserById(userId);
             return Json(users.ImagePath == null? new {avatar = "avatar.jpeg"}:new {avatar = users.ImagePath});
         }
+
+        public IActionResult UserInvoice()
+        {
+            return View(_invoiceRepo.GetAllInvoices().ToList());
+        }
+        public IActionResult GetUserInvoice()
+        {
+            var invoices = _invoiceRepo.GetAllInvoices();
+            return new JsonResult(invoices);
+        }
+
     }
 }
