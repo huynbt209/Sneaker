@@ -1,0 +1,51 @@
+﻿@model Sneaker.ViewModel.InvoiceDetailsViewModel
+
+@{
+    ViewBag.Title = "Invoice Detail";
+    Layout = "_AdminLayout";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="section-title">
+            <h2>Invoice Overview</h2>
+        </div>
+    </div>
+</div>
+<input id="InvoiceId" type="hidden" value="@Model.Invoice.Id" />
+<div class="shopping-cart section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <table class="table shopping-summery">
+                    <thead>
+                        <tr class="main-hading">
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th class="text-center">Total Price</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Order Date</th>
+                            <th class="text-center">Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Details)
+                        {
+                            <tr>
+                                <td class="ti-email" data-title="Email">
+                                    <span>@item.Product.ProductName </span>
+                                </td>
+                                <td class="address" data-title="Address">
+                                    <p class="address">
+                                        
+                                    </p>
+                                    <p class="ui-state-hover">@item.Price</p>
+                                    <p class="country">@item.Quantity</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

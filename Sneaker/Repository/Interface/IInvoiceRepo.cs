@@ -13,6 +13,6 @@ namespace Sneaker.Repository.Interface
         IEnumerable<Invoice> GetAllInvoices();
         Invoice GetInvoiceById (int id);
         IEnumerable<InvoiceDetails> GetDetailsByInvoiceId (int invoiceId);
-        
+        InvoiceDetailsViewModel GetInvoiceDetails(int id);        
     }
 }

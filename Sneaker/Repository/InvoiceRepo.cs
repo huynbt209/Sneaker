@@ -33,6 +33,19 @@ namespace Sneaker.Repository
             return _dbContext.Invoice.SingleOrDefault(i => i.Id == id);
         }
 
+        public InvoiceDetailsViewModel GetInvoiceDetails(int id)
+        {
+            var invoice = _dbContext.Invoice.FirstOrDefault(i => i.Id == id);
+            var invoiceDetails = _dbContext.InvoiceDetails.Include(d => d.Product).Where(d => d.InvoiceId == id).ToList();
+            var model = new InvoiceDetailsViewModel
+            {
+                Invoice = invoice,
+                Details = invoiceDetails,
+            };
+            return model;
+        }
+
+
         public IEnumerable<Invoice> GetUserInvoices(string userId)
         {
             return _dbContext.Invoice.Where(i => i.OwnerId == userId).ToList();

@@ -132,5 +132,13 @@ namespace Sneaker.Controllers
             return new JsonResult(invoices);
         }
 
+        public IActionResult UserInvoiceDetail(int id)
+        {
+            var invoice = _invoiceRepo.GetInvoiceDetails(id);
+            if (invoice.Invoice != null)
+            _logger.LogInformation($"Open Invoice: {invoice.Invoice.PaymentId}");
+            return View(invoice);
+        }
+
     }
 }

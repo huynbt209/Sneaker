@@ -9,6 +9,6 @@ namespace Sneaker.ViewModel
     public class InvoiceDetailsViewModel
     {
         public Invoice Invoice {get ;set;}
-        public InvoiceDetails InvoiceDetails {get; set;}
+        public IEnumerable<InvoiceDetails> Details {get; set;}
     }
 }

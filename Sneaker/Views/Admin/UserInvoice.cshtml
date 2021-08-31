@@ -36,8 +36,8 @@
                 rowId: "id",
                 columns: [
                     {
-                        data: 'ownerId', title: 'User', render: function (data, row) {
-                            return '<p id="ownerId' + row.id + '">' + data + '</p>';
+                        data: 'paymentId', title: 'Payment Code', render: function (data, row) {
+                            return '<p id="paymentId' + row.id + '">' + data + '</p>';
                         }
                     },
                     {
@@ -52,12 +52,6 @@
                     },
                 ],
                 order: [1, 'asc']
-            });
-            $('#trademarkTable tbody').on('click', 'tr', '#DeleteHandleClick', function () {
-                const trademarkId = $(this).closest('tr').attr('id');
-                document.getElementById('handleDeleteClick').setAttribute("href", "Trademark/RemoveTrademark/" + trademarkId);
-                document.getElementById('modalTitle').innerText = "Are You Sure You Want To Remove This Trademark?";
-                document.getElementById('modalWarning').innerText = "Warning! All Products of Trademark will be removed."
             });
         });
     </script>
