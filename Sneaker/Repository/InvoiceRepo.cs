@@ -50,5 +50,17 @@ namespace Sneaker.Repository
         {
             return _dbContext.Invoice.Where(i => i.OwnerId == userId).ToList();
         }
+
+        public bool UpdateInvoiceStatus(int id, bool status, string message, string changeStatus)
+        {
+            var invoiceInDb = _dbContext.Invoice.FirstOrDefault(a => a.Id == id);
+            if (invoiceInDb == null) return false;
+            invoiceInDb.Status = status;
+            invoiceInDb.StatusMessage = message;
+            invoiceInDb.ChangeStatusBy = changeStatus;
+            _dbContext.Invoice.Update(invoiceInDb);
+            _dbContext.SaveChanges();
+            return true;
+        }
     }
 }

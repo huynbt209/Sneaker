@@ -12,7 +12,7 @@ namespace Sneaker.Models
         [Key]
         public int Id { get; set; }
         public string Message { get; set; }
-        
+        public int Rating {get; set;}
         [Required]
         [Display(Name = "Product")]
         public int ProductId { get; set; }

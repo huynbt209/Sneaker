@@ -12,7 +12,7 @@
 <div class="card shadow">
     <div class="card-body">
         <div class="table-responsive-xl table mt-2">
-            <table class="table my-0 table-hover" id="trademarkTable">
+            <table class="table my-0 table-hover" id="invoiceTable">
                 <thead class="thead-light">
                 </thead>
             </table>
@@ -27,7 +27,7 @@
 @section scripts {
     <script>
         var table = $(document).ready(function () {
-            $('#trademarkTable').DataTable({
+            $('#invoiceTable').DataTable({
                 info: false,
                 ajax: {
                     url: '/Admin/GetUserInvoice',
@@ -44,6 +44,9 @@
                         data: 'isTeamOrder', title: 'Team Order'
                     },
                     {
+                        data: 'status', title: 'Status'
+                    },
+                    {
                         data: 'createAt', title: "Create At", render: function() {
                             return new Date();
                         },
@@ -52,6 +55,10 @@
                     },
                 ],
                 order: [1, 'asc']
+            });
+            $('#invoiceTable tbody').on('click', 'tr', function () {
+                const invoiceId = $(this).closest('tr').attr('id');
+                window.location.href = '/Admin/UserInvoiceDetail/' + invoiceId;
             });
         });
     </script>

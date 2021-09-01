@@ -139,6 +139,5 @@ namespace Sneaker.Controllers
             _logger.LogInformation($"Open Invoice: {invoice.Invoice.PaymentId}");
             return View(invoice);
         }
-
     }
 }

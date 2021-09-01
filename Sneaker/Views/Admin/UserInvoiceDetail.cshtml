@@ -1,17 +1,114 @@
 ﻿@model Sneaker.ViewModel.InvoiceDetailsViewModel
+@using System.Security.Claims
+@using Sneaker.Utility
 
 @{
     ViewBag.Title = "Invoice Detail";
     Layout = "_AdminLayout";
 }
-<div class="row">
-    <div class="col-12">
-        <div class="section-title">
-            <h2>Invoice Overview</h2>
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <h3 class="page-title">Invoice Details Overview</h3>
+    </div>
+    @if (User.IsInRole(SystemRoles.Administrator))
+    {
+        <div class="col-12 mt-3">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">
+                Take review
+            </button>
+        </div>
+    }
+</div>
+<input id="InvoiceId" type="hidden" value="@Model.Invoice.Id" />
+
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="MessageStatus"></div>
+                <form>
+                    <div class="form-group">
+                        <label for="status" class="col-form-label">Status:</label>
+                        <select class="custom-select" id="status">
+                            <option selected>Select status</option>
+                            <option value="true">Transaction Confirmation</option>
+                            <option value="false">Refuse Transaction</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="statusMessage" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="statusMessage"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="UpdateStatusButton" class="btn btn-primary">Submit</button>
+            </div>
         </div>
     </div>
 </div>
-<input id="InvoiceId" type="hidden" value="@Model.Invoice.Id" />
+
+@if (Model.Invoice.Status)
+{
+    <div class="btn-group mb-3">
+        <div class="input-group-prepend mr-2">
+            <span class="input-group-text" id="basic-addon1">Status:</span>
+        </div>
+        <button class="btn btn-success" type="button">
+            <span role="status" aria-hidden="true"></span>
+            Active
+        </button>
+        <button class="btn btn-success" type="button">
+            <span role="status" aria-hidden="true"></span>
+            Confirmed
+        </button>
+    </div>
+}
+else
+{
+    <div class="btn-group mb-3">
+        <div class="input-group-prepend mr-2">
+            <span class="input-group-text" id="basic-addon1">Status:</span>
+        </div>
+        <button class="btn btn-success" type="button">
+            <span role="status" aria-hidden="true"></span>
+            Active
+        </button>
+        <button class="btn btn-warning" type="button">
+            Wait For Confirmation
+        </button>
+    </div>
+}
+@if (!Model.Invoice.Status && Model.Invoice.ChangeStatusBy != null)
+{
+    <div class="card border-success mb-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                @Model.Invoice.ChangeStatusBy <a class="text-danger">Refuse Transaction:</a>
+            </h5>
+            <p class="card-text">@Model.Invoice.StatusMessage</p>
+        </div>
+    </div>
+}
+else if (Model.Invoice.Status && Model.Invoice.ChangeStatusBy != null)
+{
+    <div class="card border-success mb-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                @Model.Invoice.ChangeStatusBy <a class="text-primary">Transaction Confirmation:</a>
+            </h5>
+            <p class="card-text">@Model.Invoice.StatusMessage</p>
+        </div>
+    </div>
+}
+
 <div class="shopping-cart section">
     <div class="container">
         <div class="row">
@@ -19,27 +116,31 @@
                 <table class="table shopping-summery">
                     <thead>
                         <tr class="main-hading">
-                            <th>Email</th>
-                            <th>Address</th>
-                            <th class="text-center">Total Price</th>
-                            <th class="text-center">Status</th>
+                            <th>Products Image</th>
+                            <th>Products Name</th>
+                            <th>Price / Quantity</th>
                             <th class="text-center">Order Date</th>
-                            <th class="text-center">Payment</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Details)
                         {
                             <tr>
-                                <td class="ti-email" data-title="Email">
+                                <td class="image" data-title="Image">
+                                    <img src="@item.Product.Image" />
+                                </td>
+                                <td class="name" data-title="Name">
                                     <span>@item.Product.ProductName </span>
                                 </td>
                                 <td class="address" data-title="Address">
                                     <p class="address">
-                                        
+
                                     </p>
                                     <p class="ui-state-hover">@item.Price</p>
                                     <p class="country">@item.Quantity</p>
+                                </td>
+                                <td class="date" data-title="Date">
+                                    <span>@item.CreateAt</span>
                                 </td>
                             </tr>
                         }
@@ -49,3 +150,34 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        document.getElementById("UpdateStatusButton").addEventListener("click", function (event) {
+            var status = document.getElementById("status").value;
+            var statusMessage = document.getElementById("statusMessage").value;
+            var invoiceId = document.getElementById("InvoiceId").value;
+            $.ajax({
+                url: '/Invoice/UpdateInvoiceStatus',
+                type: 'POST',
+                data: { invoiceId: invoiceId, status: status, statusMessage: statusMessage },
+                success: function (response) {
+                    if (!response.success) {
+                        $('#MessageStatus').html('<div class="d-flex flex-row mb-2 alert alert-warning alert-dismissible mt-2"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + response.message + '</div>');
+                    }
+                    else {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 100);
+                    }
+                },
+                error: function () {
+
+                }
+            })
+                .catch(function (err) {
+                    return console.error(err.toString());
+                });
+        });
+    </script>
+}

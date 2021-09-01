@@ -43,7 +43,10 @@
                                         <p class="country">@item.Country</p>
                                     </td>
                                     <td class="price" data-title="Price">
-                                        <span>$@item.OrderTotal </span>
+                                        <p class="price">
+                                            @item.OrderTotal
+                                        </p>
+                                        <a class="ui-state-hover" asp-controller="Invoice" asp-action="InvoiceDetail" asp-route-id="@item.Id">View More</a>
                                     </td>
                                     <td class="status-indicator" data-title="Status">
                                         <span>@item.Status </span>

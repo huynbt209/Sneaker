@@ -47,16 +47,6 @@
         <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
             <h2 class="name">
                 @Html.DisplayFor(p => p.Product.ProductName)
-                <small>Product by <a href="javascript:void(0);">@Html.DisplayFor(p => p.Product.Trademark.TrademarkName)</a></small>
-                <i class="fa fa-star fa-2x text-primary"></i>
-                <i class="fa fa-star fa-2x text-primary"></i>
-                <i class="fa fa-star fa-2x text-primary"></i>
-                <i class="fa fa-star fa-2x text-primary"></i>
-                <i class="fa fa-star fa-2x text-muted"></i>
-                <span class="fa fa-2x">
-                    <h5>(109) Votes</h5>
-                </span>
-                <a href="javascript:void(0);">109 customer reviews</a>
             </h2>
             <hr/>
             <form class="form-horizontal qtyFrm" asp-action="AddCart" asp-controller="Cart" asp-route-id="@Model.Product.Id" method="post">
@@ -72,12 +62,6 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <button type="submit" class="btn btn-success btn-lg">Add to cart</button>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-6">
-                        <div class="btn-group pull-right">
-                            <button class="btn btn-white btn-default"><i class="fa fa-star"></i> Add to wishlist</button>
-                            <button class="btn btn-white btn-default"><i class="fa fa-envelope"></i> Contact Seller</button>
-                        </div>
                     </div>
                 </div>
             </form>
@@ -140,20 +124,10 @@
                                         <span class="message-text">
                                             <a href="javascript:void(0);" class="username">
                                                 @feedback.ApplicationUser.FullName
-                                                @* <span class="pull-right"> *@
-                                                @*     <i class="fa fa-star fa-2x text-primary"></i> *@
-                                                @*     <i class="fa fa-star fa-2x text-primary"></i> *@
-                                                @*     <i class="fa fa-star fa-2x text-primary"></i> *@
-                                                @*     <i class="fa fa-star fa-2x text-primary"></i> *@
-                                                @*     <i class="fa fa-star fa-2x text-muted"></i> *@
-                                                @* </span> *@
                                             </a>
                                             @feedback.Message
                                         </span>
                                         <ul class="list-inline font-xs">
-                                            @* <li> *@
-                                            @*     <a href="javascript:void(0);" class="text-info"><i class="fa fa-thumbs-up"></i> This was helpful (22)</a> *@
-                                            @* </li> *@
                                             <li class="pull-right">
                                                 <small class="text-muted pull-right ultra-light"> @feedback.CreateAt </small>
                                             </li>
@@ -170,6 +144,8 @@
     </div>
 </div>
 <!-- end product -->
+<div id="rate"></div>
+<input type="hidden" id="rating"/>
 
 @section Scripts{
     <script>
@@ -196,4 +172,5 @@
             })
         });
     </script>
+
 }
