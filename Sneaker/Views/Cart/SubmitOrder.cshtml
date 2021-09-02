@@ -51,21 +51,6 @@
                         {
                             <input asp-for="Invoices.PaymentMethod" hidden class="form-control" readonly value="PayPal" />
                         }
-                        <div>
-                            <label>Tỉnh:</label>
-                            <select id="p">
-                            </select>
-                        </div>
-                        <div id="districts">
-                            <label>Quận:</label>
-                            <select id="d">
-                            </select>
-                        </div>
-                        <div id="wards">
-                            <label>Phường:</label>
-                            <select id="w">
-                            </select>
-                        </div>
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group">
                                 <label asp-for="Invoices.FirstName">First Name<span asp-validation-for="Invoices.FirstName">*</span></label>
@@ -90,16 +75,45 @@
                                 <input asp-for="Invoices.PhoneNumber" required="required">
                             </div>
                         </div>
+                        @*<div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>City:</label>
+                                    <select id="p">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group" id="districts">
+                                    <label>Districts:</label>
+                                    <select id="d">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group" id="wards">
+                                    <label>Wards:</label>
+                                    <select id="w">
+                                    </select>
+                                </div>
+                            </div>*@
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group">
                                 <label asp-for="Invoices.State">State / City<span asp-validation-for="Invoices.State">*</span></label>
-                                <input asp-for="Invoices.State" required="required">
+                                <select id="p">
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group">
-                                <label asp-for="Invoices.State">State / City<span asp-validation-for="Invoices.State">*</span></label>
-                                <select id="state">
+                            <div class="form-group" id="districts">
+                                <label asp-for="Invoices.District">Districts<span asp-validation-for="Invoices.District">*</span></label>
+                                <select id="d">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="form-group" id="wards">
+                                <label asp-for="Invoices.Wards">Wards<span asp-validation-for="Invoices.Wards">*</span></label>
+                                <select id="w">
                                 </select>
                             </div>
                         </div>
@@ -127,7 +141,7 @@
                         <div class="content">
                             <ul>
                                 <li>Sub Total<span>$@Model.CartTotal</span></li>
-                                <li>(+) Shipping<span>$10.00</span></li>
+                                <li>(+) Shipping<span>Free Ship</span></li>
                                 <li class="last">Total<span>$@Model.CartTotal</span></li>
                             </ul>
                         </div>
@@ -151,6 +165,105 @@
     </div>
 </section>
 
-<script type="text/javascript" src="~/apivn/Locations.js"></script>
+<script>
+    const apiEndpoint = "https://provinces.open-api.vn/api/?depth=3";
+
+    let apiData = [];
+    const pOptions = document.querySelector("#p");
+    let dOptions = document.querySelector("#d");
+    let wOptions = document.querySelector("#w");
+    dOptions.style.display = "block";
+    wOptions.style.display = "block";
+    const fecthApi = async () => {
+        try {
+            const request = await fetch(apiEndpoint);
+            const response = await request.json();
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const appendProvince = async () => {
+        const data = await fecthApi();
+        console.log(pOptions);
+        pOptions.style.display = "block";
+        apiData = [...data];
+        const firstOption = document.createElement("option");
+        firstOption.disabled = true;
+        firstOption.value = "default";
+        pOptions.appendChild(firstOption);
+        pOptions.value = "default";
+        data.map((item) => {
+            const option = document.createElement("option");
+            option.value = item.codename;
+            option.innerHTML = item.name;
+            pOptions.appendChild(option);
+        });
+    };
+
+    const handleDchange = () => {
+        wOptions.remove();
+        wOptions = document.createElement("select");
+        wOptions.id = "w";
+        wOptions.classList.add('form-control');
+        const wards = document.getElementById("wards");
+        wards.appendChild(wOptions);
+        const queryArr = dOptions?.value.split(" ");
+        const chosenProvince = apiData.filter(
+            (item) => item.codename === queryArr[1],
+        );
+        const arrayDistricts = chosenProvince[0]?.districts;
+        const choosenDistrict = arrayDistricts.filter(
+            (item) => item.codename === queryArr[0],
+        );
+        const firstOption = document.createElement("option");
+        firstOption.disabled = true;
+        firstOption.value = "default";
+        wOptions.appendChild(firstOption);
+        wOptions.value = "default";
+        choosenDistrict[0]?.wards.map((item) => {
+            const option = document.createElement("option");
+            option.value = `${item.codename} ${pOptions.value}`;
+            option.innerHTML = item.name;
+            wOptions.appendChild(option);
+        });
+    };
+
+    pOptions.addEventListener("change", (e) => {
+        dOptions.remove();
+        dOptions = document.createElement("select");
+        dOptions.id = "d";
+        dOptions.classList.add("form-control");
+        dOptions.addEventListener("change", handleDchange);
+        const districts = document.getElementById("districts");
+        districts.appendChild(dOptions);
+
+        const chosenProvince = apiData.filter(
+            (item) => item.codename === pOptions.value,
+        );
+
+        if (chosenProvince[0]?.districts) {
+            const { districts } = chosenProvince[0];
+            const firstOption = document.createElement("option");
+            firstOption.disabled = true;
+            firstOption.value = "default";
+            dOptions.appendChild(firstOption);
+            dOptions.value = "default";
+            districts.map((item) => {
+                const option = document.createElement("option");
+                option.value = `${item.codename} ${pOptions.value}`;
+                option.innerHTML = item.name;
+                dOptions.appendChild(option);
+                dOptions.classList.add("districts");
+            });
+        }
+    });
+
+    appendProvince();
+
+
+</script>
+
 
 

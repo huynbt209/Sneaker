@@ -32,105 +32,106 @@
 
 <body class="bg-gradient-primary">
 
-    <div class="container">
+<div class="container">
 
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0">
-                <!-- Nested Row within Card Body -->
-                <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-                    <div class="col-lg-7">
-                        <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                        </div>
+                        <form class="user" method="post" asp-route-returnUrl="@Model.ReturnUrl">
+                            @* // *@
+                            <div class="form-group">
+                                <input asp-for="Input.FullName" type="text" class="form-control form-control-user"
+                                       placeholder="Full Name">
+                                <span asp-validation-for="Input.FullName" class="text-danger"></span>
                             </div>
-                            <form class="user" method="post" asp-route-returnUrl="@Model.ReturnUrl">
-                                @* // *@
-                                <div class="form-group">
-                                    <input asp-for="Input.FullName" type="text" class="form-control form-control-user"
-                                           placeholder="Full Name">
-                                    <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                            @* // *@
+                            <div class="form-group">
+                                <input asp-for="Input.Email" type="email" class="form-control form-control-user"
+                                       placeholder="Your Email">
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                            @* // *@
+                            <div class="form-group">
+                                <input asp-for="Input.ConfirmEmail" type="email" class="form-control form-control-user"
+                                       placeholder="Confirm Email">
+                                <span asp-validation-for="Input.ConfirmEmail" class="text-danger"></span>
+                            </div>
+                            @* // *@
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input asp-for="Input.Password" class="form-control form-control-user"
+                                           placeholder="Password">
                                 </div>
-                                @* // *@
-                                <div class="form-group">
-                                    <input asp-for="Input.Email" type="email" class="form-control form-control-user"
-                                           placeholder="Your Email">
-                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                <div class="col-sm-6">
+                                    <input asp-for="Input.ConfirmPassword" type="password" class="form-control form-control-user"
+                                           placeholder="Confirm Password">
                                 </div>
-                                @* // *@
-                                <div class="form-group">
-                                    <input asp-for="Input.ConfirmEmail" type="email" class="form-control form-control-user"
-                                           placeholder="Confirm Email">
-                                    <span asp-validation-for="Input.ConfirmEmail" class="text-danger"></span>
-                                </div>
-                                @* // *@
+                            </div>
+                            @* // *@
+                            <div class="form-group">
+                                @if (User.IsInRole(SystemRoles.Administrator))
+                                {
+                                    <select name="rdUserRole" id="inputRole" class="form-control-user">
+                                        <option selected>Role</option>
+                                        <option value="@SystemRoles.Administrator">@SystemRoles.Administrator</option>
+                                        <option value="@SystemRoles.Manager">@SystemRoles.Manager</option>
+                                        <option value="@SystemRoles.Member">@SystemRoles.Member</option>
+                                    </select>
+                                }
+                            </div>
+                            <div class="form-group row">
+                                <button type="submit" class="btn btn-primary btn-user btn-block">Register</button>
+                            </div>
+                        </form>
+                        <hr/>
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
                                 <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input asp-for="Input.Password" class="form-control form-control-user"
-                                               placeholder="Password">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input asp-for="Input.ConfirmPassword" type="password" class="form-control form-control-user"
-                                               placeholder="Confirm Password">
-                                    </div>
-                                </div>
-                                @* // *@
-                                <div class="form-group">
-                                    @if (User.IsInRole(SystemRoles.Administrator))
+
+                                    @if (provider.Name.ToLower().Contains("google"))
                                     {
-                                        <select name="rdUserRole" id="inputRole" class="form-control-user">
-                                            <option selected>Role</option>
-                                            <option value="@SystemRoles.Administrator">@SystemRoles.Administrator</option>
-                                            <option value="@SystemRoles.Manager">@SystemRoles.Manager</option>
-                                            <option value="@SystemRoles.Member">@SystemRoles.Member</option>
-                                        </select>
-                                    }                                   
-                                </div>
-                                <div class="form-group">
-                                    @if (User == null)
-                                    {
-                                        <select name="rdUserRole" id="inputRole" class="form-control-user" disabled>
-                                            <option selected>Role</option>
-                                            <option value="@SystemRoles.Member">@SystemRoles.Member</option>
-                                        </select>
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <button type="submit" name="provider" class="btn btn-google btn-user btn-block" value="@provider.Name"
+                                                    title="Login using your @provider.DisplayName account">
+                                                <i class="fab fa-google fa-fw"></i> Register with Google
+                                            </button>
+                                        </div>
                                     }
                                 </div>
-                                <div class="form-group row">
-                                    <button type="submit" class="btn btn-primary btn-user btn-block">Register</button>
-                                </div>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
-                            </form>
-                            <hr>
-                            <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="~/Identity/Account/Login">Already have an account? Login!</a>
-                            </div>
+                            }
+                        </form>
+
+                        <div class="text-center">
+                            <a class="small" href="forgot-password.html">Forgot Password?</a>
+                        </div>
+                        <div class="text-center">
+                            <a class="small" href="~/Identity/Account/Login">Already have an account? Login!</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="~/bootstrap/vendor/jquery/jquery.min.js"></script>
-    <script src="~/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</div>
 
-    <!-- Core plugin JavaScript-->
-    <script src="~/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="~/bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="~/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="~/bootstrap/js/sb-admin-2.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="~/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
+<!-- Custom scripts for all pages-->
+<script src="~/bootstrap/js/sb-admin-2.min.js"></script>
 </body>
 
 </html>

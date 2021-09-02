@@ -50,6 +50,21 @@ namespace Sneaker
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ICartRepo, CartRepo>();
             services.AddScoped<IInvoiceRepo, InvoiceRepo>();
+            
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+                
+            });
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+                options.CallbackPath =  "/signin-google";
+            });
 
 
             services.AddMvc().AddSessionStateTempDataProvider();

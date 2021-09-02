@@ -37,7 +37,21 @@ namespace Sneaker.Models
         public int TrademarkId { get; set; }
         [ForeignKey("TrademarkId")]
         public virtual Trademark Trademark { get; set; }
-        
+
+        //public string Rating { get; set; }
+        //public int RateCount
+        //{
+        //    get { return ratings.Count; }
+        //}
+        //public int RateTotal
+        //{
+        //    get{
+        //        return (ratings.Sum(m => m.Rating));
+        //    }
+        //}
+
+        //public virtual ICollection<FeedbackProduct> ratings { get; set; }
+
         public Product()
         {
             CreateAt = DateTime.Now;
