@@ -80,12 +80,19 @@ namespace Sneaker.Repository
             return true;
         }
 
-        public bool ClearCart(int id)
+        public void EmptyCart(string userId)
         {
-            var cartItems = _dbContext.Carts.Find(id);
-            _dbContext.Carts.RemoveRange(cartItems);
+            var cartItems = _dbContext.Carts.Where(c => c.UserId == userId);
+            foreach (var cartItem in cartItems)
+            {
+                _dbContext.Carts.RemoveRange(cartItem);
+            }
             _dbContext.SaveChanges();
-            return true;
+        }
+
+        public Cart GetCartById(int id)
+        {
+            return _dbContext.Carts.Find(id);
         }
 
         public bool CreateOrder(CartViewModel invoiceVM, string userId)
@@ -98,18 +105,29 @@ namespace Sneaker.Repository
             var cartItems = GetCartItem(userId);
             foreach (var item in cartItems)
             {
-                var invoiceDetail = new InvoiceDetails
+                orderTotal += (item.Quantity * item.Products.Price);
+                CreateOrderDetail(invoiceVM.Invoices, userId);
+            }
+            invoiceVM.Invoices.OrderTotal = orderTotal;
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool CreateOrderDetail(Invoice invoice, string userId)
+        {
+            var cartItems = GetCartItem(userId);
+            foreach (var item in cartItems)
+            {
+                var invoiceDetail = new InvoiceDetails()
                 {
                     ProductId = item.Products.Id,
-                    InvoiceId = invoiceVM.Invoices.Id,
+                    InvoiceId = invoice.Id,
                     Price = item.Products.Price * item.Quantity,
                     Quantity = item.Quantity,
                     UserId = item.UserId,
                 };
-                orderTotal += (item.Quantity * item.Products.Price);
                 _dbContext.InvoiceDetails.Add(invoiceDetail);
             }
-            invoiceVM.Invoices.OrderTotal = orderTotal;
             _dbContext.SaveChanges();
             return true;
         }

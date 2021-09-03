@@ -15,8 +15,10 @@ namespace Sneaker.Repository.Interface
         decimal GetCartTotal(string userId);
         int GetCount(string userId);
         bool RemoveCart(int id, string userId);
-        bool ClearCart(int id);
+        void EmptyCart(string userId);
+        Cart GetCartById(int id);
         bool CreateOrder(CartViewModel invoiceVM, string userId);
+        bool CreateOrderDetail(Invoice invoice, string userId);
         Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel invoiceVM);
     }
 }

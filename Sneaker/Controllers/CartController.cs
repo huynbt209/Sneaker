@@ -84,13 +84,13 @@ namespace Sneaker.Controllers
             return Redirect(url);
         }
 
-        public async Task<IActionResult> SubmitOrder([FromQuery(Name = "paymentId")] string paymentId, [FromQuery(Name = "PayerId")] string payerId, CartViewModel invoiceVM)
+        public async Task<IActionResult> SubmitOrder([FromQuery(Name = "paymentId")] string paymentId, [FromQuery(Name = "PayerId")] string payerId, CartViewModel cartViewModel)
         {
-            await _cartRepo.SubmitOrder(paymentId, payerId, invoiceVM);
+            await _cartRepo.SubmitOrder(paymentId, payerId, cartViewModel);
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
             var items = _cartRepo.GetCartItem(user);
-            var cartViewModel = new CartViewModel
+            var newCartViewModel = new CartViewModel
             {
                 Carts = items,
                 CartTotal = _cartRepo.GetCartTotal(user),
@@ -98,22 +98,27 @@ namespace Sneaker.Controllers
             };
             int count = _cartRepo.GetCount(user);
             ViewBag.cartCount = count;
-            return View(cartViewModel);
+            return View(newCartViewModel);
         }
 
         [HttpPost]
-        public IActionResult SubmitOrder(CartViewModel invoiceVM)
+        public IActionResult SubmitOrder(CartViewModel cartViewModel)
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
             var items = _cartRepo.GetCartItem(user);
-            var cartViewModel = new CartViewModel
+            var newCartViewModel = new CartViewModel
             {
                 Carts = items,
                 CartTotal = _cartRepo.GetCartTotal(user)
             };
-            _cartRepo.CreateOrder(invoiceVM, user);
-            return View(cartViewModel);
+            _cartRepo.CreateOrder(cartViewModel, user);
+            _cartRepo.CreateOrderDetail(cartViewModel.Invoices, user);
+            if (items != null)
+            {
+                _cartRepo.EmptyCart(user);
+            }
+            return View(newCartViewModel);
         }
     }
 }

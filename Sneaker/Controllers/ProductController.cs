@@ -161,13 +161,13 @@ namespace Sneaker.Controllers
         [HttpPost]
         public async Task<IActionResult> SendFeedback(int productId, string message)
         {
-            if (message == null) return Json(new {success = false, message = "Please write your feedback again!"});
+            if (message == null) return Json(new { success = false, message = "Please write your feedback again!" });
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userFullName = await _adminRepo.GetUserName(currentUser);
             var sendMessage = await _feedbackProductRepo.SaveComment(productId, currentUser, message);
             if (!sendMessage) return RedirectToAction();
             _logger.LogInformation($"{userFullName} has been sent a feedback: {message}!");
-            return Json(new {success = true, userInput = userFullName, messageInput = message});
+            return Json(new { success = true, userInput = userFullName, messageInput = message });
         }
 
         //    
@@ -250,100 +250,11 @@ namespace Sneaker.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Product.xlsx");
         }
 
-        //
-
-        [HttpGet]
-        public IActionResult ImportProduct()
-        {
-            var viewModel = _productRepo.ProductTrademarkViewModel();
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult ImportProduct(IFormFile file)
-        {
-            if (ModelState.IsValid)
-            {
-                if (file?.Length > 0)
-                {
-                    // convert to a stream
-                    var stream = file.OpenReadStream();
-
-                    List<Product> products = new List<Product>();
-
-                    try
-                    {
-                        using (var package = new ExcelPackage(stream))
-                        {
-                            var worksheet = package.Workbook.Worksheets.First();
-                            var rowCount = worksheet.Dimension.Rows;
-
-                            for (var row = 2; row <= rowCount; row++)
-                            {
-                                try
-                                {
-                                    var id = int.Parse(worksheet.Cells[row, 1].Value?.ToString().Trim());
-                                    var title = worksheet.Cells[row, 2].Value?.ToString().Trim();
-                                    var titleURL = worksheet.Cells[row, 3].Value?.ToString().Trim();
-                                    var productName = worksheet.Cells[row, 4].Value?.ToString().Trim();
-                                    var image = worksheet.Cells[row, 5].Value?.ToString().Trim();
-                                    var image1 = worksheet.Cells[row, 6].Value?.ToString().Trim();
-                                    var quantity = int.Parse(worksheet.Cells[row, 7].Value?.ToString().Trim());
-                                    var price = decimal.Parse(worksheet.Cells[row, 8].Value?.ToString().Trim());
-                                    var badge = worksheet.Cells[row, 9].Value?.ToString().Trim();
-                                    var category = worksheet.Cells[row, 10].Value?.ToString().Trim();
-                                    var productCard = worksheet.Cells[row, 11].Value?.ToString().Trim();
-                                    var status = bool.Parse(worksheet.Cells[row, 12].Value?.ToString().Trim());
-                                    var statusMessage = worksheet.Cells[row, 13].Value?.ToString().Trim();
-                                    var changeStatusBy = worksheet.Cells[row, 14].Value?.ToString().Trim();
-                                    var trademarkId = int.Parse(worksheet.Cells[row, 15].Value?.ToString().Trim());
-
-                                    var product = new Product()
-                                    {
-                                        Id = id,
-                                        Title = title,
-                                        TitleURL = titleURL,
-                                        ProductName = productName,
-                                        Image = image,
-                                        Image1 = image1,
-                                        Quantity = quantity,
-                                        Price = price,
-                                        Badge = badge,
-                                        Category = category,
-                                        ProductCard = productCard,
-                                        Status = status,
-                                        StatusMessage = statusMessage,
-                                        ChangeStatusBy = changeStatusBy,
-                                        TrademarkId = trademarkId
-                                    };
-
-                                    products.Add(product);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine(ex.Message);
-                                }
-                            }
-                        }
-
-                        return View("ListProducts", products);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-            }
-
-            return View("ListProducts");
-        }
-
 
         private List<Product> GetProductList()
         {
             var products = _productRepo.GetProducts();
-            return (List<Product>) products;
+            return (List<Product>)products;
         }
 
         [HttpGet]
@@ -358,46 +269,32 @@ namespace Sneaker.Controllers
         [Obsolete]
         public async Task<ActionResult> Uploads(IFormFile FormFile)
         {
-            //get file name
             var filename = ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition).FileName.Trim('"');
-
-            //get path
             var MainPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files");
-
-            //create directory "Uploads" if it doesn't exists
             if (!Directory.Exists(MainPath))
             {
                 Directory.CreateDirectory(MainPath);
             }
-
-            //get file path 
             var filePath = Path.Combine(MainPath, FormFile.FileName);
             using (System.IO.Stream stream = new FileStream(filePath, FileMode.Create))
             {
                 await FormFile.CopyToAsync(stream);
             }
-
-            //get extension
             string extension = Path.GetExtension(filename);
-
-
             string conString = string.Empty;
-
             switch (extension)
             {
-                case ".xls": //Excel 97-03.
+                case ".xls":
                     conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath +
                                 ";Extended Properties='Excel 8.0;HDR=YES'";
                     break;
-                case ".xlsx": //Excel 07 and above.
+                case ".xlsx":
                     conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath +
                                 ";Extended Properties='Excel 8.0;HDR=YES'";
                     break;
             }
-
             DataTable dt = new DataTable();
             conString = string.Format(conString, filePath);
-
             using (OleDbConnection connExcel = new OleDbConnection(conString))
             {
                 using (OleDbCommand cmdExcel = new OleDbCommand())
@@ -405,15 +302,11 @@ namespace Sneaker.Controllers
                     using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
                     {
                         cmdExcel.Connection = connExcel;
-
-                        //Get the name of First Sheet.
                         connExcel.Open();
                         DataTable dtExcelSchema;
                         dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
                         string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
                         connExcel.Close();
-
-                        //Read Data from First Sheet.
                         connExcel.Open();
                         cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
                         odaExcel.SelectCommand = cmdExcel;
@@ -422,20 +315,14 @@ namespace Sneaker.Controllers
                     }
                 }
             }
-
-            // database connection string
             conString =
-                "Server=(localdb)\\mssqllocaldb;Database=aspnet-Sneaker-22B6C20C-1D81-45E0-9D4E-4BBB13A5B01A;Trusted_Connection=True;";
+                "Server=localhost,1433;Database=Sneaker;User=sa;Password=Password@123;";
 
             using (SqlConnection con = new SqlConnection(conString))
             {
                 using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                 {
-                    //Set the database table name.
                     sqlBulkCopy.DestinationTableName = "dbo.Products";
-
-                    // Map the Excel columns with that of the database table, this is optional but good if you do
-                    // 
                     sqlBulkCopy.ColumnMappings.Add("Id", "Id");
                     sqlBulkCopy.ColumnMappings.Add("Title", "Title");
                     sqlBulkCopy.ColumnMappings.Add("TitleURL", "TitleURL");
@@ -450,19 +337,17 @@ namespace Sneaker.Controllers
                     sqlBulkCopy.ColumnMappings.Add("Status", "Status");
                     sqlBulkCopy.ColumnMappings.Add("StatusMessage", "StatusMessage");
                     sqlBulkCopy.ColumnMappings.Add("ChangeStatusBy", "ChangeStatusBy");
+                    sqlBulkCopy.ColumnMappings.Add("CreateAt", "CreateAt");
+                    sqlBulkCopy.ColumnMappings.Add("UpdateAt", "UpdateAt");
                     sqlBulkCopy.ColumnMappings.Add("TrademarkId", "TrademarkId");
-
 
                     con.Open();
                     sqlBulkCopy.WriteToServer(dt);
                     con.Close();
                 }
             }
-
-            //if the code reach here means everthing goes fine and excel data is imported into database
             ViewBag.Message = "File Imported and excel data saved into database";
-
-            return View("Index");
+            return View();
         }
     }
 }
