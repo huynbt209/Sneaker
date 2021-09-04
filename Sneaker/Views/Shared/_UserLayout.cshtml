@@ -103,7 +103,7 @@
                                 {
                                     <li class="nav-item dropdown no-arrow">
                                         <a class="nav-link dropdown-toggle text-nowrap px-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                            <img id="userAvatar" width="40" height="40" class="user-avatar rounded-circle mr-2" src="uploads/avatar.jpeg" alt="User Avatar">
+                                            <img id="userAvatar" width="40" height="40" class="user-avatar rounded-circle mr-2" src="" alt="User Avatar">
                                             <span class="d-none d-md-inline-block">@User.FindFirstValue(ClaimTypes.Name)</span>
                                         </a>
                                         <!-- Dropdown - User Information -->
@@ -255,9 +255,9 @@
 
                     <div class="col-lg-2 col-md-3 col-12">
                         <div class="right-bar">
-                            <div class="sinlge-bar shopping">
+                            <div id="userCartCount" class="sinlge-bar shopping">
                                 <a asp-controller="Cart" asp-action="Index" class="single-icon">
-                                    <i class="ti-bag"></i> <span id="spnCart" class="total-count">@ViewBag.cartCount</span>
+                                    <i class="ti-bag"></i> <span id="cartCountDisplay" class="total-count"></span>
                                 </a>
                             </div>
                         </div>
@@ -554,21 +554,26 @@
 
 
 
-    @section Scripts{
-        <script>
-    $(document).ready(function () {
-        $.ajax({
-            url: '/Admin/Avatar/',
-            type: 'GET',
-            data: {userId: '@User.FindFirstValue(ClaimTypes.NameIdentifier)'},
-            success: function (data){
-                $('#userAvatar').attr('src', '/uploads/' + data.avatar);
-                $('#userAvatarComment').attr('src', '/uploads/' + data.avatar);
-            }
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Admin/Avatar/',
+                type: 'GET',
+                data: {userId: '@User.FindFirstValue(ClaimTypes.NameIdentifier)'},
+                success: function (data){
+                    $('#userAvatar').attr('src', '/uploads/' + data.avatar);
+                    $('#userAvatarComment').attr('src', '/uploads/' + data.avatar);
+                }
+            });
+            $.ajax({          
+                url: '/Cart/GetCartCountUser',
+                type: 'GET',
+                success: function (data){
+                document.getElementById("cartCountDisplay").innerHTML = data;
+            }}); 
         });
-    })
-        </script>
-    }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

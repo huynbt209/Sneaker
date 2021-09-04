@@ -95,20 +95,20 @@ namespace Sneaker.Repository
             return _dbContext.Carts.Find(id);
         }
 
-        public bool CreateOrder(CartViewModel invoiceVM, string userId)
+        public bool CreateOrder(CartViewModel cartViewModel, string userId)
         {
-            invoiceVM.Invoices.CreateAt = DateTime.Now;
-            invoiceVM.Invoices.OwnerId = userId;
-            _dbContext.Invoice.Add(invoiceVM.Invoices);
+            cartViewModel.Invoices.CreateAt = DateTime.Now;
+            cartViewModel.Invoices.OwnerId = userId;
+            _dbContext.Invoice.Add(cartViewModel.Invoices);
             _dbContext.SaveChanges();
             decimal orderTotal = 0;
             var cartItems = GetCartItem(userId);
             foreach (var item in cartItems)
             {
                 orderTotal += (item.Quantity * item.Products.Price);
-                CreateOrderDetail(invoiceVM.Invoices, userId);
+                CreateOrderDetail(cartViewModel.Invoices, userId);
             }
-            invoiceVM.Invoices.OrderTotal = orderTotal;
+            cartViewModel.Invoices.OrderTotal = orderTotal;
             _dbContext.SaveChanges();
             return true;
         }
@@ -132,7 +132,7 @@ namespace Sneaker.Repository
             return true;
         }
 
-        public async Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel invoiceVM)
+        public async Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel cartViewModel)
         {
             var paypalAPI = new PayPalAPI(_configuration);
             await paypalAPI.ExecutedPayment(paymentId, payerId); 

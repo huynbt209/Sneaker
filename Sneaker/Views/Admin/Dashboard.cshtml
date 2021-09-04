@@ -305,16 +305,16 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: '/Admin/Avatar/',
-            type: 'GET',
-            data: {userId: '@User.FindFirstValue(ClaimTypes.NameIdentifier)'},
-            success: function (data){
-                $('#userAvatar').attr('src', '/uploads/' + data.avatar);
-                $('#userAvatarComment').attr('src', '/uploads/' + data.avatar);
-            }
-        });
-    })
-</script>
+@* <script> *@
+@*     $(document).ready(function () { *@
+@*         $.ajax({ *@
+@*             url: '/Admin/Avatar/', *@
+@*             type: 'GET', *@
+@*             data: {userId: '@User.FindFirstValue(ClaimTypes.NameIdentifier)'}, *@
+@*             success: function (data){ *@
+@*                 $('#userAvatar').attr('src', '/uploads/' + data.avatar); *@
+@*                 $('#userAvatarComment').attr('src', '/uploads/' + data.avatar); *@
+@*             } *@
+@*         }); *@
+@*     }) *@
+@* </script> *@

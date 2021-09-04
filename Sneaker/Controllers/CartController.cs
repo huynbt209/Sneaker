@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Sneaker.Helpers;
-using Sneaker.Models;
 using Sneaker.Repository.Interface;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +42,15 @@ namespace Sneaker.Controllers
             };
 
             return View(cartViewModel);
+        }
+
+        [AllowAnonymous]
+        public IActionResult GetCartCountUser()
+        {
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+            var countCart = _cartRepo.GetCount(user);
+            return new JsonResult(countCart);
         }
 
         public IActionResult AddCart(int id)

@@ -17,8 +17,8 @@ namespace Sneaker.Repository.Interface
         bool RemoveCart(int id, string userId);
         void EmptyCart(string userId);
         Cart GetCartById(int id);
-        bool CreateOrder(CartViewModel invoiceVM, string userId);
+        bool CreateOrder(CartViewModel cartViewModel, string userId);
         bool CreateOrderDetail(Invoice invoice, string userId);
-        Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel invoiceVM);
+        Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel cartViewModel);
     }
 }
