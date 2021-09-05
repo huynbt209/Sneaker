@@ -13,11 +13,9 @@ namespace Sneaker.Repository
     public class TrademarkRepo : ITrademarkRepo
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public TrademarkRepo(ApplicationDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public TrademarkRepo(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _webHostEnvironment = webHostEnvironment;
         }
 
     //

@@ -117,7 +117,6 @@ namespace Sneaker.Controllers
                 CartTotal = _cartRepo.GetCartTotal(user)
             };
             _cartRepo.CreateOrder(cartViewModel, user);
-            _cartRepo.CreateOrderDetail(cartViewModel.Invoices, user);
             if (items != null)
             {
                 _cartRepo.EmptyCart(user);

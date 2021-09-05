@@ -14,7 +14,7 @@
     {
         <div class="col-12 mt-3">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">
-                Take review
+                Review Order Details
             </button>
         </div>
     }
@@ -158,7 +158,7 @@ else if (Model.Invoice.Status && Model.Invoice.ChangeStatusBy != null)
             var statusMessage = document.getElementById("statusMessage").value;
             var invoiceId = document.getElementById("InvoiceId").value;
             $.ajax({
-                url: '/Invoice/UpdateInvoiceStatus',
+                url: '/Admin/UpdateInvoiceStatus',
                 type: 'POST',
                 data: { invoiceId: invoiceId, status: status, statusMessage: statusMessage },
                 success: function (response) {

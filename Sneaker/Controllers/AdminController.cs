@@ -7,7 +7,7 @@ using Sneaker.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Sneaker.Controllers
 {
@@ -138,6 +138,26 @@ namespace Sneaker.Controllers
             if (invoice.Invoice != null)
             _logger.LogInformation($"Open Invoice: {invoice.Invoice.PaymentId}");
             return View(invoice);
+        }
+        
+        [HttpPost]
+        public IActionResult UpdateInvoiceStatus(int invoiceId, bool status, string statusMessage)
+        {   
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserName(currentUser).Result;
+            if (statusMessage == null)
+            {
+                _logger.LogWarning("Message is empty when update invoice status!");
+                return Json(new {success = false, message = "Please add a message!"});
+            }
+
+            if (_invoiceRepo.UpdateInvoiceStatus(invoiceId, status, statusMessage, user))
+            {
+                _logger.LogInformation("The invoice has been Transaction Confirmation!");
+                return Json(new {success = true, message = "The invoice has been Transaction Confirmation!"});
+            }
+            _logger.LogInformation("There are some error when confirmation!");
+            return Json(new {success = false, message = "There are some error when confirmation!"});
         }
     }
 }

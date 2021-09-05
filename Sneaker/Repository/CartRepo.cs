@@ -105,8 +105,16 @@ namespace Sneaker.Repository
             var cartItems = GetCartItem(userId);
             foreach (var item in cartItems)
             {
+                var invoiceDetail = new InvoiceDetails()
+                {
+                    ProductId = item.Products.Id,
+                    InvoiceId = cartViewModel.Invoices.Id,
+                    Price = item.Products.Price * item.Quantity,
+                    Quantity = item.Quantity,
+                    UserId = item.UserId,
+                };
+                _dbContext.InvoiceDetails.Add(invoiceDetail);
                 orderTotal += (item.Quantity * item.Products.Price);
-                CreateOrderDetail(cartViewModel.Invoices, userId);
             }
             cartViewModel.Invoices.OrderTotal = orderTotal;
             _dbContext.SaveChanges();

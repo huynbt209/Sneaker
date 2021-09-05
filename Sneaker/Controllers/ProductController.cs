@@ -347,6 +347,7 @@ namespace Sneaker.Controllers
                 }
             }
             ViewBag.Message = "File Imported and excel data saved into database";
+            _logger.LogInformation("File Imported and excel Products data saved into database");
             return View();
         }
     }

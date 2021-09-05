@@ -20,7 +20,8 @@ namespace Sneaker.Repository
 
         public IEnumerable<Invoice> GetAllInvoices()
         {
-            return _dbContext.Invoice.ToList();
+            var invoiceInDb = _dbContext.Invoice.ToList();
+            return invoiceInDb;
         }
 
         public IEnumerable<InvoiceDetails> GetDetailsByInvoiceId(int invoiceId)

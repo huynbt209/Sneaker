@@ -10,8 +10,12 @@
             <div class="col-12">
                 <div class="bread-inner">
                     <ul class="bread-list">
-                        <li><a href="index1.html">Home<i class="ti-arrow-right"></i></a></li>
-                        <li class="active"><a href="blog-single.html">Checkout</a></li>
+                        <li>
+                            <a href="index1.html">Home<i class="ti-arrow-right"></i></a>
+                        </li>
+                        <li class="active">
+                            <a href="blog-single.html">Checkout</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -44,12 +48,12 @@
                 <div class="checkout-form">
                     <!-- Form -->
                     <form class="form" method="post" asp-action="SubmitOrder" id="SubmitForm">
-                        <input hidden asp-for="Invoices.Id" />
-                        <input asp-for="Invoices.PaymentId" hidden class="form-control" readonly value="@Model.PaymentId" />
-                        <input asp-for="Invoices.Country" hidden class="form-control" readonly value="Việt Nam" />
+                        <input hidden asp-for="Invoices.Id"/>
+                        <input asp-for="Invoices.PaymentId" hidden class="form-control" readonly value="@Model.PaymentId"/>
+                        <input asp-for="Invoices.Country" hidden class="form-control" readonly value="Việt Nam"/>
                         @if (@Model.PaymentId != null)
                         {
-                            <input asp-for="Invoices.PaymentMethod" hidden class="form-control" readonly value="PayPal" />
+                            <input asp-for="Invoices.PaymentMethod" hidden class="form-control" readonly value="PayPal"/>
                         }
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group">
@@ -75,46 +79,43 @@
                                 <input asp-for="Invoices.PhoneNumber" required="required">
                             </div>
                         </div>
-                        @*<div class="col-lg-6 col-md-6 col-12">
-                                <div class="form-group">
-                                    <label>City:</label>
-                                    <select id="p">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <div class="form-group" id="districts">
-                                    <label>Districts:</label>
-                                    <select id="d">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <div class="form-group" id="wards">
-                                    <label>Wards:</label>
-                                    <select id="w">
-                                    </select>
-                                </div>
-                            </div>*@
+                        @* <div class="col-lg-6 col-md-6 col-12"> *@
+                        @*     <div class="form-group"> *@
+                        @*         <label asp-for="Invoices.State">State / City<span asp-validation-for="Invoices.State">*</span></label> *@
+                        @*         <select id="p" asp-for="Invoices.State" required="required"> *@
+                        @*         </select> *@
+                        @*     </div> *@
+                        @* </div> *@
+                        @* <div class="col-lg-6 col-md-6 col-12"> *@
+                        @*     <div class="form-group" id="districts"> *@
+                        @*         <label asp-for="Invoices.District">Districts<span asp-validation-for="Invoices.District">*</span></label> *@
+                        @*         <select id="d" asp-for="Invoices.District" required="required"> *@
+                        @*         </select> *@
+                        @*     </div> *@
+                        @* </div> *@
+                        @* <div class="col-lg-6 col-md-6 col-12"> *@
+                        @*     <div class="form-group" id="wards"> *@
+                        @*         <label asp-for="Invoices.Wards">Wards<span asp-validation-for="Invoices.Wards">*</span></label> *@
+                        @*         <select id="w" asp-for="Invoices.Wards" required="required"> *@
+                        @*         </select> *@
+                        @*     </div> *@
+                        @* </div> *@
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group">
                                 <label asp-for="Invoices.State">State / City<span asp-validation-for="Invoices.State">*</span></label>
-                                <select id="p">
-                                </select>
+                                <input asp-for="Invoices.State" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group" id="districts">
-                                <label asp-for="Invoices.District">Districts<span asp-validation-for="Invoices.District">*</span></label>
-                                <select id="d">
-                                </select>
+                            <div class="form-group">
+                                <label asp-for="Invoices.District">District<span asp-validation-for="Invoices.District">*</span></label>
+                                <input asp-for="Invoices.District" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
-                            <div class="form-group" id="wards">
+                            <div class="form-group">
                                 <label asp-for="Invoices.Wards">Wards<span asp-validation-for="Invoices.Wards">*</span></label>
-                                <select id="w">
-                                </select>
+                                <input asp-for="Invoices.Wards" required="required">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
@@ -149,16 +150,17 @@
                     <!--/ End Order Widget -->
                     <!-- Order Widget -->
                     <div class="single-widget">
-                        <h2>Payments</h2>
+                        <h2>Submit Order</h2>
                     </div>
                     <!--/ End Order Widget -->
-                    <!-- Button Widget -->
                     <div class="single-widget get-button">
                         <div class="content">
-                            <input type="submit" form="SubmitForm" value="Create" />
+                            <div class="button" type="submit">
+                                <button class="btn" type="submit" form="SubmitForm">Submit an order</button>
+                            </div>
                         </div>
                     </div>
-                    <!--/ End Button Widget -->
+
                 </div>
             </div>
         </div>
@@ -166,6 +168,16 @@
 </section>
 
 <script>
+    // $(document).ready(function (){
+    //    $.ajax({
+    //    url: 'https://provinces.open-api.vn/api/?depth=3',
+    //    method: 'get',
+    //    }) 
+    // });
+
+
+
+
     const apiEndpoint = "https://provinces.open-api.vn/api/?depth=3";
 
     let apiData = [];
@@ -192,6 +204,7 @@
         const firstOption = document.createElement("option");
         firstOption.disabled = true;
         firstOption.value = "default";
+        firstOption.textContent = "";
         pOptions.appendChild(firstOption);
         pOptions.value = "default";
         data.map((item) => {
@@ -264,6 +277,3 @@
 
 
 </script>
-
-
-
