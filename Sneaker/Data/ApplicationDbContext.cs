@@ -22,5 +22,6 @@ namespace Sneaker.Data
         public DbSet<InvoiceDetails> InvoiceDetails { get; set; }
 
         public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<Item> Items { get; set; }
     }
 }

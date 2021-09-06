@@ -36,23 +36,23 @@ namespace Sneaker.Repository
 
         public ProductTrademarkViewModel CreateProduct(ProductTrademarkViewModel productTrademarkViewModel)
         {
-            var checkExists = _dbContext.Products.Include(p => p.Trademark).Where(p => p.ProductName == productTrademarkViewModel.Product.ProductName
-            && p.Trademark.Id == productTrademarkViewModel.Product.TrademarkId);
+            var checkExists = _dbContext.Products.Include(p => p.Trademark).Where(p => p.ProductName == productTrademarkViewModel.Products.ProductName
+            && p.Trademark.Id == productTrademarkViewModel.Products.TrademarkId);
             if (checkExists.Any())
             {
                 //
             }
             else
             {
-                var productResult = _dbContext.Products.Add(productTrademarkViewModel.Product);
+                productTrademarkViewModel.Products.CreateAt = DateTime.Now;
+                _dbContext.Products.Add(productTrademarkViewModel.Products);
                 _dbContext.SaveChanges();
-                return null;
             }
             var newProduct = new ProductTrademarkViewModel
             {
-                Product = productTrademarkViewModel.Product,
+                Products = productTrademarkViewModel.Products,
                 Trademarks = _dbContext.Trademarks.ToList(),
-                StatusMessage = "Error: " + _dbContext.Trademarks.SingleOrDefault(t => t.Id == productTrademarkViewModel.Product.TrademarkId).TrademarkName.ToString()
+                StatusMessage = "Error: " + _dbContext.Trademarks.SingleOrDefault(t => t.Id == productTrademarkViewModel.Products.TrademarkId).TrademarkName.ToString()
             };
             return newProduct;
         }
@@ -63,34 +63,34 @@ namespace Sneaker.Repository
 
         public ProductTrademarkViewModel EditProduct(ProductTrademarkViewModel productTrademarkViewModel)
         {
-            var checkExists = _dbContext.Products.Include(p => p.Trademark).Where(p => p.ProductName == productTrademarkViewModel.Product.ProductName
-            && p.Trademark.Id == productTrademarkViewModel.Product.TrademarkId);
-            var productInDb = GetProductById(productTrademarkViewModel.Product.Id);
+            var checkExists = _dbContext.Products.Include(p => p.Trademark).Where(p => p.ProductName == productTrademarkViewModel.Products.ProductName
+            && p.Trademark.Id == productTrademarkViewModel.Products.TrademarkId);
+            var productInDb = GetProductById(productTrademarkViewModel.Products.Id);
             if (checkExists.Any())
             {
                 //
             }
             else
             {
-                productInDb.ProductName = productTrademarkViewModel.Product.ProductName;
-                productInDb.Badge = productTrademarkViewModel.Product.Badge;
-                productInDb.Title = productTrademarkViewModel.Product.Title;
-                productInDb.TitleURL = productTrademarkViewModel.Product.TitleURL;
-                productInDb.Image = productTrademarkViewModel.Product.Image;
-                productInDb.Image1 = productTrademarkViewModel.Product.Image1;
-                productInDb.Quantity = productTrademarkViewModel.Product.Quantity;
-                productInDb.Badge = productTrademarkViewModel.Product.Badge;
-                productInDb.Price = productTrademarkViewModel.Product.Price;
-                productInDb.Status = productTrademarkViewModel.Product.Status;
-                productInDb.StatusMessage = productTrademarkViewModel.Product.StatusMessage;
+                productInDb.ProductName = productTrademarkViewModel.Products.ProductName;
+                productInDb.Badge = productTrademarkViewModel.Products.Badge;
+                productInDb.Title = productTrademarkViewModel.Products.Title;
+                productInDb.TitleURL = productTrademarkViewModel.Products.TitleURL;
+                productInDb.Image = productTrademarkViewModel.Products.Image;
+                productInDb.Image1 = productTrademarkViewModel.Products.Image1;
+                productInDb.Quantity = productTrademarkViewModel.Products.Quantity;
+                productInDb.Badge = productTrademarkViewModel.Products.Badge;
+                productInDb.Price = productTrademarkViewModel.Products.Price;
+                productInDb.Status = productTrademarkViewModel.Products.Status;
+                productInDb.StatusMessage = productTrademarkViewModel.Products.StatusMessage;
                 _dbContext.SaveChanges();
                 return null;
             }
 
             var model = new ProductTrademarkViewModel
             {
-                Product = productTrademarkViewModel.Product,
-                StatusMessage = "Error: " + _dbContext.Trademarks.SingleOrDefault(t => t.Id == productTrademarkViewModel.Product.TrademarkId).TrademarkName.ToString()
+                Products = productTrademarkViewModel.Products,
+                StatusMessage = "Error: " + _dbContext.Trademarks.SingleOrDefault(t => t.Id == productTrademarkViewModel.Products.TrademarkId).TrademarkName.ToString()
             };
             return model;
         }
@@ -109,7 +109,7 @@ namespace Sneaker.Repository
         {
             var productViewModel = new ProductTrademarkViewModel
             {
-                Product = new Product(),
+                Products = new Product(),
                 Trademarks = _dbContext.Trademarks.OrderBy(t => t.TrademarkName).Distinct().ToList(),
             };
             return productViewModel;

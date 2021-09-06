@@ -8,7 +8,7 @@ namespace Sneaker.ViewModel
 {
     public class ProductTrademarkViewModel
     {
-        public Product Product { get; set; }
+        public Product Products { get; set; }
         public IEnumerable<Trademark> Trademarks { get; set; }
         public string StatusMessage { get; set; }
     }

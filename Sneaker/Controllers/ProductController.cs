@@ -127,7 +127,7 @@ namespace Sneaker.Controllers
                 return NotFound();
             var productVM = new ProductTrademarkViewModel()
             {
-                Product = productInDb,
+                Products = productInDb,
                 Trademarks = _trademarkRepo.GetTrademarks()
             };
             return View(productVM);
@@ -178,15 +178,10 @@ namespace Sneaker.Controllers
 
             using (var xlPackage = new ExcelPackage(stream))
             {
-                // Define a worksheet
                 var worksheet = xlPackage.Workbook.Worksheets.Add("Product");
-
-                // Styling
                 var customStyle = xlPackage.Workbook.Styles.CreateNamedStyle("CustomStyle");
                 customStyle.Style.Font.UnderLine = true;
                 customStyle.Style.Font.Color.SetColor(new Color( /* Color [Red] */));
-
-                // First row
                 var startRow = 5;
                 var row = startRow;
 

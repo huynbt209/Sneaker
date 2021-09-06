@@ -31,8 +31,6 @@ namespace Sneaker.Controllers
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
-            int count = _cartRepo.GetCount(user);
-            ViewBag.cartCount = count;
             var items = _cartRepo.GetCartItem(user);
 
             var cartViewModel = new CartViewModel
@@ -100,13 +98,11 @@ namespace Sneaker.Controllers
                 CartTotal = _cartRepo.GetCartTotal(user),
                 PaymentId = paymentId
             };
-            int count = _cartRepo.GetCount(user);
-            ViewBag.cartCount = count;
             return View(newCartViewModel);
         }
 
         [HttpPost]
-        public IActionResult SubmitOrder(CartViewModel cartViewModel)
+        public async Task<IActionResult> SubmitOrder(CartViewModel cartViewModel)
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;

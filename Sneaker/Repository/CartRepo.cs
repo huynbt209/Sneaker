@@ -71,10 +71,10 @@ namespace Sneaker.Repository
 
         public bool RemoveCart(int id, string userId)
         {
-            var CartItem = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == id && c.UserId == userId);
-            if (CartItem != null)
+            var cartItem = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == id && c.UserId == userId);
+            if (cartItem != null)
             {
-                _dbContext.Carts.Remove(CartItem);
+                _dbContext.Carts.Remove(cartItem);
             }
             _dbContext.SaveChanges();
             return true;
@@ -95,34 +95,26 @@ namespace Sneaker.Repository
             return _dbContext.Carts.Find(id);
         }
 
+        private Invoice CreateInvoice(Invoice invoice)
+        {
+            var result= _dbContext.Invoice.Add(invoice);
+            _dbContext.SaveChanges();
+            return result.Entity;
+        }
+        
         public bool CreateOrder(CartViewModel cartViewModel, string userId)
         {
             cartViewModel.Invoices.CreateAt = DateTime.Now;
             cartViewModel.Invoices.OwnerId = userId;
-            _dbContext.Invoice.Add(cartViewModel.Invoices);
-            _dbContext.SaveChanges();
-            decimal orderTotal = 0;
-            var cartItems = GetCartItem(userId);
-            foreach (var item in cartItems)
-            {
-                var invoiceDetail = new InvoiceDetails()
-                {
-                    ProductId = item.Products.Id,
-                    InvoiceId = cartViewModel.Invoices.Id,
-                    Price = item.Products.Price * item.Quantity,
-                    Quantity = item.Quantity,
-                    UserId = item.UserId,
-                };
-                _dbContext.InvoiceDetails.Add(invoiceDetail);
-                orderTotal += (item.Quantity * item.Products.Price);
-            }
-            cartViewModel.Invoices.OrderTotal = orderTotal;
-            _dbContext.SaveChanges();
+            var invoice = CreateInvoice(cartViewModel.Invoices); 
+             CreateOrderDetail(invoice, userId);
             return true;
         }
 
-        public bool CreateOrderDetail(Invoice invoice, string userId)
+        private void CreateOrderDetail(Invoice invoice, string userId)
         {
+            decimal orderTotal = 0;
+            List<InvoiceDetails> detailsList = new List<InvoiceDetails>();
             var cartItems = GetCartItem(userId);
             foreach (var item in cartItems)
             {
@@ -134,10 +126,12 @@ namespace Sneaker.Repository
                     Quantity = item.Quantity,
                     UserId = item.UserId,
                 };
-                _dbContext.InvoiceDetails.Add(invoiceDetail);
+                detailsList.Add(invoiceDetail);
+                orderTotal += (item.Quantity * item.Products.Price);
             }
+            _dbContext.InvoiceDetails.AddRange(detailsList);
+            invoice.OrderTotal = orderTotal;
             _dbContext.SaveChanges();
-            return true;
         }
 
         public async Task<bool> SubmitOrder(string paymentId, string payerId, CartViewModel cartViewModel)

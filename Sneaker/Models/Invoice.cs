@@ -80,7 +80,6 @@ namespace Sneaker.Models
 
         public DateTime CreateAt { get; set; }
 
-        public virtual InvoiceDetails OrderDetails { get; set; }
 
         public Invoice()
         {
