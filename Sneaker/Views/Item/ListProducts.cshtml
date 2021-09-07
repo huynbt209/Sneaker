@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Routing
-@model IEnumerable<Sneaker.Models.Product>
+@model IEnumerable<Sneaker.Models.Item>
 
 @{
-    ViewBag.Title = "List";
+    ViewBag.Title = "list";
     Layout = "_AdminLayout";
 }
 
@@ -17,28 +17,28 @@
 <div class="card shadow">
     <div class="card-body">
         <div class="table-responsive-xl table mt-2">
-            <table class="table my-0 table-hover" id="productSaleTable">
+            <table class="table my-0 table-hover" id="productTable">
                 <thead class="thead-light">
                 </thead>
             </table>
         </div>
     </div>
 </div>
-
+<div>
+    <partial name="_Remove" />
+</div>
 @section Scripts {
     <script>
         $(document).ready(function () {
             const trademarkId = document.getElementById("trademarkId").value;
-            $('#productSaleTable').DataTable({
+            $('#productTable').DataTable({
                 "processing": true,
-                fixedHeader: true,
                 ajax: {
-                    url: '/Product/GetProductNew/' + trademarkId,
+                    url: '/Item/GetListProducts/' + trademarkId,
                     dataSrc: ''
                 },
                 rowId: "id",
                 columns: [
-                    { data: "title", title: "Title" },
                     {
                         data: "productName", title: "Product Name", render: function (data, type, row) {
                             return '<p id="ProductName' + row.id + '">' + data + '</p>';
@@ -51,14 +51,9 @@
                         data: 'image', title: 'Image', render: function (data) {
                             return '<img src=' + data + ' class="avatar" width="100" height="100"/>';
                         }
-                    }
+                    },                    
                 ],
                 order: [1, 'asc']
-            });
-
-            $('#productTable tbody').on('click', 'tr', function () {
-               const productId = $(this).closest('tr').attr('id');
-               window.location.href = '/Product/ProductDetails/' + productId;
             });
         });
     </script>

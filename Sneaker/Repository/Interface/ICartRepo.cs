@@ -9,7 +9,7 @@ namespace Sneaker.Repository.Interface
 {
     public interface ICartRepo
     {
-        bool AddtoCart(Product product, int quantity, string userId);
+        bool AddtoCart(Item item, int quantity, string userId);
         Cart cart(string userId);
         IEnumerable<Cart> GetCartItem(string userId);
         decimal GetCartTotal(string userId);

@@ -45,11 +45,11 @@ namespace Sneaker
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAdminRepo, AdminRepo>();
             services.AddScoped<ITrademarkRepo, TrademarkRepo>();
-            services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<IFeedbackProductRepo, FeedbackProductRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ICartRepo, CartRepo>();
             services.AddScoped<IInvoiceRepo, InvoiceRepo>();
+            services.AddScoped<IItemRepo, ItemRepo>();
             
             services.ConfigureApplicationCookie(options =>
             {
@@ -109,8 +109,7 @@ namespace Sneaker
             });
 
             dbInitializer.Initializer();
-
-
+            
         }
     }
 }

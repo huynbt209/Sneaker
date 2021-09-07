@@ -14,19 +14,19 @@ namespace Sneaker.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ITrademarkRepo _trademarkRepo;
-        private readonly IProductRepo _productRepo;
+        private readonly IItemRepo _itemRepo;
 
 
-        public HomeController(ILogger<HomeController> logger, ITrademarkRepo trademarkRepo, IProductRepo productRepo)
+        public HomeController(ILogger<HomeController> logger, ITrademarkRepo trademarkRepo, IItemRepo itemRepo)
         {
             _logger = logger;
             _trademarkRepo = trademarkRepo;
-            _productRepo = productRepo;
+            _itemRepo = itemRepo;
         }
 
         public IActionResult Index()
         {
-            return View(_productRepo.getTrendingHotSaleProducts());
+            return View(_itemRepo.GetTrendHotSaleNewProducts());
         }
 
         public IActionResult Privacy()

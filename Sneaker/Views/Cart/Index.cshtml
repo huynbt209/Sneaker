@@ -28,16 +28,16 @@
                             {
                                 <tr>
                                     <td class="image" data-title="No">
-                                        <img src="@item.Products.Image" alt="#">
+                                        <img src="@item.Items.Image" alt="#">
                                     </td>
                                     <td class="product-des" data-title="Description">
                                         <p class="product-name">
-                                            <a href="#">@item.Products.ProductName</a>
+                                            <a href="#">@item.Items.ProductName</a>
                                         </p>
-                                        <p class="product-des">@item.Products.Category</p>
+                                        <p class="product-des">@item.Items.Category</p>
                                     </td>
                                     <td class="price" data-title="Price">
-                                        <span>$@item.Products.Price </span>
+                                        <span>$@item.Items.Price </span>
                                     </td>
                                     <td>
                                         <div class="input-append">
@@ -49,10 +49,10 @@
                                         </div>
                                     </td>
                                     <td class="total-amount" data-title="Total">
-                                        <span>$@(item.Products.Price * item.Quantity)</span>
+                                        <span>$@(item.Items.Price * item.Quantity)</span>
                                     </td>
                                     <td class="action" data-title="Remove">
-                                        <a asp-controller="Cart" asp-action="RemoveCart" asp-route-id="@item.Products.Id">
+                                        <a asp-controller="Cart" asp-action="RemoveCart" asp-route-id="@item.Items.Id">
                                             <i class="ti-trash remove-icon"></i>
                                         </a>
                                     </td>

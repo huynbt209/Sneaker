@@ -37,7 +37,7 @@ namespace Sneaker.Repository
         public InvoiceDetailsViewModel GetInvoiceDetails(int id)
         {
             var invoice = _dbContext.Invoice.FirstOrDefault(i => i.Id == id);
-            var invoiceDetails = _dbContext.InvoiceDetails.Include(d => d.Product).Where(d => d.InvoiceId == id).ToList();
+            var invoiceDetails = _dbContext.InvoiceDetails.Include(d => d.Item).Where(d => d.InvoiceId == id).ToList();
             var model = new InvoiceDetailsViewModel
             {
                 Invoice = invoice,

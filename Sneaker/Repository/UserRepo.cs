@@ -17,24 +17,19 @@ namespace Sneaker.Repository
         {
             _dbContext = dbContext;
         }
-
-        public FeedbackProductViewModel GetProductDetail(int id)
+        
+        public IEnumerable<Item> GetProductsNewUser(int id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Items.Include(p => p.Trademark).Where(p => p.Badge != null && p.Trademark.Id == id).ToList();
         }
 
-        public IEnumerable<Product> GetProductsNewUser(int id)
+        public IEnumerable<Item> GetProductsSaleUser(int id)
         {
-            return _dbContext.Products.Include(p => p.Trademark).Where(p => p.Badge != null && p.Trademark.Id == id).ToList();
+            return _dbContext.Items.Include(p => p.Trademark).Where(p => p.Status == true && p.TrademarkId == id).ToList();
         }
-
-        public IEnumerable<Product> GetProductsSaleUser(int id)
+        public IEnumerable<Item> GetProductByTrademark(int trademarkId)
         {
-            return _dbContext.Products.Include(p => p.Trademark).Where(p => p.Status == true && p.TrademarkId == id).ToList();
-        }
-        public IEnumerable<Product> GetProductByTrademark(int trademarkId)
-        {
-            var products = _dbContext.Products.Include(p => p.Trademark).Where(p => p.TrademarkId == trademarkId).ToList();
+            var products = _dbContext.Items.Include(p => p.Trademark).Where(p => p.TrademarkId == trademarkId).ToList();
             return products;
         }
     }

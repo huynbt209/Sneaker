@@ -1,4 +1,4 @@
-﻿@model Sneaker.ViewModel.CartProductViewModel
+﻿@model Sneaker.ViewModel.TrendingHotSaleViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -97,7 +97,7 @@
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-12">
                                     <div class="single-product">
                                         <div class="product-img">
-                                            <a href="/Product/ProductDetails/@item.Id">
+                                            <a href="/Item/ProductDetails/@item.Id">
                                                 <img class="default-img" src="@item.Image" alt="#">
                                                 <img class="hover-img" src="@item.Image" alt="#">
                                                 <span class="new">Trending</span>
@@ -161,7 +161,7 @@
                     {
                         <div class="single-product">
                             <div class="product-img">
-                                <a href="/Product/ProductDetails/@item.Id">
+                                <a href="/Item/ProductDetails/@item.Id">
                                     <img src="@item.Image" alt="HTML tutorial">
                                     <span class="out-of-stock">Hot</span>
                                 </a>
@@ -187,7 +187,7 @@
                                     <span>@item.Trademark.TrademarkName</span>
                                 </h3>
                                 <h3>
-                                    <a href="/Product/ProductDetails/@item.Id">@item.ProductName</a>
+                                    <a href="/Item/ProductDetails/@item.Id">@item.ProductName</a>
                                 </h3>
                                 <div class="product-price">
                                     <span>$@item.Price</span>

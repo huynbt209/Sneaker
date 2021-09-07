@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Routing
-@model IEnumerable<Sneaker.Models.Product>
+@model IEnumerable<Sneaker.Models.Item>
 
 @{
     ViewBag.Title = "title";
@@ -33,12 +33,11 @@
                 "processing": true,
                 fixedHeader: true,
                 ajax: {
-                    url: '/Product/GetProductSale/' + trademarkId,
+                    url: '/Item/GetProductSale/' + trademarkId,
                     dataSrc: ''
                 },
                 rowId: "id",
                 columns: [
-                    { data: "title", title: "Title" },
                     {
                         data: "productName", title: "Product Name", render: function (data, type, row) {
                             return '<p id="ProductName' + row.id + '">' + data + '</p>';
@@ -54,11 +53,6 @@
                     }
                 ],
                 order: [1, 'asc']
-            });
-
-            $('#productTable tbody').on('click', 'tr', function () {
-               const productId = $(this).closest('tr').attr('id');
-               window.location.href = '/Product/ProductDetails/' + productId;
             });
         });
     </script>

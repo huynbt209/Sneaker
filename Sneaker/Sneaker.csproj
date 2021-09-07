@@ -61,9 +61,18 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="Views\Product\CreateProduct.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\EditProduct.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\ListProductNew.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\ListProducts.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\ListProductSale.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\ProductDetails.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\Uploads.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 

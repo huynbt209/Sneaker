@@ -77,6 +77,7 @@ namespace Sneaker.Models
 
         public string StatusMessage { get; set; }
         public string ChangeStatusBy { get; set; }
+        public string Note { get; set; }
 
         public DateTime CreateAt { get; set; }
 

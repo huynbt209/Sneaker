@@ -19,13 +19,13 @@ namespace Sneaker.Repository
 
         public async Task<bool> SaveComment(int productId, string userId, string message)
         {
-            var newFeedback = new FeedbackProduct
+            var newFeedback = new FeedbackItem()
             {
-                ProductId = productId,
+                ItemId = productId,
                 UserId = userId,
                 Message = message
             };
-            await _dbContext.FeedbackProducts.AddAsync(newFeedback);
+            await _dbContext.FeedbackItems.AddAsync(newFeedback);
             await _dbContext.SaveChangesAsync();
             return true;
         }

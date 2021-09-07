@@ -12,20 +12,21 @@ namespace Sneaker.Controllers
 {
     public class CartController : Controller
     {
-        private readonly IProductRepo _productRepo;
         private readonly IAdminRepo _adminRepo;
         private readonly ICartRepo _cartRepo;
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IItemRepo _itemRepo;
+        
 
-        public CartController(ILogger<UserController> logger, IProductRepo productRepo, IAdminRepo adminRepo,
-            ICartRepo cartRepo, IConfiguration configuration)
+        public CartController(ILogger<UserController> logger, IAdminRepo adminRepo,
+            ICartRepo cartRepo, IConfiguration configuration, IItemRepo itemRepo)
         {
             _logger = logger;
-            _productRepo = productRepo;
             _adminRepo = adminRepo;
             _cartRepo = cartRepo;
             _configuration = configuration;
+            _itemRepo = itemRepo;
         }
         public IActionResult Index()
         {
@@ -56,7 +57,7 @@ namespace Sneaker.Controllers
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
             var cart = _cartRepo.cart(user);
-            var product = _productRepo.GetProductById(id);
+            var product = _itemRepo.GetItemById(id);
             if (product != null)
             {
                 _cartRepo.AddtoCart(product, 1, user);
@@ -69,7 +70,7 @@ namespace Sneaker.Controllers
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
-            var product = _productRepo.GetProductById(id);
+            var product = _itemRepo.GetItemById(id);
             if (product != null)
             {
                 _cartRepo.RemoveCart(id, user);

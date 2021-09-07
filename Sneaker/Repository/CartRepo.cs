@@ -33,14 +33,14 @@ namespace Sneaker.Repository
             };
             return cart;
         }
-        public bool AddtoCart(Product product, int quantity, string userId)
+        public bool AddtoCart(Item item, int quantity, string userId)
         {
-            var cart = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == product.Id && c.UserId == userId);
+            var cart = _dbContext.Carts.SingleOrDefault(c => c.Items.Id == item.Id && c.UserId == userId);
             if (cart == null)
             {
                 cart = new Cart
                 {
-                    Products = product,
+                    Items = item,
                     Quantity = quantity,
                     UserId = userId
                 };
@@ -56,12 +56,12 @@ namespace Sneaker.Repository
 
         public IEnumerable<Cart> GetCartItem(string userId)
         {
-            return _dbContext.Carts.Where(c => c.UserId == userId).Include(p => p.Products).ToList();
+            return _dbContext.Carts.Where(c => c.UserId == userId).Include(p => p.Items).ToList();
         }
 
         public decimal GetCartTotal(string userId)
         {
-            var total = _dbContext.Carts.Where(c => c.UserId == userId).Select(c => c.Products.Price * c.Quantity).Sum();
+            var total = _dbContext.Carts.Where(c => c.UserId == userId).Select(c => c.Items.Price * c.Quantity).Sum();
             return total;
         }
         public int GetCount(string userId)
@@ -71,7 +71,7 @@ namespace Sneaker.Repository
 
         public bool RemoveCart(int id, string userId)
         {
-            var cartItem = _dbContext.Carts.SingleOrDefault(c => c.Products.Id == id && c.UserId == userId);
+            var cartItem = _dbContext.Carts.SingleOrDefault(c => c.Items.Id == id && c.UserId == userId);
             if (cartItem != null)
             {
                 _dbContext.Carts.Remove(cartItem);
@@ -107,7 +107,7 @@ namespace Sneaker.Repository
             cartViewModel.Invoices.CreateAt = DateTime.Now;
             cartViewModel.Invoices.OwnerId = userId;
             var invoice = CreateInvoice(cartViewModel.Invoices); 
-             CreateOrderDetail(invoice, userId);
+            CreateOrderDetail(invoice, userId);
             return true;
         }
 
@@ -120,14 +120,14 @@ namespace Sneaker.Repository
             {
                 var invoiceDetail = new InvoiceDetails()
                 {
-                    ProductId = item.Products.Id,
+                    ItemId = item.Items.Id,
                     InvoiceId = invoice.Id,
-                    Price = item.Products.Price * item.Quantity,
+                    Price = item.Items.Price * item.Quantity,
                     Quantity = item.Quantity,
                     UserId = item.UserId,
                 };
                 detailsList.Add(invoiceDetail);
-                orderTotal += (item.Quantity * item.Products.Price);
+                orderTotal += (item.Quantity * item.Items.Price);
             }
             _dbContext.InvoiceDetails.AddRange(detailsList);
             invoice.OrderTotal = orderTotal;

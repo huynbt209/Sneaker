@@ -9,9 +9,9 @@ namespace Sneaker.Repository.Interface
 {
     public interface IAdminRepo
     {
-        public Task<string> GetUserId(string userId);
-        public Task<string> GetUserName(string userId);
-        public IEnumerable<UserRoleViewModel> GetAllUserInDb();
+        Task<string> GetUserId(string userId);
+        Task<string> GetUserName(string userId);
+        IEnumerable<UserRoleViewModel> GetAllUserInDb();
         bool RemoveAccountUser(string Id);
         ApplicationUser GetUserById(string Id);
         bool EditAccountUser(ApplicationUser applicationUser);

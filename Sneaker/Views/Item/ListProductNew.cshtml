@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Routing
-@model IEnumerable<Sneaker.Models.Product>
+@model IEnumerable<Sneaker.Models.Item>
 
 @{
-    ViewBag.Title = "list";
+    ViewBag.Title = "List";
     Layout = "_AdminLayout";
 }
 
@@ -17,7 +17,7 @@
 <div class="card shadow">
     <div class="card-body">
         <div class="table-responsive-xl table mt-2">
-            <table class="table my-0 table-hover" id="productTable">
+            <table class="table my-0 table-hover" id="productSaleTable">
                 <thead class="thead-light">
                 </thead>
             </table>
@@ -29,15 +29,15 @@
     <script>
         $(document).ready(function () {
             const trademarkId = document.getElementById("trademarkId").value;
-            $('#productTable').DataTable({
+            $('#productSaleTable').DataTable({
                 "processing": true,
+                fixedHeader: true,
                 ajax: {
-                    url: '/Product/GetListProducts/' + trademarkId,
+                    url: '/Item/GetProductNew/' + trademarkId,
                     dataSrc: ''
                 },
                 rowId: "id",
                 columns: [
-                    { data: "title", title: "Title" },
                     {
                         data: "productName", title: "Product Name", render: function (data, type, row) {
                             return '<p id="ProductName' + row.id + '">' + data + '</p>';
@@ -50,21 +50,10 @@
                         data: 'image', title: 'Image', render: function (data) {
                             return '<img src=' + data + ' class="avatar" width="100" height="100"/>';
                         }
-                    },
-                    {
-                        data: 'id', title: 'Action', render: function (data) {
-                            return '<a href="Product/EditProduct/' + data + '"class="btn btn-success mr-1"> Edit </a> '
-                                + '<a id="DeleteHandleClick" class="btn btn-danger mr-1 text-white" data-toggle="modal" data-target="#delModal"> Remove </a>';
-                        }
                     }
                 ],
                 order: [1, 'asc']
-            });
-
-            $('#productTable tbody').on('click', 'tr', function () {
-               const productId = $(this).closest('tr').attr('id');
-               window.location.href = '/Product/ProductDetails/' + productId;
-            });
+            });          
         });
     </script>
 }

@@ -2,22 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sneaker.Models
 {
-    public class FeedbackProduct
+    public class FeedbackItem
     {
         [Key]
         public int Id { get; set; }
         public string Message { get; set; }
         public int Rating {get; set;}
         [Required]
-        [Display(Name = "Product")]
-        public int ProductId { get; set; }
-        [ForeignKey("ProductId")]
-        //public virtual Product Product { get; set; }
+        [Display(Name = "Item")]
+        public int ItemId { get; set; }
+        [ForeignKey("ItemId")]
+        public virtual Item Item { get; set; }
         
         [Required]
         [Display(Name = "User")]
@@ -28,7 +26,7 @@ namespace Sneaker.Models
         public DateTime CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
 
-        public FeedbackProduct()
+        public FeedbackItem()
         {
             CreateAt = DateTime.Now;
             UpdateAt = DateTime.Now;
