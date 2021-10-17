@@ -15,6 +15,10 @@
 <form asp-controller="Item" asp-action="Uploads" method="post" enctype="multipart/form-data">
     <input type="file" name="FormFile" />
     <input type="submit" value="Import" />
+    <br/>
+    <select id="trademarkId" name="Id" asp-items="Model">
+        <option value="0">Please select</option>
+    </select>
 </form>
     
 </body>

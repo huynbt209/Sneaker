@@ -1,4 +1,5 @@
 ﻿@page
+@using DocumentFormat.OpenXml.Office2010.Excel
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -25,7 +26,7 @@
                 }
                 else
                 {
-                    <img src="/avatars/@Model.ImagePath" class="img-thumbnail">
+                     <img src="/avatars/@Model.ImagePath" class="img-thumbnail">
                 }
             </div>
 

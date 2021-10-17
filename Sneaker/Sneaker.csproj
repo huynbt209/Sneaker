@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Windsor" Version="5.1.1" />
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.13.0" />
     <PackageReference Include="EPPlus" Version="5.7.0" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
@@ -69,10 +70,13 @@
     <_ContentIncludedByDefault Remove="Views\Product\ListProductSale.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Product\ProductDetails.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Product\Uploads.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\cart\js\bootstrap.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\cart\js\jquery-2.2.3.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\cart\js\jquery.mycart.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\cart\js\jquery.mycart.min.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 

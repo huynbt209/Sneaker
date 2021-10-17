@@ -31,7 +31,7 @@
                                                 <span>@product.Trademark.TrademarkName</span>
                                             </div>
                                             <div class="product-img">
-                                                <a href="product-details.html">
+                                                <a asp-controller="Item" asp-action="ProductDetails" asp-route-id="@product.Id">
                                                     <img class="default-img" src="@product.Image" alt="#">
                                                     <img class="hover-img" src="@product.Image" alt="#">
                                                     @if (product.Badge != null)
@@ -58,7 +58,7 @@
                                             </div>
                                             <div class="product-content">
                                                 <h3>
-                                                    <a href="product-details.html">@product.ProductName</a>
+                                                    <a asp-controller="Item" asp-action="ProductDetails" asp-route-id="@product.Id">@product.ProductName</a>
                                                 </h3>
                                                 <div class="product-price">
                                                     <span>@product.Price</span>

@@ -50,21 +50,6 @@
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css" />
 
-    <title>My Cart</title>
-    <link rel="stylesheet" href="~/cart/css/bootstrap.min.css">
-    <style>
-        .badge-notify {
-            background: red;
-            position: relative;
-            top: -20px;
-            right: 10px;
-        }
-
-        .my-cart-icon-affix {
-            position: fixed;
-            z-index: 999;
-        }
-    </style>
 
 </head>
 <body class="js">
@@ -230,8 +215,8 @@
                             <div class="search-bar">
                                 <select style="display: none;">
                                     <option selected="selected">All Category</option>
-                                    <option>watch</option>
-                                    <option>mobile</option>
+                                    <option>Man</option>
+                                    <option>Women</option>
                                     <option>kid’s item</option>
                                 </select>
                                 <div class="nice-select" tabindex="0">
@@ -255,14 +240,13 @@
 
                     <div class="col-lg-2 col-md-3 col-12">
                         <div class="right-bar">
-                            <div id="userCartCount" class="sinlge-bar shopping">
+                            <div class="sinlge-bar shopping">
                                 <a asp-controller="Cart" asp-action="Index" class="single-icon">
                                     <i class="ti-bag"></i> <span id="cartCountDisplay" class="total-count"></span>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    @*@await Html.PartialAsync("_CartView")*@
                 </div>
             </div>
         </div>
@@ -551,6 +535,7 @@
     <script type='text/javascript' src="~/cart/js/jquery.mycart.js"></script>
     <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 
 
@@ -572,6 +557,36 @@
                 document.getElementById("cartCountDisplay").innerHTML = data;
             }}); 
         });
+        
+        $(document).ready(function () {
+                    $(".add-to-cart").click(function () {
+                        $.ajax({
+                            url: "/Cart/AddCart",
+                            data: {
+                                id: $(this).data("id"),
+                                addType: "ajax"
+                            },
+                            success: function (res) {
+                                //update cart
+                                $("#top_cart_contain").html(res);
+                                Swal.fire({
+                                    title: 'Add to cart successfully.',
+                                    text: "Go to cart page?",
+                                    icon: 'success',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Move',
+                                    cancelButtonText: 'Continue shopping'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/Cart";
+                                    }
+                                })
+                            }
+                        });
+                    });
+                });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

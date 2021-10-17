@@ -42,10 +42,10 @@
                                     <td>
                                         <div class="input-append">
                                             <input class="span1" style="max-width: 60px" placeholder="1" id="appendedInputButtons" size="20"
-                                                   type="number" min="1" value="@item.Quantity" name="quantity" />
-                                            <button class="btn" type="submit">
-                                                <i class="fa fa-refresh" aria-hidden="true"></i>
-                                            </button>
+                                                   type="number" min="1" value="@item.Quantity" name="quantity" disabled/>
+                                            @* <button class="btn" type="submit"> *@
+                                            @*     <i class="fa fa-refresh" aria-hidden="true"></i> *@
+                                            @* </button> *@
                                         </div>
                                     </td>
                                     <td class="total-amount" data-title="Total">
@@ -70,10 +70,10 @@
                         <div class="col-lg-8 col-md-5 col-12">
                             <div class="left">
                                 <div class="coupon">
-                                    <form action="#" target="_blank">
-                                        <input name="Coupon" placeholder="Enter Your Coupon">
-                                        <button class="btn">Apply</button>
-                                    </form>
+                                    @* <form action="#" target="_blank"> *@
+                                    @*     <input name="Coupon" placeholder="Enter Your Coupon"> *@
+                                    @*     <button class="btn">Apply</button> *@
+                                    @* </form> *@
                                 </div>
                             </div>
                         </div>
@@ -81,8 +81,8 @@
                             <div class="right">
                                 <ul>
                                     <li>Cart Subtotal<span>$@Model.CartTotal</span></li>
-                                    <li>Shipping<span>Free</span></li>
-                                    <li>You Save<span>Free Ship</span></li>
+                                    <li>Shipping<span>Free Ship</span></li>
+                                    <li>You Save<span></span></li>
                                     <li class="last">You Pay<span>$@Model.CartTotal</span></li>
                                 </ul>
                                 <div class="button5">

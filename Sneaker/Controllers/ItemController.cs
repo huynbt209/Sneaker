@@ -21,6 +21,7 @@ using ExcelDataReader;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks.Dataflow;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Sneaker.Controllers
 {
@@ -314,9 +315,11 @@ namespace Sneaker.Controllers
             }
 
             DataTable dt = new DataTable();
+            List<SelectListItem> trademark = new List<SelectListItem>();
             foreach (DataRow row in dt.Rows)
             {
                 row["Id"] = Guid.NewGuid();
+                trademark.Add(new SelectListItem{ Text = row["Trademark"].ToString(), Value = row["TrademarkId"].ToString()});
             }
 
             conString = string.Format(conString, filePath);
@@ -364,7 +367,6 @@ namespace Sneaker.Controllers
                     sqlBulkCopy.ColumnMappings.Add("ChangeStatusBy", "ChangeStatusBy");
                     sqlBulkCopy.ColumnMappings.Add("CreateAt", "CreateAt");
                     sqlBulkCopy.ColumnMappings.Add("UpdateAt", "UpdateAt");
-                    sqlBulkCopy.ColumnMappings.Add("TrademarkId", "TrademarkId");
 
                     con.Open();
                     sqlBulkCopy.WriteToServer(dt);

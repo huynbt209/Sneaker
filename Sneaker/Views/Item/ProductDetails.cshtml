@@ -23,15 +23,15 @@
                     <div class="carousel-inner">
                         <!-- Slide 1 -->
                         <div class="item active">
-                            <img src="@Html.DisplayFor(p => p.Items.Image)" class="img-responsive" alt="" />
+                            <img src="@Html.DisplayFor(p => p.Items.Image)" class="img-responsive" alt=""/>
                         </div>
                         <!-- Slide 2 -->
                         <div class="item">
-                            <img src="@Html.DisplayFor(p => p.Items.Image)" class="img-responsive" alt="" />
+                            <img src="@Html.DisplayFor(p => p.Items.Image)" class="img-responsive" alt=""/>
                         </div>
                         <!-- Slide 3 -->
                         <div class="item">
-                            <img src="@Html.DisplayFor(p => p.Items.Image)" class="img-responsive" alt="" />
+                            <img src="@Html.DisplayFor(p => p.Items.Image)" class="img-responsive" alt=""/>
                         </div>
                     </div>
                     <a class="left carousel-control" href="#myCarousel-2" data-slide="prev">
@@ -48,25 +48,29 @@
             <h2 class="name">
                 @Html.DisplayFor(p => p.Items.ProductName)
             </h2>
-            <hr />
-            <form class="form-horizontal qtyFrm" asp-action="AddCart" asp-controller="Cart" asp-route-id="@Model.Items.Id" method="post">
+            <hr/>
+            <form class="form-horizontal qtyFrm">
                 <div class="control-group">
                     <h3 class="price-container">
                         $@Html.DisplayFor(p => p.Items.Price)
                     </h3>
-                    <div class="controls">
-                        <input type="number" min="1" name="quantity" value="1" class="span1" placeholder="Qty." />
+                    <div class="input-append">
+                        <input class="span1" style="max-width: 60px" placeholder="1" id="appendedInputButtons" size="20"
+                               type="number" min="1" name="quantity" disabled/>
+                        @* <button class="btn" type="submit"> *@
+                        @*     <i class="fa fa-refresh" aria-hidden="true"></i> *@
+                        @* </button> *@
                     </div>
                 </div>
-                <hr />
+                <hr/>
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-6">
-                        <button type="submit" class="btn btn-success btn-lg">Add to cart</button>
+                        <a type="button" class="add-to-cart btn btn-success btn-lg" data-id="@Model.Items.Id">Add to cart</a>
                     </div>
                 </div>
             </form>
 
-            <hr />
+            <hr/>
 
             <div class="description description-tabs">
                 <ul id="myTab" class="nav nav-pills">
@@ -79,39 +83,20 @@
                 </ul>
                 <div id="myTabContent" class="tab-content">
                     <div class="tab-pane fade active in" id="more-information">
-                        <br />
+                        <br/>
                         <strong>Description Title</strong>
                         <p>
                             @Html.DisplayFor(p => p.Items.Category)
                         </p>
                     </div>
                     <div class="tab-pane fade" id="reviews">
-                        <div id="star-rating" data-pid="">
-                            <input type="radio" name="example" class="rating" value="1" />
-                            <input type="radio" name="example" class="rating" value="2" />
-                            <input type="radio" name="example" class="rating" value="3" />
-                            <input type="radio" name="example" class="rating" value="4" />
-                            <input type="radio" name="example" class="rating" value="5" />
-                        </div>
-                        <br />
+                        <br/>
                         <form method="post" class="well padding-bottom-10">
                             <textarea rows="2" id="messageInput" class="form-control" placeholder="Write a review"></textarea>
                             <div class="margin-top-10">
                                 <button type="button" class="btn btn-sm btn-primary pull-right" id="sendButton">
                                     Submit Review
                                 </button>
-                                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add Location">
-                                    <i class="fa fa-location-arrow"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add Voice">
-                                    <i class="fa fa-microphone"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add Photo">
-                                    <i class="fa fa-camera"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add File">
-                                    <i class="fa fa-file"></i>
-                                </a>
                             </div>
                         </form>
 
@@ -122,11 +107,11 @@
                                     <li class="message">
                                         @if (feedback.ApplicationUser.ImagePath == null)
                                         {
-                                            <img src="avatars/avatar.jpeg" class="online" height="30px" width="30px" alt="" />
+                                            <img src="avatars/avatar.jpeg" class="online" height="40" width="40" alt=""/>
                                         }
                                         else
                                         {
-                                            <img src="avatars/@feedback.ApplicationUser.ImagePath" class="online" height="30px" width="30px" alt="" />
+                                            <img id="userAvatarComment" src="avatars/@feedback.ApplicationUser.ImagePath" class="online" height="40" width="40" alt="User Avatar"/>
                                         }
                                         <span class="message-text">
                                             <a href="javascript:void(0);" class="username">
@@ -146,13 +131,11 @@
                     </div>
                 </div>
             </div>
-            <hr />
+            <hr/>
         </div>
     </div>
 </div>
 <!-- end product -->
-<div id="rate"></div>
-<input type="hidden" id="rating" />
 
 @section Scripts{
     <script>
@@ -160,7 +143,7 @@
             let message = document.getElementById("messageInput").value;
             let productId = document.getElementById("ProductId").value;
             $.ajax({
-                url: '/Product/SendFeedback',
+                url: '/Item/SendFeedback',
                 type: 'POST',
                 data: { productId: productId, message: message },
                 success: function (response) {
