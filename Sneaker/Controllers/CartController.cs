@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Sneaker.Models;
 using Sneaker.ViewModel;
 
 namespace Sneaker.Controllers
@@ -43,6 +44,24 @@ namespace Sneaker.Controllers
             return View(cartViewModel);
         }
 
+        [HttpGet]
+        public IActionResult CreateCart()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateCart(ShoppingCart shoppingCart)
+        {
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+            if (shoppingCart != null && user != null)
+            {
+                _cartRepo.CreateShoppingCart(shoppingCart, user);
+            }
+            return RedirectToAction("Index");
+        }
+
         [AllowAnonymous]
         public IActionResult GetCartCountUser()
         {
@@ -56,11 +75,11 @@ namespace Sneaker.Controllers
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
-            var cart = _cartRepo.cart(user);
+            var cart = _cartRepo.Cart(user);
             var product = _itemRepo.GetItemById(id);
             if (product != null)
             {
-                _cartRepo.AddtoCart(product, 1, user);
+                _cartRepo.AddToCart(product, 1, user);
                 return Json(nameof(Index));
             }
             return View(cart);
@@ -82,8 +101,8 @@ namespace Sneaker.Controllers
         [Route("checkout")]
         public async Task<IActionResult> Checkout(double total)
         {
-            var paypalAPI = new PayPalAPI(_configuration);
-            string url = await paypalAPI.getRedirectURLToPayPal(total, "USD");
+            var paypalApi = new PayPalAPI(_configuration);
+            string url = await paypalApi.GetRedirectUrlToPayPal(total, "USD");
             return Redirect(url);
         }
 

@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Sneaker.Data;
 using Sneaker.Models;
 using Sneaker.Repository.Interface;
 using Sneaker.ViewModel;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using System.Data;
+using System.Data.OleDb;
+using Microsoft.Data.SqlClient;
+using System.Net.Http.Headers;
 
 namespace Sneaker.Repository
 {
@@ -53,6 +58,7 @@ namespace Sneaker.Repository
             var list = _dbContext.Items.Where(p => listProductIdInSelectedTrademark.Any(t => t.Equals(p.Id))).ToList();
             return list;
         }
+        
 
         public ItemTrademarkViewModel CreateProduct(ItemTrademarkViewModel productTrademarkViewModel)
         {
@@ -76,6 +82,19 @@ namespace Sneaker.Repository
                 Trademarks = _dbContext.Trademarks.ToList(),
                 StatusMessage = "Error: " + _dbContext.Trademarks
                     .SingleOrDefault(t => t.Id == productTrademarkViewModel.Items.TrademarkId).TrademarkName.ToString()
+            };
+            return newProduct;
+        }
+
+        public ItemTrademarkViewModel CreateProductWithExcel(ItemTrademarkViewModel itemTrademarkViewModel)
+        {
+            _dbContext.Items.Add(itemTrademarkViewModel.Items);
+            _dbContext.SaveChanges();
+                
+            var newProduct = new ItemTrademarkViewModel()
+            {
+                Items = itemTrademarkViewModel.Items,
+                Trademarks = _dbContext.Trademarks.ToList(),
             };
             return newProduct;
         }
@@ -135,13 +154,17 @@ namespace Sneaker.Repository
             IEnumerable<Item> _newProducts =
                 _dbContext.Items.Include(p => p.Trademark).Where(p => p.Badge != null).ToList();
 
+            IEnumerable<InvoiceDetails> _hotBuyProduct =
+                _dbContext.InvoiceDetails.Include(i => i.Item.Trademark).Take(30).ToList();
+
 
             var newTrendingHotSaleViewModel = new TrendingHotSaleViewModel()
             {
                 trendingProducts = _trendingProducts,
                 hotProducts = _hotProducts,
                 saleProducts = _saleProducts,
-                newProducts = _newProducts
+                newProducts = _newProducts,
+                hotBuyProduct = _hotBuyProduct,
             };
             return newTrendingHotSaleViewModel;
         }
@@ -162,7 +185,7 @@ namespace Sneaker.Repository
                 itemInDb.ProductName = itemTrademarkViewModel.Items.ProductName;
                 itemInDb.Badge = itemTrademarkViewModel.Items.Badge;
                 itemInDb.Title = itemTrademarkViewModel.Items.Title;
-                itemInDb.TitleURL = itemTrademarkViewModel.Items.TitleURL;
+                itemInDb.TitleUrl = itemTrademarkViewModel.Items.TitleUrl;
                 itemInDb.Image = itemTrademarkViewModel.Items.Image;
                 itemInDb.Image1 = itemTrademarkViewModel.Items.Image1;
                 itemInDb.Quantity = itemTrademarkViewModel.Items.Quantity;

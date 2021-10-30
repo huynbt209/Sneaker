@@ -6,22 +6,16 @@ using System.IO;
 using OfficeOpenXml;
 using System.Drawing;
 using Microsoft.AspNetCore.Http;
-using System.Linq;
 using Sneaker.Repository.Interface;
 using Microsoft.Extensions.Logging;
 using Sneaker.ViewModel;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.OleDb;
 using Microsoft.Data.SqlClient;
-using System.Text;
-using ExcelDataReader;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Threading.Tasks.Dataflow;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace Sneaker.Controllers
 {
@@ -209,7 +203,7 @@ namespace Sneaker.Controllers
                 var worksheet = xlPackage.Workbook.Worksheets.Add("Product");
                 var customStyle = xlPackage.Workbook.Styles.CreateNamedStyle("CustomStyle");
                 customStyle.Style.Font.UnderLine = true;
-                customStyle.Style.Font.Color.SetColor(new Color( /* Color [Red] */));
+                customStyle.Style.Font.Color.SetColor(new Color());
                 var startRow = 5;
                 var row = startRow;
 
@@ -224,7 +218,7 @@ namespace Sneaker.Controllers
 
                 worksheet.Cells["A2"].Value = "Id";
                 worksheet.Cells["B2"].Value = "Title";
-                worksheet.Cells["C2"].Value = "TitleURL";
+                worksheet.Cells["C2"].Value = "TitleUrl";
                 worksheet.Cells["D2"].Value = "ProductName";
                 worksheet.Cells["E2"].Value = "Image";
                 worksheet.Cells["F2"].Value = "Image1";
@@ -246,7 +240,7 @@ namespace Sneaker.Controllers
                 {
                     worksheet.Cells[row, 1].Value = product.Id;
                     worksheet.Cells[row, 2].Value = product.Title;
-                    worksheet.Cells[row, 3].Value = product.Title;
+                    worksheet.Cells[row, 3].Value = product.TitleUrl;
                     worksheet.Cells[row, 4].Value = product.ProductName;
                     worksheet.Cells[row, 5].Value = product.Image;
                     worksheet.Cells[row, 6].Value = product.Image1;
@@ -260,7 +254,7 @@ namespace Sneaker.Controllers
                     worksheet.Cells[row, 14].Value = product.ChangeStatusBy;
                     worksheet.Cells[row, 15].Value = product.TrademarkId;
 
-                    row++; // row = row + 1;
+                    row++; 
                 }
 
                 xlPackage.Workbook.Properties.Title = "Product list";
@@ -278,104 +272,103 @@ namespace Sneaker.Controllers
         [HttpGet]
         public IActionResult Uploads()
         {
-            return View();
+            var viewModel = _itemRepo.ProductTrademarkViewModel();
+            return View(viewModel);
         }
 
-
-        ///////////////////
-        [HttpPost]
-        [Obsolete]
-        public async Task<ActionResult> Uploads(IFormFile FormFile)
-        {
-            var filename = ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition).FileName.Trim('"');
-            var MainPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files");
-            if (!Directory.Exists(MainPath))
-            {
-                Directory.CreateDirectory(MainPath);
-            }
-
-            var filePath = Path.Combine(MainPath, FormFile.FileName);
-            using (System.IO.Stream stream = new FileStream(filePath, FileMode.Create))
-            {
-                await FormFile.CopyToAsync(stream);
-            }
-
-            string extension = Path.GetExtension(filename);
-            string conString = string.Empty;
-            switch (extension)
-            {
-                case ".xls":
-                    conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath +
-                                ";Extended Properties='Excel 8.0;HDR=YES'";
-                    break;
-                case ".xlsx":
-                    conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath +
-                                ";Extended Properties='Excel 8.0;HDR=YES'";
-                    break;
-            }
-
-            DataTable dt = new DataTable();
-            List<SelectListItem> trademark = new List<SelectListItem>();
-            foreach (DataRow row in dt.Rows)
-            {
-                row["Id"] = Guid.NewGuid();
-                trademark.Add(new SelectListItem{ Text = row["Trademark"].ToString(), Value = row["TrademarkId"].ToString()});
-            }
-
-            conString = string.Format(conString, filePath);
-            using (OleDbConnection connExcel = new OleDbConnection(conString))
-            {
-                using (OleDbCommand cmdExcel = new OleDbCommand())
-                {
-                    using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
-                    {
-                        cmdExcel.Connection = connExcel;
-                        connExcel.Open();
-                        DataTable dtExcelSchema;
-                        dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                        string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                        connExcel.Close();
-                        connExcel.Open();
-                        cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
-                        odaExcel.SelectCommand = cmdExcel;
-                        odaExcel.Fill(dt);
-                        connExcel.Close();
-                    }
-                }
-            }
-
-            conString =
-                "Server=localhost,1433;Database=Sneaker;User=sa;Password=Password@123;";
-
-            using (SqlConnection con = new SqlConnection(conString))
-            {
-                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
-                {
-                    sqlBulkCopy.DestinationTableName = "dbo.Items";
-                    sqlBulkCopy.ColumnMappings.Add("Title", "Title");
-                    sqlBulkCopy.ColumnMappings.Add("TitleURL", "TitleURL");
-                    sqlBulkCopy.ColumnMappings.Add("ProductName", "ProductName");
-                    sqlBulkCopy.ColumnMappings.Add("Image", "Image");
-                    sqlBulkCopy.ColumnMappings.Add("Image1", "Image1");
-                    sqlBulkCopy.ColumnMappings.Add("Quantity", "Quantity");
-                    sqlBulkCopy.ColumnMappings.Add("Price", "Price");
-                    sqlBulkCopy.ColumnMappings.Add("Badge", "Badge");
-                    sqlBulkCopy.ColumnMappings.Add("Category", "Category");
-                    sqlBulkCopy.ColumnMappings.Add("ProductCard", "ProductCard");
-                    sqlBulkCopy.ColumnMappings.Add("Status", "Status");
-                    sqlBulkCopy.ColumnMappings.Add("StatusMessage", "StatusMessage");
-                    sqlBulkCopy.ColumnMappings.Add("ChangeStatusBy", "ChangeStatusBy");
-                    sqlBulkCopy.ColumnMappings.Add("CreateAt", "CreateAt");
-                    sqlBulkCopy.ColumnMappings.Add("UpdateAt", "UpdateAt");
-
-                    con.Open();
-                    sqlBulkCopy.WriteToServer(dt);
-                    con.Close();
-                }
-            }
-
-            _logger.LogInformation("File Imported and excel Products data saved into database");
-            return View();
-        }
+        /////////////////
+         [HttpPost]
+         [Obsolete]
+         public async Task<ActionResult> Uploads(IFormFile formFile)
+         {
+             var filename = ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim('"');
+             var mainPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files");
+             if (!Directory.Exists(mainPath))
+             {
+                 Directory.CreateDirectory(mainPath);
+             }
+        
+             var filePath = Path.Combine(mainPath, formFile.FileName);
+             using (System.IO.Stream stream = new FileStream(filePath, FileMode.Create))
+             {
+                 await formFile.CopyToAsync(stream);
+             }
+        
+             string extension = Path.GetExtension(filename);
+             string conString = string.Empty;
+             switch (extension)
+             {
+                 case ".xls":
+                     conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath +
+                                 ";Extended Properties='Excel 8.0;HDR=YES'";
+                     break;
+                 case ".xlsx":
+                     conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath +
+                                 ";Extended Properties='Excel 8.0;HDR=YES'";
+                     break;
+             }
+        
+             DataTable dataTable = new DataTable();
+             foreach (DataRow row in dataTable.Rows)
+             {
+                 row["Id"] = Guid.NewGuid();
+             }
+        
+             conString = string.Format(conString, filePath);
+             using (OleDbConnection connExcel = new OleDbConnection(conString))
+             {
+                 using (OleDbCommand cmdExcel = new OleDbCommand())
+                 {
+                     using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                     {
+                         cmdExcel.Connection = connExcel;
+                         connExcel.Open();
+                         DataTable dtExcelSchema;
+                         dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                         string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                         connExcel.Close();
+                         connExcel.Open();
+                         cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                         odaExcel.SelectCommand = cmdExcel;
+                         odaExcel.Fill(dataTable);
+                         connExcel.Close();
+                     }
+                 }
+             }
+        
+             conString =
+                 "Server=localhost,1433;Database=Project;User=sa;Password=Password@123;";
+        
+             using (SqlConnection con = new SqlConnection(conString))
+             {
+                 using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+                 {
+                     sqlBulkCopy.DestinationTableName = "dbo.Items";
+                     sqlBulkCopy.ColumnMappings.Add("Title", "Title");
+                     sqlBulkCopy.ColumnMappings.Add("TitleUrl", "TitleUrl");
+                     sqlBulkCopy.ColumnMappings.Add("ProductName", "ProductName");
+                     sqlBulkCopy.ColumnMappings.Add("Image", "Image");
+                     sqlBulkCopy.ColumnMappings.Add("Image1", "Image1");
+                     sqlBulkCopy.ColumnMappings.Add("Quantity", "Quantity");
+                     sqlBulkCopy.ColumnMappings.Add("Price", "Price");
+                     sqlBulkCopy.ColumnMappings.Add("Badge", "Badge");
+                     sqlBulkCopy.ColumnMappings.Add("Category", "Category");
+                     sqlBulkCopy.ColumnMappings.Add("ProductCard", "ProductCard");
+                     sqlBulkCopy.ColumnMappings.Add("Status", "Status");
+                     sqlBulkCopy.ColumnMappings.Add("StatusMessage", "StatusMessage");
+                     sqlBulkCopy.ColumnMappings.Add("ChangeStatusBy", "ChangeStatusBy");
+                     sqlBulkCopy.ColumnMappings.Add("CreateAt", "CreateAt");
+                     sqlBulkCopy.ColumnMappings.Add("UpdateAt", "UpdateAt");
+                     sqlBulkCopy.ColumnMappings.Add("TrademarkId", "TrademarkId");
+        
+                     con.Open();
+                     sqlBulkCopy.WriteToServer(dataTable);
+                     con.Close();
+                 }
+             }
+        
+             _logger.LogInformation("File Imported and excel Products data saved into database");
+             return View();
+         }
     }
 }

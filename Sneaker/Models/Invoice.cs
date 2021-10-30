@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sneaker.Models
 {
-    public partial class Invoice
+    public class Invoice
     {
         [Key]
         public int Id { get; set; }
@@ -67,10 +67,10 @@ namespace Sneaker.Models
         [Required(ErrorMessage = "Please enter your Postal Code")]
         public int PostalCode { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
+        [Column(TypeName = "decimal(18,0)")]
         public decimal OrderTotal { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
+        [Column(TypeName = "decimal(18,0)")]
         public decimal DeliveryFee { get; set; }
 
         public bool Status { get; set; }

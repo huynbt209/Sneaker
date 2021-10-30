@@ -13,13 +13,14 @@ namespace Sneaker.Data
 
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<Product> Products { get; set; }
         public DbSet<Trademark> Trademarks { get; set; }
-        public DbSet<FeedbackProduct> FeedbackProducts { get; set; }
         public DbSet<FeedbackItem> FeedbackItems { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<InvoiceDetails> InvoiceDetails { get; set; }
-        public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
     }
 }

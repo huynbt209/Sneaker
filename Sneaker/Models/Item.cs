@@ -11,7 +11,7 @@ namespace Sneaker.Models
         [Required]
         public string Title { get; set; }
         [Display(Name = "Title URL")]
-        public string TitleURL { get; set; }
+        public string TitleUrl { get; set; }
         [Display(Name = "Product Name")]
         public string ProductName { get; set; }
         public string Image { get; set; }

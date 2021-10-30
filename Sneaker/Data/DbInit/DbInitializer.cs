@@ -67,55 +67,55 @@ namespace Sneaker.Data.DbInit
             }
 
 
-            if (_userManager.FindByEmailAsync("sneakermanager@gmail.com").Result == null)
-            {
-                var result = _userManager.CreateAsync(new ApplicationUser
-                {
-                    UserName = "sneakermanager@gmail.com",
-                    FullName = "Manager Sneaker",
-                    Email = "sneakermanager@gmail.com",
-                    EmailConfirmed = true
-                }, "Sneaker@123").GetAwaiter().GetResult();
-                if (result.Succeeded)
-                {
-                    var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == "sneakermanager@gmail.com");
-                    await _userManager.AddToRoleAsync(user, SystemRoles.Manager);
-                }
-            }
-
-
-            if (_userManager.FindByEmailAsync("sneakermember@gmail.com").Result == null)
-            {
-                var result = _userManager.CreateAsync(new ApplicationUser
-                {
-                    UserName = "sneakermember@gmail.com",
-                    FullName = "Member Sneaker",
-                    Email = "sneakermember@gmail.com",
-                    EmailConfirmed = true
-                }, "Sneaker@123").GetAwaiter().GetResult();
-                if (result.Succeeded)
-                {
-                    var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == "sneakermember@gmail.com");
-                    await _userManager.AddToRoleAsync(user, SystemRoles.Member);
-                }
-            }
-
-
-            if (_userManager.FindByEmailAsync("huynbt09@gmail.com").Result == null)
-            {
-                var result = _userManager.CreateAsync(new ApplicationUser
-                {
-                    UserName = "huynbt09@gmail.com",
-                    FullName = "Huy Sneaker",
-                    Email = "huynbt09@gmail.com",
-                    EmailConfirmed = true
-                }, "Sneaker@123").GetAwaiter().GetResult();
-                if (result.Succeeded)
-                {
-                    var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == "huynbt09@gmail.com");
-                    await _userManager.AddToRoleAsync(user, SystemRoles.Administrator);
-                }
-            }
+            // if (_userManager.FindByEmailAsync("sneakermanager@gmail.com").Result == null)
+            // {
+            //     var result = _userManager.CreateAsync(new ApplicationUser
+            //     {
+            //         UserName = "sneakermanager@gmail.com",
+            //         FullName = "Manager Sneaker",
+            //         Email = "sneakermanager@gmail.com",
+            //         EmailConfirmed = true
+            //     }, "Sneaker@123").GetAwaiter().GetResult();
+            //     if (result.Succeeded)
+            //     {
+            //         var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == "sneakermanager@gmail.com");
+            //         await _userManager.AddToRoleAsync(user, SystemRoles.Manager);
+            //     }
+            // }
+            //
+            //
+            // if (_userManager.FindByEmailAsync("sneakermember@gmail.com").Result == null)
+            // {
+            //     var result = _userManager.CreateAsync(new ApplicationUser
+            //     {
+            //         UserName = "sneakermember@gmail.com",
+            //         FullName = "Member Sneaker",
+            //         Email = "sneakermember@gmail.com",
+            //         EmailConfirmed = true
+            //     }, "Sneaker@123").GetAwaiter().GetResult();
+            //     if (result.Succeeded)
+            //     {
+            //         var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == "sneakermember@gmail.com");
+            //         await _userManager.AddToRoleAsync(user, SystemRoles.Member);
+            //     }
+            // }
+            //
+            //
+            // if (_userManager.FindByEmailAsync("huynbt09@gmail.com").Result == null)
+            // {
+            //     var result = _userManager.CreateAsync(new ApplicationUser
+            //     {
+            //         UserName = "huynbt09@gmail.com",
+            //         FullName = "Huy Sneaker",
+            //         Email = "huynbt09@gmail.com",
+            //         EmailConfirmed = true
+            //     }, "Sneaker@123").GetAwaiter().GetResult();
+            //     if (result.Succeeded)
+            //     {
+            //         var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == "huynbt09@gmail.com");
+            //         await _userManager.AddToRoleAsync(user, SystemRoles.Administrator);
+            //     }
+            // }
         }
     }
 }

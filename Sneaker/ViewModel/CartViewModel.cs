@@ -11,7 +11,6 @@ namespace Sneaker.ViewModel
         public decimal CartTotal { get; set; }
         public IEnumerable<Cart> Carts {get ; set;}
         public Invoice  Invoices {get; set;}
-        public InvoiceDetails InvoiceDetails { get; set; }
         public string PaymentId {get ;set;}
     }
 }

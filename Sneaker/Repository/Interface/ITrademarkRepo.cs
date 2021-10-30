@@ -10,9 +10,9 @@ namespace Sneaker.Repository.Interface
     public interface ITrademarkRepo
     {
         IEnumerable<Trademark> GetTrademarks();
-        Trademark GetTrademarkById(int Id);
+        Trademark GetTrademarkById(int id);
         bool CreateNewTrademark(Trademark trademark);
         bool EditTrademark(Trademark trademark);
-        bool RemoveTrademark(int Id);
+        bool RemoveTrademark(int id);
     }
 }

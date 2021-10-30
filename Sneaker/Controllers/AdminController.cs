@@ -17,15 +17,29 @@ namespace Sneaker.Controllers
         private readonly IAdminRepo _adminRepo;
         private readonly IInvoiceRepo _invoiceRepo;
         private readonly ILogger<AdminController> _logger;
+        private readonly IChartRepo _chartRepo;
 
-        public AdminController(IAdminRepo adminRepo, ILogger<AdminController> logger, IInvoiceRepo invoiceRepo)
+        public AdminController(IAdminRepo adminRepo, ILogger<AdminController> logger, IInvoiceRepo invoiceRepo, IChartRepo chartRepo)
         {
             _adminRepo = adminRepo;
             _logger = logger;
             _invoiceRepo = invoiceRepo;
+            _chartRepo = chartRepo;
         }
         public IActionResult Dashboard()
         {
+            ViewBag.TrademarkList = _chartRepo.GetTrademarkList();
+            ViewBag.CountItemOfTrademark = _chartRepo.CountItemOfTrademark();
+            ViewBag.CountItemInInvoiceOfTrademark = _chartRepo.CountProductInInvoiceOfTrademark();
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Dashboard(int selectedYear)
+        {
+            ViewBag.TrademarkList = _chartRepo.GetTrademarkList();
+            ViewBag.CountItemOfTrademark = _chartRepo.CountItemOfTrademark();
+            ViewBag.CountItemInInvoiceOfTrademark = _chartRepo.CountProductInInvoiceOfTrademark();
+            ViewBag.Year = selectedYear;
             return View();
         }
 

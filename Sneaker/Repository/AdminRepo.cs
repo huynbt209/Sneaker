@@ -24,7 +24,7 @@ namespace Sneaker.Repository
         }
         public async Task<string> GetUserName(string userId)
         {
-            var user = _dbContext.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+            var user = await _dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == userId);
             return user == null ? "Unknown" : user.FullName;
         }
 

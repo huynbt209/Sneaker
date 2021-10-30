@@ -23,7 +23,7 @@ namespace Sneaker.Helpers
             _configuration = configuration;
         }
 
-        public async Task<string> getRedirectURLToPayPal(double total, string currency)
+        public async Task<string> GetRedirectUrlToPayPal(double total, string currency)
         {
             try
             {

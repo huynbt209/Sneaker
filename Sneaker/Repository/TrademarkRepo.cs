@@ -56,9 +56,9 @@ namespace Sneaker.Repository
             return true;
         }
     //
-        public Trademark GetTrademarkById(int Id)
+        public Trademark GetTrademarkById(int id)
         {
-            return _dbContext.Trademarks.SingleOrDefault(tr => tr.Id == Id);
+            return _dbContext.Trademarks.SingleOrDefault(tr => tr.Id == id);
         }
 
         public IEnumerable<Trademark> GetTrademarks()
@@ -66,14 +66,14 @@ namespace Sneaker.Repository
             return _dbContext.Trademarks.ToList();
         }
     //
-        public bool RemoveTrademark(int Id)
+        public bool RemoveTrademark(int id)
         {
-            var TrademarkInDb = GetTrademarkById(Id);
-            if (TrademarkInDb == null)
+            var trademarkInDb = GetTrademarkById(id);
+            if (trademarkInDb == null)
             {
                 return false;
             }
-            _dbContext.Trademarks.Remove(TrademarkInDb);
+            _dbContext.Trademarks.Remove(trademarkInDb);
             _dbContext.SaveChanges();
             return true;
         }

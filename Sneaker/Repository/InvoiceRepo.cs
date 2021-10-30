@@ -20,7 +20,7 @@ namespace Sneaker.Repository
 
         public IEnumerable<Invoice> GetAllInvoices()
         {
-            var invoiceInDb = _dbContext.Invoice.ToList();
+            var invoiceInDb = _dbContext.Invoices.ToList();
             return invoiceInDb;
         }
 
@@ -31,12 +31,12 @@ namespace Sneaker.Repository
 
         public Invoice GetInvoiceById(int id)
         {
-            return _dbContext.Invoice.SingleOrDefault(i => i.Id == id);
+            return _dbContext.Invoices.SingleOrDefault(i => i.Id == id);
         }
 
         public InvoiceDetailsViewModel GetInvoiceDetails(int id)
         {
-            var invoice = _dbContext.Invoice.FirstOrDefault(i => i.Id == id);
+            var invoice = _dbContext.Invoices.FirstOrDefault(i => i.Id == id);
             var invoiceDetails = _dbContext.InvoiceDetails.Include(d => d.Item).Where(d => d.InvoiceId == id).ToList();
             var model = new InvoiceDetailsViewModel
             {
@@ -49,17 +49,17 @@ namespace Sneaker.Repository
 
         public IEnumerable<Invoice> GetUserInvoices(string userId)
         {
-            return _dbContext.Invoice.Where(i => i.OwnerId == userId).ToList();
+            return _dbContext.Invoices.Where(i => i.OwnerId == userId).ToList();
         }
 
         public bool UpdateInvoiceStatus(int id, bool status, string message, string changeStatus)
         {
-            var invoiceInDb = _dbContext.Invoice.FirstOrDefault(a => a.Id == id);
+            var invoiceInDb = _dbContext.Invoices.FirstOrDefault(a => a.Id == id);
             if (invoiceInDb == null) return false;
             invoiceInDb.Status = status;
             invoiceInDb.StatusMessage = message;
             invoiceInDb.ChangeStatusBy = changeStatus;
-            _dbContext.Invoice.Update(invoiceInDb);
+            _dbContext.Invoices.Update(invoiceInDb);
             _dbContext.SaveChanges();
             return true;
         }

@@ -9,5 +9,6 @@ namespace Sneaker.ViewModel
         public IEnumerable<Item> hotProducts { get; set; }
         public IEnumerable<Item> saleProducts { get; set; }
         public IEnumerable<Item> newProducts { get; set; }
+        public IEnumerable<InvoiceDetails> hotBuyProduct { get; set; }
     }
 }

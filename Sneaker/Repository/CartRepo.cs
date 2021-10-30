@@ -25,7 +25,21 @@ namespace Sneaker.Repository
             _configuration = configuration;
         }
 
-        public Cart cart(string userId)
+        public bool CreateShoppingCart(ShoppingCart shoppingCart, string userId)
+        {
+            var newShoppingCart = new ShoppingCart()
+            {
+                OwnerName = shoppingCart.OwnerName,
+                Note = shoppingCart.Note,
+                OwnerId = userId,
+                CreateAt = DateTime.Now
+            };
+            _dbContext.ShoppingCarts.Add(newShoppingCart);
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public Cart Cart(string userId)
         {
             var cart = new Cart
             {
@@ -33,7 +47,7 @@ namespace Sneaker.Repository
             };
             return cart;
         }
-        public bool AddtoCart(Item item, int quantity, string userId)
+        public bool AddToCart(Item item, int quantity, string userId)
         {
             var cart = _dbContext.Carts.SingleOrDefault(c => c.Items.Id == item.Id && c.UserId == userId);
             if (cart == null)
@@ -97,7 +111,7 @@ namespace Sneaker.Repository
 
         private Invoice CreateInvoice(Invoice invoice)
         {
-            var result= _dbContext.Invoice.Add(invoice);
+            var result= _dbContext.Invoices.Add(invoice);
             _dbContext.SaveChanges();
             return result.Entity;
         }
