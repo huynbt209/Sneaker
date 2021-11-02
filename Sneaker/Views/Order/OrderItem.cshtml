@@ -1,0 +1,194 @@
+﻿@model Sneaker.ViewModel.OrderItemViewModel
+
+@{
+    ViewBag.Title = "Order Items";
+    Layout = "_UserLayout";
+}
+
+<div class="shopping-cart section">
+    <div class="container">
+        <div class="page-header row no-gutters py-4">
+            <div class="col-12 mt-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">
+                    Open Group Order
+                </button>
+            </div>
+        </div>
+        <input id="OrderId" type="hidden" value="@Model.Orders.Id"/>
+        <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reviewModalLabel">Check Group Order</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="MessageStatus"></div>
+                        <form>
+                            <div class="form-group">
+                                <label for="isTeamOrder" class="col-form-label">Is Team Order:</label>
+                                <select class="custom-select" id="isTeamOrder">
+                                    <option selected>Select status</option>
+                                    <option value="true">Open Group Order</option>
+                                    <option value="false">Close Group Order</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="UpdateStatusButton" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Orders.IsTeamOrder)
+        {
+            <div class="btn-group mb-3">
+                <div class="input-group-prepend mr-2">
+                    <span class="input-group-text" id="basic-addon1">Is Team Order:</span>
+                </div>
+                <button class="btn btn-success" type="button">
+                    <span role="status" aria-hidden="true"></span>
+                    Opening: 
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="btn-group mb-3">
+                <div class="input-group-prepend mr-2">
+                    <span class="input-group-text" id="basic-addon1">Is Team Order:</span>
+                </div>
+                <button class="btn btn-warning" type="button">
+                    Closing
+                </button>
+            </div>
+        }
+        <div class="row">
+            <div class="col-12">
+                <form method="post" asp-controller="Order" asp-action="">
+                    <table class="table shopping-summery">
+                        <thead>
+                        <tr class="main-hading">
+                            <th>PRODUCT</th>
+                            <th>NAME</th>
+                            <th class="text-center">UNIT PRICE</th>
+                            <th class="text-center">QUANTITY</th>
+                            <th class="text-center">TOTAL</th>
+                            <th class="text-center">
+                                <i class="ti-trash remove-icon"></i>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td class="image" data-title="No">
+                                    <img src="@item.Item.Image" alt="#">
+                                </td>
+                                <td class="product-des" data-title="Description">
+                                    <p class="product-name">
+                                        <a href="#">@item.Item.ProductName</a>
+                                    </p>
+                                    <p class="product-des">@item.Item.Category</p>
+                                </td>
+                                <td class="price" data-title="Price">
+                                    <span>$@item.Item.Price </span>
+                                </td>
+                                <td>
+                                    <div class="input-append">
+                                        <input class="span1" style="max-width: 60px" placeholder="1" id="appendedInputButtons" size="20"
+                                               type="number" min="1" value="@item.Quantity" name="quantity" disabled/>
+                                        @* <button class="btn" type="submit"> *@
+                                        @*     <i class="fa fa-refresh" aria-hidden="true"></i> *@
+                                        @* </button> *@
+                                    </div>
+                                </td>
+                                <td class="total-amount" data-title="Total">
+                                    <span>$@(item.Item.Price * item.Quantity)</span>
+                                </td>
+                                <td class="action" data-title="Remove">
+                                    <a asp-controller="Cart" asp-action="RemoveCart" asp-route-id="@item.Item.Id">
+                                        <i class="ti-trash remove-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="total-amount">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-5 col-12">
+                            <div class="left">
+                                <div class="coupon">
+                                    @* <form action="#" target="_blank"> *@
+                                    @*     <input name="Coupon" placeholder="Enter Your Coupon"> *@
+                                    @*     <button class="btn">Apply</button> *@
+                                    @* </form> *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-7 col-12">
+                            <div class="right">
+                                <ul>
+                                    <li>Cart Subtotal<span>$</span></li>
+                                    <li>Shipping<span>Free Ship</span></li>
+                                    <li>You Save<span></span></li>
+                                    <li class="last">You Pay<span>$</span></li>
+                                </ul>
+                                <div class="button5">
+                                    <form method="post" asp-controller="cart" asp-action="checkout">
+                                        <button type="submit" value="Checkout" class="btn">Checkout With PayPal</button>
+                                        <input type="hidden" name="total" value="1"/>
+                                    </form>
+                                    <a href="#" class="btn">Continue shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        document.getElementById("UpdateStatusButton").addEventListener("click", function (event) {
+            var isTeamOrder = document.getElementById("isTeamOrder").value;
+            var orderId = document.getElementById("OrderId").value;
+            $.ajax({
+                url: '/Order/ShareOrder',
+                type: 'POST',
+                data: { orderId: orderId, isTeamOrder: isTeamOrder },
+                success: function (response) {
+                    if (!response.success) {
+                        $('#MessageStatus').html('<div class="d-flex flex-row mb-2 alert alert-warning alert-dismissible mt-2"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div>');
+                    }
+                    else {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 100);
+                    }
+                },
+                error: function () {
+
+                }
+            })
+                .catch(function (err) {
+                    return console.error(err.toString());
+                });
+        });
+    </script>
+}

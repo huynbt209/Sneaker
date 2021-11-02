@@ -1,60 +1,51 @@
-﻿@model Sneaker.ViewModel.OrderItemViewModel
+﻿@model IEnumerable<Sneaker.Models.Order>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "index";
     Layout = "_UserLayout";
 }
 
+<div class="row">
+    <div class="col-12">
+        <div class="section-title">
+            <h2>Invoice Overview</h2>
+        </div>
+    </div>
+</div>
 <div class="shopping-cart section">
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <form method="post" asp-controller="Cart" asp-action="">
+                <form>
                     <table class="table shopping-summery">
                         <thead>
                             <tr class="main-hading">
-                                <th>PRODUCT</th>
-                                <th>NAME</th>
-                                <th class="text-center">UNIT PRICE</th>
-                                <th class="text-center">QUANTITY</th>
-                                <th class="text-center">TOTAL</th>
-                                <th class="text-center">
-                                    <i class="ti-trash remove-icon"></i>
-                                </th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th class="text-center">Total Price</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Order Date</th>
+                                <th class="text-center">Payment</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.OrderItems)
+                            @foreach (var or in Model)
                             {
                                 <tr>
-                                    <td class="image" data-title="No">
-                                        <img src="@item.Item.Image" alt="#">
-                                    </td>
-                                    <td class="product-des" data-title="Description">
-                                        <p class="product-name">
-                                            <a href="#">@item.Item.ProductName</a>
-                                        </p>
-                                        <p class="product-des">@item.Item.Category</p>
+                                    <td class="ti-email" data-title="Email">
+                                        <span>@or.Status </span>
                                     </td>
                                     <td class="price" data-title="Price">
-                                        <span>$@item.Item.Price </span>
+                                        <p class="price">
+                                            @or.IsTeamOrder
+                                        </p>
+                                        <a class="ui-state-hover" asp-controller="Order" asp-action="OrderItem" asp-route-id="@or.Id">View More</a>
                                     </td>
-                                    <td>
-                                        <div class="input-append">
-                                            <input class="span1" style="max-width: 60px" placeholder="1" id="appendedInputButtons" size="20"
-                                                   type="number" min="1" value="@item.Quantity" name="quantity" disabled/>
-                                            @* <button class="btn" type="submit"> *@
-                                            @*     <i class="fa fa-refresh" aria-hidden="true"></i> *@
-                                            @* </button> *@
-                                        </div>
+                                    <td class="status-indicator" data-title="Status">
+                                        <span>@or.Status </span>
                                     </td>
-                                    <td class="total-amount" data-title="Total">
-                                        <span>$@(item.Item.Price * item.Quantity)</span>
-                                    </td>
-                                    <td class="action" data-title="Remove">
-                                        <a asp-controller="Cart" asp-action="RemoveCart" asp-route-id="@item.Item.Id">
-                                            <i class="ti-trash remove-icon"></i>
-                                        </a>
+                                    <td class="date" data-title="Date">
+                                        <span>@or.CreateAt </span>
                                     </td>
                                 </tr>
                             }
@@ -63,40 +54,6 @@
                 </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="total-amount">
-                    <div class="row">
-                        <div class="col-lg-8 col-md-5 col-12">
-                            <div class="left">
-                                <div class="coupon">
-                                    @* <form action="#" target="_blank"> *@
-                                    @*     <input name="Coupon" placeholder="Enter Your Coupon"> *@
-                                    @*     <button class="btn">Apply</button> *@
-                                    @* </form> *@
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-7 col-12">
-                            <div class="right">
-                                <ul>
-                                    <li>Cart Subtotal<span>$</span></li>
-                                    <li>Shipping<span>Free Ship</span></li>
-                                    <li>You Save<span></span></li>
-                                    <li class="last">You Pay<span>$</span></li>
-                                </ul>
-                                <div class="button5">
-                                    <form method="post" asp-controller="cart" asp-action="checkout">
-                                        <button type="submit" value="Checkout" class="btn">Checkout With PayPal</button>
-                                        <input type="hidden" name="total" value="1" />
-                                    </form>
-                                    <a href="#" class="btn">Continue shopping</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
+

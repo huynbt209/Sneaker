@@ -11,6 +11,7 @@ namespace Sneaker.Repository.Interface
     {
         Task<string> GetUserId(string userId);
         Task<string> GetUserName(string userId);
+        Task<string> GetUserFullName(string userId);
         IEnumerable<UserRoleViewModel> GetAllUserInDb();
         bool RemoveAccountUser(string Id);
         ApplicationUser GetUserById(string Id);

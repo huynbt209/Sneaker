@@ -27,14 +27,19 @@ namespace Sneaker.Controllers
         {
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _adminRepo.GetUserId(currentUser).Result;
-            var items = _orderRepo.GetCartItem(user);
-
-            var orderViewModel = new OrderItemViewModel()
+            var order = _orderRepo.GetUserOrder(user);
+            return View(order);
+        }
+        
+        public IActionResult OrderItem(int id)
+        {
+            var order = _orderRepo.GetOrderItem(id);
+            if (order.Orders != null)
             {
-                OrderItems = items,
-            };
-
-            return View(orderViewModel);
+                
+            }
+            _logger.LogInformation($"Open Invoice: {order.Orders.Id}");
+            return View(order);
         }
         public IActionResult CreateNewOrder()
         {
@@ -72,6 +77,22 @@ namespace Sneaker.Controllers
             }
             _logger.LogInformation("...");
             return View(cart);
+        }
+        
+        
+        [HttpPost]
+        public IActionResult ShareOrder(int orderId, bool isTeamOrder, string userId)
+        {   
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _adminRepo.GetUserId(currentUser).Result;
+
+            if (_orderRepo.ShareOrder(orderId, isTeamOrder, user))
+            {
+                _logger.LogInformation("Order has been opened!");
+                return Json(new {success = true, message = "Invite friends to shop together!"});
+            }
+            _logger.LogInformation("There are some error when confirmation!");
+            return Json(new {success = false, message = "There are some error when confirmation!"});
         }
     }
 }

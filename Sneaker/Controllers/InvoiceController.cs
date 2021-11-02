@@ -32,7 +32,10 @@ namespace Sneaker.Controllers
         {
             var invoice = _invoiceRepo.GetInvoiceDetails(id);
             if (invoice.Invoice != null)
-            _logger.LogInformation($"Open Invoice: {invoice.Invoice.PaymentId}");
+            {
+                
+            }
+            _logger.LogInformation($"Open Invoice: {invoice.Invoice.Id}");
             return View(invoice);
         }
     }

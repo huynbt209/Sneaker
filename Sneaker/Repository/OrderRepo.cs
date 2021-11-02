@@ -34,7 +34,7 @@ namespace Sneaker.Repository
 
         public IEnumerable<OrderItem> GetCartItem(string userId)
         {
-            return _dbContext.OrderItems.Where(c => c.UserId == userId).Include(p => p.Item).ToList();
+            return _dbContext.OrderItems.Where(c => c.UserId == userId).Include(p => p.Order).ToList();
         }
 
         public decimal GetCartTotal(string userId)
@@ -43,7 +43,18 @@ namespace Sneaker.Repository
                 .Sum();
             return total;
         }
-        
+
+        public bool ShareOrder(int id, bool isTeamOrder, string userId)
+        {
+            var orderUserInDb = _dbContext.Orders.FirstOrDefault(o => o.Id == id && o.OwnerId == userId);
+            if (orderUserInDb == null) return false;
+            orderUserInDb.IsTeamOrder = isTeamOrder;
+            orderUserInDb.OrderLocked = isTeamOrder != true;
+            _dbContext.Orders.Update(orderUserInDb);
+            _dbContext.SaveChanges();
+            return true;
+        }
+
         public bool CreateNewOrder(Order order, string userId)
         {
             var orderUserExists = _dbContext.Orders.Where(o => o.OwnerId == userId);
@@ -54,7 +65,8 @@ namespace Sneaker.Repository
             var newOrder = new Order()
             {
                 Note = order.Note,
-                OwnerId = userId
+                OwnerId = userId,
+                OrderLocked = true
             };
             _dbContext.Orders.Add(newOrder);
             _dbContext.SaveChanges();
@@ -86,5 +98,21 @@ namespace Sneaker.Repository
             return true;
         }
         
+        public IEnumerable<Order> GetUserOrder(string userId)
+        {
+            return _dbContext.Orders.Where(i => i.OwnerId == userId).ToList();
+        }
+
+        public OrderItemViewModel GetOrderItem(int id)
+        {
+            var orderInDb = _dbContext.Orders.FirstOrDefault(i => i.Id == id);
+            var orderItem = _dbContext.OrderItems.Include(d => d.Item).Where(o => o.OrderId == id).ToList();
+            var model = new OrderItemViewModel()
+            {
+                Orders = orderInDb,
+                OrderItems = orderItem,
+            };
+            return model;
+        }
     }
 }
