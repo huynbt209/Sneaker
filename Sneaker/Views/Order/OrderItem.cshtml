@@ -5,6 +5,7 @@
     Layout = "_UserLayout";
 }
 
+
 <div class="shopping-cart section">
     <div class="container">
         <div class="page-header row no-gutters py-4">
@@ -30,21 +31,24 @@
                             <div class="form-group">
                                 <label for="isTeamOrder" class="col-form-label">Is Team Order:</label>
                                 <select class="custom-select" id="isTeamOrder">
-                                    <option selected>Select status</option>
+                                    <option value="">Select status</option>
                                     <option value="true">Open Group Order</option>
                                     <option value="false">Close Group Order</option>
                                 </select>
+                                <div class="form-group">
+                                    <label for="statusMessage" class="col-form-label">Message:</label>
+                                    <textarea class="form-control" id="statusMessage"></textarea>
+                                </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" id="UpdateStatusButton" class="btn btn-primary">Submit</button>
-                    </div>
+                        <button type="button" id="UpdateGroupOrder" class="btn btn-primary">Submit</button>
+                    </div>`
                 </div>
             </div>
         </div>
-
         @if (Model.Orders.IsTeamOrder)
         {
             <div class="btn-group mb-3">
@@ -53,7 +57,7 @@
                 </div>
                 <button class="btn btn-success" type="button">
                     <span role="status" aria-hidden="true"></span>
-                    Opening: 
+                    Opening
                 </button>
             </div>
         }
@@ -165,13 +169,22 @@
 
 @section Scripts{
     <script>
-        document.getElementById("UpdateStatusButton").addEventListener("click", function (event) {
-            var isTeamOrder = document.getElementById("isTeamOrder").value;
+    $( document ).ready(function() {
+        $('.nice-select').hide()
+                    $("#isTeamOrder").css("display", "");
+    });    
+    // $( document ).ready(function() {
+    //     $('.modal-dialog .modal-content .modal-body').hide()
+    //                 $("#reviewModal").css("display", "");
+    // });
+        document.getElementById("UpdateGroupOrder").addEventListener("click", function (event) {   
+            var isItemOrder = document.getElementById("isTeamOrder").value;
+            var statusMessage = document.getElementById("statusMessage").value;
             var orderId = document.getElementById("OrderId").value;
             $.ajax({
                 url: '/Order/ShareOrder',
                 type: 'POST',
-                data: { orderId: orderId, isTeamOrder: isTeamOrder },
+                data: { orderId: orderId, isTeamOrder: isItemOrder, note: statusMessage },
                 success: function (response) {
                     if (!response.success) {
                         $('#MessageStatus').html('<div class="d-flex flex-row mb-2 alert alert-warning alert-dismissible mt-2"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div>');

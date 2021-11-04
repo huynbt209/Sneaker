@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Sneaker.Models.Order>
+﻿@using Microsoft.AspNetCore.Routing
+@model IEnumerable<Sneaker.Models.Order>
 
 @{
     ViewBag.Title = "index";
@@ -16,39 +17,55 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
+                @foreach (var or in Model)
+                {
+                    if (string.IsNullOrEmpty(or.orderGroupCode))
+                    {
+                        <a id="createGroupOrderCode" class="ui-state-hover" asp-controller="Order" asp-action="ShareOrder">Create Group Order</a>
+                    }
+                    else
+                    {
+                        <button id="copyGroupOrderCode">Copy group order: </button>
+                    }
+                    <tr>
+                        <td class="ti-email" data-title="Email">
+                            <span id="groupOrderCode" >@or.orderGroupCode</span>
+                        </td>
+                    </tr>
+                }
                 <form>
                     <table class="table shopping-summery">
                         <thead>
-                            <tr class="main-hading">
-                                <th>Email</th>
-                                <th>Address</th>
-                                <th class="text-center">Total Price</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Order Date</th>
-                                <th class="text-center">Payment</th>
-                            </tr>
+                        <tr class="main-hading">
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th class="text-center">Total Price</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Order Date</th>
+                            <th class="text-center">Payment</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var or in Model)
-                            {
-                                <tr>
-                                    <td class="ti-email" data-title="Email">
-                                        <span>@or.Status </span>
-                                    </td>
-                                    <td class="price" data-title="Price">
-                                        <p class="price">
-                                            @or.IsTeamOrder
-                                        </p>
-                                        <a class="ui-state-hover" asp-controller="Order" asp-action="OrderItem" asp-route-id="@or.Id">View More</a>
-                                    </td>
-                                    <td class="status-indicator" data-title="Status">
-                                        <span>@or.Status </span>
-                                    </td>
-                                    <td class="date" data-title="Date">
-                                        <span>@or.CreateAt </span>
-                                    </td>
-                                </tr>
-                            }
+                        @foreach (var or in Model)
+                        {
+                            <tr>
+                                <td class="ti-email" data-title="Email">
+                                    <span>@or.Status </span>
+                                </td>
+                                <td class="price" data-title="Price">
+                                    <p class="price">
+                                        @or.IsTeamOrder
+                                    </p>
+                                    <a class="ui-state-hover" asp-controller="Order" asp-action="OrderItem" asp-route-id="@or.Id">View More</a>
+                                </td>
+                                <td class="status-indicator" data-title="Status">
+                                    <span>@or.Status </span>
+                                </td>
+                                <td class="date" data-title="Date">
+                                    <span>@or.CreateAt </span>
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </form>
@@ -56,4 +73,13 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        document.getElementById("copyGroupOrderCode").addEventListener("click", function (event) {   
+            var grpCode = document.getElementById("groupOrderCode").innerHTML;
+            navigator.clipboard.writeText(grpCode);
+        });
+    </script>
+}
 

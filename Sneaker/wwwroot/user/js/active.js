@@ -198,13 +198,13 @@ Version:1.0
 		/*====================================
 		16. Flex Slider JS
 		======================================*/
-		(function ($) {
-			'use strict';
-			$('.flexslider-thumbnails').flexslider({
-				animation: "slide",
-				controlNav: "thumbnails",
-			});
-		})(jQuery);
+		// (function ($) {
+		// 	'use strict';
+		// 	$('.flexslider-thumbnails').flexslider({
+		// 		animation: "slide",
+		// 		controlNav: "thumbnails",
+		// 	});
+		// })(jQuery);
 
 		/*====================================
 		  Cart Plus Minus Button

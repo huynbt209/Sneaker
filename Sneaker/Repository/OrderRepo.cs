@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Sneaker.Data;
 using Sneaker.Models;
@@ -44,17 +45,63 @@ namespace Sneaker.Repository
             return total;
         }
 
-        public bool ShareOrder(int id, bool isTeamOrder, string userId)
+        public string CreateOrderGroup(string userId)
         {
-            var orderUserInDb = _dbContext.Orders.FirstOrDefault(o => o.Id == id && o.OwnerId == userId);
-            if (orderUserInDb == null) return false;
-            orderUserInDb.IsTeamOrder = isTeamOrder;
-            orderUserInDb.OrderLocked = isTeamOrder != true;
-            _dbContext.Orders.Update(orderUserInDb);
+            Order orderGroup;
+            var orderGrCode = RandomGroupCode();
+            if (FindOrderExistInDb(userId) != null)
+            {
+                orderGroup = FindOrderExistInDb(userId);
+                if (orderGroup.orderGroupCode == null)
+                {
+                    orderGroup.orderGroupCode = orderGrCode;
+                }
+                else
+                {
+                    orderGrCode = orderGroup.orderGroupCode;
+                }
+            }
+            else
+            {
+                orderGroup = new Order()
+                {
+                    OwnerId = userId,
+                    IsTeamOrder = true,
+                    orderGroupCode = orderGrCode,
+                    OrderLocked = false
+                };
+                _dbContext.Orders.Add(orderGroup);
+            }
             _dbContext.SaveChanges();
-            return true;
+            
+            return orderGrCode;
         }
 
+        private Order FindOrderExistInDb(string userId)
+        {
+            return _dbContext.Orders.FirstOrDefault(o => o.OwnerId == userId);
+        }
+
+        private string RandomGroupCode()
+        {
+            int length = 15;
+      
+            // creating a StringBuilder object()
+            StringBuilder stringBuilder = new StringBuilder();  
+            Random random = new Random();  
+
+            char letter;  
+
+            for (int i = 0; i < length; i++)
+            {
+                double flt = random.NextDouble();
+                int shift = Convert.ToInt32(Math.Floor(25 * flt));
+                letter = Convert.ToChar(shift + 65);
+                stringBuilder.Append(letter);  
+            }
+
+            return stringBuilder.ToString();
+        }
         public bool CreateNewOrder(Order order, string userId)
         {
             var orderUserExists = _dbContext.Orders.Where(o => o.OwnerId == userId);

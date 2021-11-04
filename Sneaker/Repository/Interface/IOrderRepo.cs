@@ -17,7 +17,7 @@ namespace Sneaker.Repository.Interface
         IEnumerable<OrderItem> GetCartItem(string userId);
         decimal GetCartTotal(string userId);
 
-        bool ShareOrder(int id, bool isTeamOrder, string userId);
+        string CreateOrderGroup(string userId);
 
         IEnumerable<Order> GetUserOrder(string userId);
 

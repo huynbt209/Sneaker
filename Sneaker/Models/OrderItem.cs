@@ -18,6 +18,7 @@ namespace Sneaker.Models
         [Required]
         [Display(Name = "User")]
         public string UserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
         public int Quantity { get; set; }
         [Column(TypeName = "decimal(18,0)")]
         public Decimal Price { get; set; }

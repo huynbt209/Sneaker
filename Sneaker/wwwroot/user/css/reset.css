@@ -323,7 +323,7 @@ big {
 ===============================*/
 .demo-section{
 	width: 100%;
-	background-image: url('../images/demo-bg.jpg');
+	background-image: url('../images');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -479,18 +479,14 @@ big {
 	left: 0;
 	z-index: 5555;
 	background: rgba(255, 117, 80, 0.94);
-	--uiPreloaderColor: var(--cpPreloaderColor, #fff);
 	color:#fff;
-	color:var(--uiPreloaderColor)
 }
 .cp-preloader__box {
 	position:relative
 }
 .cp-preloader-inner {
-	font-size:var(--uiPreloaderSize);
 	width:1em;
 	height:1em;
-	--uiPreloaderSize: var(--cpPreloaderSize, 80px);
 	font-size: 70px;
 }
 .cp-preloader-inner::after, 
@@ -1145,10 +1141,8 @@ object {
   background:#F7941D;
 }
 .modal-dialog .modal-content .modal-body {
-	padding: 0px;
 	overflow-y: auto;
 	max-height: 510px;
-	height: 700px;
 }
 .quickview-content {
 	padding: 40px 40px;
@@ -1271,44 +1265,8 @@ object {
 	text-transform: capitalize;
 	margin-bottom: 12px;
 }
-.quickview-content .nice-select {
-	clear: initial;
-	margin: 0;
-	height: 45px;
-	width: 100%;
-	text-align: center;
-	background: transparent;
-	text-transform: capitalize;
-	padding: 0 0 0 20px;
-	line-height: 45px;
-	font-size: 14px;
-	font-weight: 400;
-	border: 1px solid #eee;
-	border-radius: 0;
-}
-.quickview-content .nice-select::after {
-	border-color: #666;
-	right: 20px;
-}
-.quickview-content .nice-select .list {
-	border-radius:0px;
-	width: 100%;
-}
-.quickview-content .nice-select .list li.focus{
-	font-weight:400;
-	text-transform:lowercase;
-}
-.quickview-content .nice-select .list li {
-	color: #666;
-	border-radius: 0px;
-	font-size: 14px;
-	font-weight: 400;
-	text-transform:lowercase;
-}
-.quickview-content .nice-select .list li:hover{
-	background:#F7941D;
-	color:#fff;
-}
+
+
 
 .quickview-content .quickview-peragraph ul {
   margin: 30px 0 0;

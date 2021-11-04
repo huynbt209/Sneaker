@@ -80,19 +80,25 @@ namespace Sneaker.Controllers
         }
         
         
-        [HttpPost]
-        public IActionResult ShareOrder(int orderId, bool isTeamOrder, string userId)
+        public IActionResult ShareOrder()
         {   
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = _adminRepo.GetUserId(currentUser).Result;
+            var userId = _adminRepo.GetUserId(currentUser).Result;
 
-            if (_orderRepo.ShareOrder(orderId, isTeamOrder, user))
+            var groupOrderCode = _orderRepo.CreateOrderGroup(userId);
+            if (groupOrderCode!= null)
+            {
+                _logger.LogInformation("Create group order Successfully!");
+            }
+
+            return RedirectToAction("Index");
+            /*if (_orderRepo.createOrderGroup(orderId, isTeamOrder, note, user))
             {
                 _logger.LogInformation("Order has been opened!");
                 return Json(new {success = true, message = "Invite friends to shop together!"});
             }
             _logger.LogInformation("There are some error when confirmation!");
-            return Json(new {success = false, message = "There are some error when confirmation!"});
+            return Json(new {success = false, message = "There are some error when confirmation!"});*/
         }
     }
 }
